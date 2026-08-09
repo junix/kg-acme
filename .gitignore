@@ -1,6 +1,7 @@
 # build artifacts
 /kg
 /kg-acme
+/kg-mcp
 /dist/
 
 # editor / OS

@@ -59,6 +59,45 @@ func (g Gates) allowed(effect string) bool {
 	}
 }
 
+// Merge returns gates with the other's allowances OR'd in.
+func (g Gates) Merge(o Gates) Gates {
+	return Gates{
+		AllowNetwork:       g.AllowNetwork || o.AllowNetwork,
+		AllowDataEgress:    g.AllowDataEgress || o.AllowDataEgress,
+		AllowModelDownload: g.AllowModelDownload || o.AllowModelDownload,
+		AllowDBWrite:       g.AllowDBWrite || o.AllowDBWrite,
+	}
+}
+
+// ParseGates parses an allow-list spec into Gates. Tokens are separated by
+// commas, semicolons, or whitespace: network, data_egress,
+// downloads_models, writes_db, or * (all gates). Unknown tokens are an
+// error — a misspelled gate in server configuration must fail loudly at
+// startup, never silently allow or deny the wrong thing.
+func ParseGates(spec string) (Gates, error) {
+	var g Gates
+	fields := strings.FieldsFunc(spec, func(r rune) bool {
+		return r == ',' || r == ';' || r == ' ' || r == '\t' || r == '\n'
+	})
+	for _, f := range fields {
+		switch f {
+		case "*":
+			g = Gates{true, true, true, true}
+		case Network:
+			g.AllowNetwork = true
+		case DataEgress:
+			g.AllowDataEgress = true
+		case DownloadsModels:
+			g.AllowModelDownload = true
+		case WritesDB:
+			g.AllowDBWrite = true
+		default:
+			return Gates{}, fmt.Errorf("unknown side effect %q in allow list (want network|data_egress|downloads_models|writes_db|*)", f)
+		}
+	}
+	return g, nil
+}
+
 // Denied returns the declared effects whose gates are closed.
 func (g Gates) Denied(effects []string) []string {
 	var denied []string
