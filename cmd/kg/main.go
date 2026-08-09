@@ -346,7 +346,7 @@ func cmdCapability(hf hubFlags, cmd catalog.Command, args []string) int {
 	if err != nil {
 		return emitError(hf, cmd.CapabilityID, hf.provider, protocol.ErrCapabilityNotFound, err.Error())
 	}
-	input, err := router.ParseInput(res.CLISpec, args)
+	input, err := router.ParseInput(res.CLISpec, res.InputSchema, args)
 	if err != nil {
 		return emitError(hf, cmd.CapabilityID, res.Provider.ID(), protocol.ErrInvalidInput, err.Error())
 	}

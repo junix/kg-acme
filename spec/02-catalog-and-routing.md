@@ -86,6 +86,14 @@ protocol-only——未 probe 时对这些能力报 `capability_not_found`，而�
 
 ## 执行路径
 
+- **argv 解析**：顶层 canonical 命令除 cli_spec 声明的 flags/positionals
+  外，还把 input_schema 中未被 cli_spec 覆盖的属性派生为
+  `--<property>` flag（下划线转连字符；string/number/integer/boolean/
+  array 按 JSON Schema 类型映射，object 不派生）。派生 flag 的值进
+  invoke request 的 input——graph-in 能力因此可以直接从顶层命令驱动
+  （`kg communities --document-file kg.json`），hub 不硬编码任何
+  provider 选项。
+
 - **probed**：`invoke <capability_id> --request -`，stdin 送
   `{"capability_id","input"}`，stdout 收 envelope，hub 透传（合并自身
   diagnostics）。

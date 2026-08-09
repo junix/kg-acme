@@ -164,11 +164,22 @@ func resolveOne(p Provider, capabilityID string) *Resolved {
 
 // ParseInput converts argv (hub flags already stripped) into an input
 // object per the cli_spec: tokens matching a spec flag are parsed by kind,
-// remaining bare tokens fill positionals in spec order.
-func ParseInput(spec protocol.CLISpec, args []string) (map[string]any, error) {
+// remaining bare tokens fill positionals in spec order. Flags are also
+// derived from input_schema properties the cli_spec does not declare
+// (see schemaDerivedFlags), so top-level canonical commands can drive
+// graph-in capabilities whose inputs travel in the invoke request JSON.
+func ParseInput(spec protocol.CLISpec, inputSchema json.RawMessage, args []string) (map[string]any, error) {
 	input := map[string]any{}
 	byFlag := map[string]protocol.FlagSpec{}
+	covered := map[string]bool{}
 	for _, f := range spec.Flags {
+		byFlag[f.Flag] = f
+		covered[f.Name] = true
+	}
+	for _, p := range spec.Positionals {
+		covered[p.Name] = true
+	}
+	for _, f := range schemaDerivedFlags(inputSchema, covered) {
 		byFlag[f.Flag] = f
 	}
 	var positionalValues []string
@@ -225,6 +236,77 @@ func asSlice(v any) []any {
 		return s
 	}
 	return nil
+}
+
+// schemaDerivedFlags maps input_schema properties not covered by the
+// cli_spec to flags of the form --<property> (underscores → dashes), with
+// the flag kind taken from the property's JSON Schema type. Graph-in
+// capabilities (detect.communities, resolve.coref, store.triples, ...)
+// legitimately declare no cli_spec flag for inputs like document_file —
+// those travel in the invoke request JSON — so the hub derives them here
+// instead of hardcoding provider options.
+func schemaDerivedFlags(inputSchema json.RawMessage, covered map[string]bool) []protocol.FlagSpec {
+	if len(inputSchema) == 0 {
+		return nil
+	}
+	var sch struct {
+		Properties map[string]struct {
+			Type any `json:"type"`
+		} `json:"properties"`
+	}
+	if err := json.Unmarshal(inputSchema, &sch); err != nil {
+		return nil
+	}
+	var names []string
+	for name := range sch.Properties {
+		if !covered[name] {
+			names = append(names, name)
+		}
+	}
+	sort.Strings(names)
+	var out []protocol.FlagSpec
+	for _, name := range names {
+		kind := schemaFlagKind(sch.Properties[name].Type)
+		if kind == "" {
+			continue
+		}
+		out = append(out, protocol.FlagSpec{
+			Name:     name,
+			Flag:     "--" + strings.ReplaceAll(name, "_", "-"),
+			Kind:     kind,
+			Optional: true,
+		})
+	}
+	return out
+}
+
+// schemaFlagKind maps a JSON Schema type (a string, or a list such as
+// ["string","null"]) to a flag kind. Object-typed properties return ""
+// (not expressible as an argv flag); untyped properties default to
+// string, the common case for file-path inputs.
+func schemaFlagKind(t any) string {
+	var types []any
+	if s, ok := t.(string); ok {
+		types = []any{s}
+	} else if l, ok := t.([]any); ok {
+		types = l
+	}
+	for _, v := range types {
+		switch v {
+		case "number", "integer":
+			return protocol.FlagNumber
+		case "boolean":
+			return protocol.FlagBoolean
+		case "array":
+			return protocol.FlagArray
+		case "string":
+			return protocol.FlagString
+		case "object":
+			// Objects cannot be expressed as an argv flag value.
+			return ""
+		}
+	}
+	return protocol.FlagString
 }
 
 // Runner executes an external command; a seam for tests.
