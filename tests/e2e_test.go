@@ -13,13 +13,15 @@ import (
 	"testing"
 
 	"kg-acme/internal/bridge"
+	"kg-acme/internal/pipeline"
 	"kg-acme/internal/protocol"
 )
 
 var (
-	kgBin  string
-	binDir string
-	homeDir string
+	kgBin    string
+	kgMCPBin string
+	binDir   string
+	homeDir  string
 )
 
 func TestMain(m *testing.M) {
@@ -36,6 +38,13 @@ func TestMain(m *testing.M) {
 		panic("building kg: " + err.Error() + "\n" + string(out))
 	}
 
+	kgMCPBin = filepath.Join(root, "kg-mcp")
+	buildMCP := exec.Command("go", "build", "-o", kgMCPBin, "kg-acme/cmd/kg-mcp")
+	buildMCP.Dir = ".."
+	if out, err := buildMCP.CombinedOutput(); err != nil {
+		panic("building kg-mcp: " + err.Error() + "\n" + string(out))
+	}
+
 	binDir = filepath.Join(root, "bin")
 	homeDir = filepath.Join(root, "home")
 	if err := os.MkdirAll(binDir, 0o755); err != nil {
@@ -46,6 +55,7 @@ func TestMain(m *testing.M) {
 	}
 
 	writeScript(filepath.Join(binDir, "kg-provider-fake"), fakeProviderScript)
+	writeScript(filepath.Join(binDir, "kg-provider-pipe"), pipeProviderScript)
 	writeScript(filepath.Join(binDir, "kg-extract"), legacyExtractScript)
 	writeScript(filepath.Join(binDir, "kg-extract-ng"), probedExtractScript)
 	writeScript(filepath.Join(binDir, "kg-provider-bad"), badManifestScript)
@@ -130,6 +140,112 @@ JSON
     cap="$2"
     req=$(cat)
     printf '{"protocol":"kg.execution/v1","capability_id":"%s","provider":"kg-extract","status":"ok","result":{"echo":%s}}\n' "$cap" "$req"
+    ;;
+esac
+exit 0
+`
+
+// pipeProviderScript is a protocol-native provider covering the full
+// pipeline chain: parse (chunks artifact), extract (kg-document artifact),
+// coref (graph-in/out artifact), store (graph-in, result-json). Artifacts
+// land under $HOME/fake-out; parse fails when its sidecar file is missing
+// (drives the optional-skip test); extract appends a marker per invocation
+// (drives the resume-skip assertion); store records the document path it
+// received (proves edge wiring end to end).
+const pipeProviderScript = `#!/bin/sh
+case "$1" in
+  describe)
+    cat <<'JSON'
+{
+  "protocol": "kg.provider/v1",
+  "protocol_versions": [1],
+  "provider": {"id": "kg-provider-pipe", "version": "0.1.0", "description": "fake pipeline-capable provider"},
+  "capabilities": [
+    {
+      "capability_id": "parse.multimodal",
+      "title": "Fake parse",
+      "description": "Writes a chunks JSONL artifact.",
+      "side_effects": ["network"],
+      "input_schema": {"type": "object", "properties": {"sidecar": {"type": "string"}}, "required": ["sidecar"], "additionalProperties": false},
+      "output": {"mode": "artifact", "kind": "chunks"},
+      "cli_spec": {"subcommand": [], "always": [], "positionals": [], "flags": []}
+    },
+    {
+      "capability_id": "extract.entities_relations",
+      "title": "Fake extract",
+      "description": "Writes a kg-document artifact.",
+      "side_effects": ["network", "data_egress"],
+      "input_schema": {"type": "object", "properties": {"file": {"type": "string"}, "text": {"type": "string"}}, "additionalProperties": false},
+      "output": {"mode": "artifact", "kind": "kg-document"},
+      "cli_spec": {"subcommand": [], "always": [], "positionals": [], "flags": []}
+    },
+    {
+      "capability_id": "resolve.coref",
+      "title": "Fake coref",
+      "description": "Copies the input kg-document.",
+      "side_effects": [],
+      "input_schema": {"type": "object", "properties": {"document": {"type": "string"}, "document_file": {"type": "string"}}, "additionalProperties": false},
+      "output": {"mode": "artifact", "kind": "kg-document"},
+      "cli_spec": {"subcommand": [], "always": [], "positionals": [], "flags": []}
+    },
+    {
+      "capability_id": "store.triples",
+      "title": "Fake store",
+      "description": "Records the received document path.",
+      "side_effects": ["writes_db"],
+      "input_schema": {"type": "object", "properties": {"document": {"type": "string"}, "document_file": {"type": "string"}}, "additionalProperties": false},
+      "output": {"mode": "result-json", "kind": "json"},
+      "cli_spec": {"subcommand": [], "always": [], "positionals": [], "flags": []}
+    }
+  ]
+}
+JSON
+    ;;
+  available)
+    echo '{"available":true,"ready":[],"missing":[]}'
+    ;;
+  invoke)
+    cap="$2"
+    req=$(cat)
+    out="$HOME/fake-out"
+    mkdir -p "$out"
+    art=""
+    kind=""
+    case "$cap" in
+      parse.multimodal)
+        sidecar=$(printf '%s' "$req" | sed -n 's/.*"sidecar":"\([^"]*\)".*/\1/p')
+        if [ ! -f "$sidecar" ]; then
+          printf '{"protocol":"kg.execution/v1","capability_id":"%s","provider":"kg-provider-pipe","status":"error","error":{"code":"invocation_failed","message":"sidecar not found: %s"}}\n' "$cap" "$sidecar"
+          exit 0
+        fi
+        art="$out/parse-chunks.jsonl"
+        echo '{"text":"hello chunk"}' > "$art"
+        kind="chunks"
+        ;;
+      extract.entities_relations)
+        echo run >> "$out/extract-runs"
+        art="$out/extract-kg.json"
+        printf '{"schema_version":"kg.protocol.v1","entities":[{"name":"Alice"}],"relations":[]}\n' > "$art"
+        kind="kg-document"
+        ;;
+      resolve.coref)
+        doc=$(printf '%s' "$req" | sed -n 's/.*"document_file":"\([^"]*\)".*/\1/p')
+        art="$out/dedup-kg.json"
+        cp "$doc" "$art"
+        kind="kg-document"
+        ;;
+      store.triples)
+        doc=$(printf '%s' "$req" | sed -n 's/.*"document_file":"\([^"]*\)".*/\1/p')
+        printf '%s\n' "$doc" > "$out/store-received"
+        printf '{"protocol":"kg.execution/v1","capability_id":"%s","provider":"kg-provider-pipe","status":"ok","result":{"stored":true}}\n' "$cap"
+        exit 0
+        ;;
+      *)
+        exit 1
+        ;;
+    esac
+    sum=$(shasum -a 256 "$art" | cut -d' ' -f1)
+    printf '{"protocol":"kg.execution/v1","capability_id":"%s","provider":"kg-provider-pipe","status":"ok","artifacts":[{"path":"%s","kind":"%s","checksum":"sha256:%s"}]}\n' "$cap" "$art" "$kind" "$sum"
     ;;
 esac
 exit 0
@@ -382,7 +498,10 @@ func TestCatalogCommandsRouteToNewNamespace(t *testing.T) {
 		{[]string{"parse"}, "parse.multimodal"},
 	}
 	for _, tc := range cases {
-		args := append(append([]string{}, tc.args...), "--json")
+		// Constrain routing to a provider that offers none of these
+		// capabilities, so resolution fails and the envelope names the
+		// catalog-mapped capability_id.
+		args := append(append([]string{}, tc.args...), "--provider", "kg-provider-fake", "--json")
 		stdout, _, code := runKG(t, "", args...)
 		if code != 1 {
 			t.Errorf("%v: expected exit 1, got %d: %s", tc.args, code, stdout)
@@ -462,9 +581,303 @@ func TestDescribeProbedProvider(t *testing.T) {
 	}
 }
 
-func TestPipelineStub(t *testing.T) {
-	_, _, code := runKG(t, "", "pipeline")
-	if code != 2 {
-		t.Errorf("pipeline stub should exit 2, got %d", code)
+// writePipelineDef renders a kg.pipeline/v1 definition into a temp file.
+func writePipelineDef(t *testing.T, def string) string {
+	t.Helper()
+	path := filepath.Join(t.TempDir(), "pipeline.json")
+	if err := os.WriteFile(path, []byte(def), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
+
+func parsePipelineEnvelope(t *testing.T, stdout string) pipeline.Envelope {
+	t.Helper()
+	var env pipeline.Envelope
+	if err := json.Unmarshal([]byte(strings.TrimSpace(stdout)), &env); err != nil {
+		t.Fatalf("stdout must be exactly one pipeline envelope, got %q: %v", stdout, err)
+	}
+	return env
+}
+
+// chainPipelineDef wires parse → extract → dedup → store through the fake
+// kg-provider-pipe. sidecar must be an existing file (parse fails
+// otherwise, which the optional-skip test exploits).
+func chainPipelineDef(sidecar string) string {
+	return `{
+  "pipeline": "kg.pipeline/v1",
+  "name": "doc-to-graph",
+  "stages": [
+    {"id": "parse", "capability": "parse.multimodal", "optional": true,
+     "input": {"sidecar": "` + sidecar + `"}},
+    {"id": "extract", "capability": "extract.entities_relations",
+     "input": {"file": "doc.md"}},
+    {"id": "dedup", "capability": "resolve.coref",
+     "input_from": {"stage": "extract", "artifact_kind": "kg-document", "as": "document_file"}},
+    {"id": "store", "capability": "store.triples",
+     "input_from": {"stage": "dedup", "artifact_kind": "kg-document", "as": "document_file"}}
+  ]
+}`
+}
+
+func TestPipelineFullChain(t *testing.T) {
+	sidecar := filepath.Join(t.TempDir(), "sidecar.json")
+	if err := os.WriteFile(sidecar, []byte(`{"docs":[]}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	workDir := filepath.Join(t.TempDir(), "work")
+	def := writePipelineDef(t, chainPipelineDef(sidecar))
+
+	stdout, _, code := runKG(t, "", "pipeline", "run", def,
+		"--provider", "kg-provider-pipe",
+		"--work-dir", workDir, "--json",
+		"--allow-network", "--allow-data-egress", "--allow-db-write")
+	if code != 0 {
+		t.Fatalf("pipeline run exited %d: %s", code, stdout)
+	}
+	env := parsePipelineEnvelope(t, stdout)
+	if env.Protocol != "kg.pipeline.execution/v1" || env.Status != "ok" || env.Pipeline != "doc-to-graph" {
+		t.Fatalf("pipeline envelope: %+v", env)
+	}
+	wantOrder := []string{"parse", "extract", "dedup", "store"}
+	if len(env.Stages) != len(wantOrder) {
+		t.Fatalf("expected %d stages, got %+v", len(wantOrder), env.Stages)
+	}
+	for i, s := range env.Stages {
+		if s.ID != wantOrder[i] || s.Status != "ok" {
+			t.Errorf("stage %d: %+v", i, s)
+		}
+		if s.Provider != "kg-provider-pipe" {
+			t.Errorf("stage %s provider = %q", s.ID, s.Provider)
+		}
+	}
+	// Artifacts are copied into the work dir with checksums.
+	for _, id := range []string{"parse", "extract", "dedup"} {
+		s := env.Stages[0]
+		for _, st := range env.Stages {
+			if st.ID == id {
+				s = st
+			}
+		}
+		if len(s.Artifacts) != 1 || filepath.Dir(s.Artifacts[0].Path) != workDir || s.Artifacts[0].Checksum == "" {
+			t.Errorf("stage %s artifacts: %+v", id, s.Artifacts)
+		}
+		if _, err := os.Stat(s.Artifacts[0].Path); err != nil {
+			t.Errorf("stage %s artifact missing: %v", id, err)
+		}
+		// Per-stage envelope recorded for resume.
+		if _, err := os.Stat(filepath.Join(workDir, "stage-"+id+".envelope.json")); err != nil {
+			t.Errorf("stage envelope missing for %s: %v", id, err)
+		}
+	}
+	// Edge wiring reached the store: it received dedup's work-dir artifact.
+	received, err := os.ReadFile(filepath.Join(homeDir, "fake-out", "store-received"))
+	if err != nil {
+		t.Fatalf("store did not record its input: %v", err)
+	}
+	dedupArt := env.Stages[2].Artifacts[0].Path
+	if strings.TrimSpace(string(received)) != dedupArt {
+		t.Errorf("store received %q, expected dedup artifact %q", received, dedupArt)
+	}
+}
+
+func TestPipelineValidateRejectsIncompatibleEdge(t *testing.T) {
+	// chunks (parse output) cannot feed the graph-in property document_file.
+	def := writePipelineDef(t, `{
+	  "pipeline": "kg.pipeline/v1", "name": "bad-edge",
+	  "stages": [
+	    {"id": "parse", "capability": "parse.multimodal", "input": {"sidecar": "s.json"}},
+	    {"id": "dedup", "capability": "resolve.coref",
+	     "input_from": {"stage": "parse", "artifact_kind": "chunks", "as": "document_file"}}
+	  ]
+	}`)
+	stdout, _, code := runKG(t, "", "pipeline", "validate", def, "--provider", "kg-provider-pipe", "--json")
+	if code != 1 {
+		t.Fatalf("expected exit 1, got %d: %s", code, stdout)
+	}
+	env := parsePipelineEnvelope(t, stdout)
+	if env.Error == nil || env.Error.Code != protocol.ErrIncompatibleStageEdge {
+		t.Errorf("expected incompatible_stage_edge, got %+v", env.Error)
+	}
+}
+
+func TestPipelineValidateOk(t *testing.T) {
+	def := writePipelineDef(t, chainPipelineDef("s.json"))
+	_, stderr, code := runKG(t, "", "pipeline", "validate", def, "--provider", "kg-provider-pipe")
+	if code != 0 {
+		t.Fatalf("validate exited %d: %s", code, stderr)
+	}
+	if !strings.Contains(stderr, "parse → extract → dedup → store") {
+		t.Errorf("validate should print the topological order, got %q", stderr)
+	}
+}
+
+func TestPipelineGatePrecheck(t *testing.T) {
+	sidecar := filepath.Join(t.TempDir(), "sidecar.json")
+	if err := os.WriteFile(sidecar, []byte(`{}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	workDir := filepath.Join(t.TempDir(), "work")
+	def := writePipelineDef(t, chainPipelineDef(sidecar))
+	os.Remove(filepath.Join(homeDir, "fake-out", "extract-runs"))
+
+	stdout, _, code := runKG(t, "", "pipeline", "run", def, "--provider", "kg-provider-pipe", "--work-dir", workDir, "--json")
+	if code != 1 {
+		t.Fatalf("expected exit 1, got %d: %s", code, stdout)
+	}
+	env := parsePipelineEnvelope(t, stdout)
+	if env.Error == nil || env.Error.Code != protocol.ErrPolicyDenied {
+		t.Fatalf("expected policy_denied, got %+v", env.Error)
+	}
+	for _, want := range []string{"--allow-network", "--allow-data-egress", "--allow-db-write"} {
+		if !strings.Contains(env.Error.Message, want) {
+			t.Errorf("error should name %s: %q", want, env.Error.Message)
+		}
+	}
+	if len(env.Stages) != 0 {
+		t.Errorf("no stage may run under gate denial: %+v", env.Stages)
+	}
+	// fail fast: providers never started.
+	if _, err := os.Stat(filepath.Join(homeDir, "fake-out", "extract-runs")); !os.IsNotExist(err) {
+		t.Errorf("extract must not have run under gate denial")
+	}
+}
+
+func TestPipelineDryRun(t *testing.T) {
+	def := writePipelineDef(t, chainPipelineDef("s.json"))
+	workDir := filepath.Join(t.TempDir(), "work")
+	stdout, _, code := runKG(t, "", "pipeline", "run", def, "--dry-run", "--provider", "kg-provider-pipe", "--work-dir", workDir, "--json")
+	if code != 0 {
+		t.Fatalf("dry-run exited %d: %s", code, stdout)
+	}
+	env := parsePipelineEnvelope(t, stdout)
+	if !env.DryRun || env.Status != "ok" {
+		t.Fatalf("dry-run envelope: %+v", env)
+	}
+	for _, s := range env.Stages {
+		if s.Status != "planned" {
+			t.Errorf("stage %s status %s, want planned", s.ID, s.Status)
+		}
+	}
+	// Resolved input shows the injection placeholder for wired edges.
+	var dedup *pipeline.StageResult
+	for i := range env.Stages {
+		if env.Stages[i].ID == "dedup" {
+			dedup = &env.Stages[i]
+		}
+	}
+	if dedup == nil || dedup.Input["document_file"] != "kg-pipeline://extract/kg-document" {
+		t.Errorf("dedup planned input: %+v", dedup)
+	}
+	// Zero execution: the work dir was never created.
+	if _, err := os.Stat(workDir); !os.IsNotExist(err) {
+		t.Errorf("dry-run must not create the work dir")
+	}
+}
+
+func TestPipelineResume(t *testing.T) {
+	sidecar := filepath.Join(t.TempDir(), "sidecar.json")
+	if err := os.WriteFile(sidecar, []byte(`{}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	workDir := filepath.Join(t.TempDir(), "work")
+	def := writePipelineDef(t, chainPipelineDef(sidecar))
+	gates := []string{"--provider", "kg-provider-pipe", "--allow-network", "--allow-data-egress", "--allow-db-write", "--json"}
+	os.Remove(filepath.Join(homeDir, "fake-out", "extract-runs"))
+
+	args := append([]string{"pipeline", "run", def, "--work-dir", workDir}, gates...)
+	stdout, _, code := runKG(t, "", args...)
+	if code != 0 {
+		t.Fatalf("first run exited %d: %s", code, stdout)
+	}
+	countRuns := func() int {
+		data, err := os.ReadFile(filepath.Join(homeDir, "fake-out", "extract-runs"))
+		if err != nil {
+			return 0
+		}
+		return strings.Count(strings.TrimSpace(string(data)), "run")
+	}
+	if n := countRuns(); n != 1 {
+		t.Fatalf("extract should have run once, ran %d", n)
+	}
+
+	stdout, _, code = runKG(t, "", "pipeline", "run", def, "--resume", workDir, "--provider", "kg-provider-pipe", "--json",
+		"--allow-network", "--allow-data-egress", "--allow-db-write")
+	if code != 0 {
+		t.Fatalf("resume run exited %d: %s", code, stdout)
+	}
+	env := parsePipelineEnvelope(t, stdout)
+	if env.Status != "ok" {
+		t.Fatalf("resume run failed: %+v", env.Error)
+	}
+	if n := countRuns(); n != 1 {
+		t.Errorf("resume must skip completed stages, extract ran %d times", n)
+	}
+	reused := 0
+	for _, d := range env.Diagnostics {
+		if strings.Contains(d.Message, "reused from") {
+			reused++
+		}
+	}
+	if reused != 4 {
+		t.Errorf("expected 4 reuse diagnostics, got %d: %+v", reused, env.Diagnostics)
+	}
+}
+
+func TestPipelineOptionalStageSkipped(t *testing.T) {
+	workDir := filepath.Join(t.TempDir(), "work")
+	def := writePipelineDef(t, chainPipelineDef(filepath.Join(t.TempDir(), "missing-sidecar.json")))
+	stdout, _, code := runKG(t, "", "pipeline", "run", def, "--provider", "kg-provider-pipe", "--work-dir", workDir, "--json",
+		"--allow-network", "--allow-data-egress", "--allow-db-write")
+	if code != 0 {
+		t.Fatalf("optional failure must not fail the pipeline, exit %d: %s", code, stdout)
+	}
+	env := parsePipelineEnvelope(t, stdout)
+	if env.Status != "ok" {
+		t.Fatalf("pipeline should be ok, got %+v", env.Error)
+	}
+	if env.Stages[0].ID != "parse" || env.Stages[0].Status != "skipped" {
+		t.Errorf("parse should be skipped: %+v", env.Stages[0])
+	}
+	found := false
+	for _, d := range env.Diagnostics {
+		if d.Severity == "warning" && strings.Contains(d.Message, "optional stage \"parse\" failed, skipping") {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("expected optional-skip diagnostic, got %+v", env.Diagnostics)
+	}
+}
+
+// Stages listed out of dependency order must still execute in topological
+// order (DAG semantics, not definition order).
+func TestPipelineTopologicalOrder(t *testing.T) {
+	def := writePipelineDef(t, `{
+	  "pipeline": "kg.pipeline/v1", "name": "shuffled",
+	  "stages": [
+	    {"id": "store", "capability": "store.triples",
+	     "input_from": {"stage": "dedup", "as": "document_file"}},
+	    {"id": "dedup", "capability": "resolve.coref",
+	     "input_from": {"stage": "extract", "as": "document_file"}},
+	    {"id": "extract", "capability": "extract.entities_relations",
+	     "input": {"file": "doc.md"}}
+	  ]
+	}`)
+	workDir := filepath.Join(t.TempDir(), "work")
+	stdout, _, code := runKG(t, "", "pipeline", "run", def, "--provider", "kg-provider-pipe", "--work-dir", workDir, "--json",
+		"--allow-network", "--allow-data-egress", "--allow-db-write")
+	if code != 0 {
+		t.Fatalf("pipeline run exited %d: %s", code, stdout)
+	}
+	env := parsePipelineEnvelope(t, stdout)
+	want := []string{"extract", "dedup", "store"}
+	if len(env.Stages) != len(want) {
+		t.Fatalf("stages: %+v", env.Stages)
+	}
+	for i, s := range env.Stages {
+		if s.ID != want[i] || s.Status != "ok" {
+			t.Errorf("stage %d = %s (%s), want %s ok", i, s.ID, s.Status, want[i])
+		}
 	}
 }

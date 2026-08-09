@@ -40,6 +40,45 @@ func (p Provider) ID() string {
 	return p.Status.ID
 }
 
+// DiscoverProviders assembles the routable provider set: legacy bridges
+// found on disk plus protocol-native kg-provider-* binaries, honoring
+// explicit --provider-bin overrides. This is the one discovery assembly
+// shared by every hub front end (kg CLI, kg-mcp server).
+func DiscoverProviders(ctx context.Context, overrides discover.Overrides) []Provider {
+	env := discover.DefaultEnv()
+	var out []Provider
+	seen := map[string]bool{}
+
+	for _, fb := range bridge.Table() {
+		path := discover.FindExecutable(fb.Bin, overrides, env)
+		if path == "" {
+			continue
+		}
+		fbCopy := fb
+		st := discover.Probe(ctx, fb.ID, path)
+		out = append(out, Provider{Status: st, Fallback: &fbCopy})
+		seen[st.ID] = true
+	}
+	for name, path := range discover.ScanProviders(env) {
+		if seen[name] {
+			continue
+		}
+		st := discover.Probe(ctx, name, path)
+		out = append(out, Provider{Status: st})
+		seen[st.ID] = true
+	}
+	// Explicit overrides for providers unknown to the hub.
+	for id, path := range overrides {
+		if seen[id] || !discover.IsExecutable(path) {
+			continue
+		}
+		st := discover.Probe(ctx, id, path)
+		out = append(out, Provider{Status: st})
+		seen[st.ID] = true
+	}
+	return out
+}
+
 // Resolved binds a capability_id to a concrete provider plus the effective
 // spec (provider-authoritative when probed, fallback otherwise).
 type Resolved struct {

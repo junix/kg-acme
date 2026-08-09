@@ -11,7 +11,7 @@ func TestLoadEmbeddedValid(t *testing.T) {
 		t.Fatalf("embedded catalog must be valid: %v", err)
 	}
 	want := []string{"extract", "dedup", "communities", "communities hierarchy", "communities summaries",
-		"store", "ask", "parse", "provider", "pipeline"}
+		"store", "ask", "parse", "provider", "pipeline run", "pipeline validate"}
 	if len(c.Commands) != len(want) {
 		t.Fatalf("expected %d commands, got %d", len(want), len(c.Commands))
 	}

@@ -65,12 +65,18 @@
       "builtin": true
     },
     {
-      "command_path": ["pipeline"],
-      "semantic_id": "pipeline",
+      "command_path": ["pipeline", "run"],
+      "semantic_id": "pipeline run",
       "title": "Run a capability pipeline",
-      "description": "Compose provider capabilities into a staged pipeline.",
-      "builtin": true,
-      "stub": true
+      "description": "Execute a declarative kg.pipeline/v1 pipeline definition.",
+      "builtin": true
+    },
+    {
+      "command_path": ["pipeline", "validate"],
+      "semantic_id": "pipeline validate",
+      "title": "Validate a pipeline definition",
+      "description": "Check a kg.pipeline/v1 pipeline definition without executing it.",
+      "builtin": true
     }
   ]
 }

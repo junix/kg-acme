@@ -11,6 +11,12 @@ import "encoding/json"
 const (
 	ProviderProtocol  = "kg.provider/v1"
 	ExecutionProtocol = "kg.execution/v1"
+
+	// PipelineProtocol identifies a declarative pipeline definition file.
+	PipelineProtocol = "kg.pipeline/v1"
+	// PipelineExecutionProtocol identifies the pipeline runner's stdout
+	// envelope (one per `kg pipeline run` invocation).
+	PipelineExecutionProtocol = "kg.pipeline.execution/v1"
 )
 
 // SupportedVersions is the set of kg.provider/v1 protocol versions the hub
@@ -156,6 +162,10 @@ const (
 	ErrPolicyDenied             = "policy_denied"
 	ErrInvalidInput             = "invalid_input"
 	ErrInvocationFailed         = "invocation_failed"
+
+	// Pipeline runner error codes.
+	ErrInvalidPipeline       = "invalid_pipeline"
+	ErrIncompatibleStageEdge = "incompatible_stage_edge"
 )
 
 // NewEnvelope builds an envelope skeleton with the protocol field set.

@@ -14,9 +14,9 @@ import (
 	"os"
 	"strings"
 
-	"kg-acme/internal/bridge"
 	"kg-acme/internal/catalog"
 	"kg-acme/internal/discover"
+	"kg-acme/internal/pipeline"
 	"kg-acme/internal/policy"
 	"kg-acme/internal/protocol"
 	"kg-acme/internal/router"
@@ -31,6 +31,8 @@ type hubFlags struct {
 	provider       string
 	providerBin    discover.Overrides
 	request        string
+	workDir        string
+	resume         string
 }
 
 func main() {
@@ -84,9 +86,12 @@ func run(args []string) int {
 	switch {
 	case cmd.Builtin && cmd.SemanticID == "provider":
 		return cmdProvider(hf, rest)
+	case cmd.Builtin && cmd.SemanticID == "pipeline run":
+		return cmdPipelineRun(hf, rest)
+	case cmd.Builtin && cmd.SemanticID == "pipeline validate":
+		return cmdPipelineValidate(hf, rest)
 	case cmd.Builtin:
-		// pipeline (Phase 2): stub.
-		fmt.Fprintf(os.Stderr, "kg %s: not implemented yet (Phase 2 pipeline runner)\n", cmd.SemanticID)
+		fmt.Fprintf(os.Stderr, "kg %s: unknown builtin command\n", cmd.SemanticID)
 		return 2
 	default:
 		return cmdCapability(hf, *cmd, rest)
@@ -106,6 +111,8 @@ Usage:
   kg describe <provider> [--json]        show a provider's self-description
   kg <command> [args] [hub flags]        run a capability (extract/dedup/communities/store/ask/parse)
   kg provider <id> <capability_id> --request <file|->  raw protocol escape hatch
+  kg pipeline run <def.json> [--dry-run] [--work-dir d | --resume d]  run a kg.pipeline/v1 pipeline
+  kg pipeline validate <def.json>        validate a pipeline definition without executing
 
 Hub flags:
   --json                  emit exactly one kg.execution/v1 envelope on stdout
@@ -116,6 +123,8 @@ Hub flags:
   --allow-db-write        allow database writes
   --provider <id>         force a specific provider
   --provider-bin ID=PATH  explicit provider executable (repeatable)
+  --work-dir <dir>        pipeline work directory (default kg-pipeline-<ts>/)
+  --resume <dir>          resume a pipeline from an existing work directory
 
 Commands:`)
 	for _, c := range cat.Commands {
@@ -165,6 +174,18 @@ func parseHubFlags(args []string) (hubFlags, []string, error) {
 				return hf, nil, err
 			}
 			hf.request = v
+		case tok == "--work-dir":
+			v, err := next()
+			if err != nil {
+				return hf, nil, err
+			}
+			hf.workDir = v
+		case tok == "--resume":
+			v, err := next()
+			if err != nil {
+				return hf, nil, err
+			}
+			hf.resume = v
 		case strings.HasPrefix(tok, "--provider-bin="):
 			kv := strings.TrimPrefix(tok, "--provider-bin=")
 			id, path, ok := strings.Cut(kv, "=")
@@ -192,38 +213,7 @@ func parseHubFlags(args []string) (hubFlags, []string, error) {
 // buildProviders assembles the routable provider set: legacy bridges found
 // on disk plus protocol-native kg-provider-* binaries.
 func buildProviders(ctx context.Context, hf hubFlags) []router.Provider {
-	env := discover.DefaultEnv()
-	var out []router.Provider
-	seen := map[string]bool{}
-
-	for _, fb := range bridge.Table() {
-		path := discover.FindExecutable(fb.Bin, hf.providerBin, env)
-		if path == "" {
-			continue
-		}
-		fbCopy := fb
-		st := discover.Probe(ctx, fb.ID, path)
-		out = append(out, router.Provider{Status: st, Fallback: &fbCopy})
-		seen[st.ID] = true
-	}
-	for name, path := range discover.ScanProviders(env) {
-		if seen[name] {
-			continue
-		}
-		st := discover.Probe(ctx, name, path)
-		out = append(out, router.Provider{Status: st})
-		seen[st.ID] = true
-	}
-	// Explicit overrides for providers unknown to the hub.
-	for id, path := range hf.providerBin {
-		if seen[id] || !discover.IsExecutable(path) {
-			continue
-		}
-		st := discover.Probe(ctx, id, path)
-		out = append(out, router.Provider{Status: st})
-		seen[st.ID] = true
-	}
-	return out
+	return router.DiscoverProviders(ctx, hf.providerBin)
 }
 
 func cmdList(hf hubFlags) int {
@@ -420,6 +410,128 @@ func cmdProvider(hf hubFlags, args []string) int {
 		return emitError(hf, capabilityID, id, protocol.ErrInvocationFailed, err.Error())
 	}
 	return emitEnvelope(hf, env)
+}
+
+// cmdPipelineRun runs `kg pipeline run <def.json>`: validate, fail fast on
+// the gate union (unless --dry-run), then execute stage by stage.
+func cmdPipelineRun(hf hubFlags, args []string) int {
+	if len(args) != 1 {
+		fmt.Fprintf(os.Stderr, "usage: kg pipeline run <def.json> [--dry-run] [--work-dir dir | --resume dir] [--json] [--allow-*] [--provider-bin ID=PATH]\n")
+		return 2
+	}
+	def, err := pipeline.LoadDefinition(args[0])
+	if err != nil {
+		return emitPipelineError(hf, "", err)
+	}
+	ctx := context.Background()
+	providers := filterProviders(buildProviders(ctx, hf), hf.provider)
+	plan, err := pipeline.Build(def, providers, hf.gates)
+	if err != nil {
+		return emitPipelineError(hf, def.Name, err)
+	}
+	if hf.dryRun {
+		return emitPipelineEnvelope(hf, pipeline.RenderDryRun(plan))
+	}
+	env := pipeline.Execute(ctx, plan, pipeline.RunOptions{
+		WorkDir: hf.workDir,
+		Resume:  hf.resume,
+		Gates:   hf.gates,
+	})
+	return emitPipelineEnvelope(hf, env)
+}
+
+// cmdPipelineValidate runs `kg pipeline validate <def.json>`: the full plan
+// (structure, capability resolution, typed edges, static input schemas)
+// with zero execution.
+func cmdPipelineValidate(hf hubFlags, args []string) int {
+	if len(args) != 1 {
+		fmt.Fprintf(os.Stderr, "usage: kg pipeline validate <def.json> [--json] [--provider-bin ID=PATH]\n")
+		return 2
+	}
+	def, err := pipeline.LoadDefinition(args[0])
+	if err != nil {
+		return emitPipelineError(hf, "", err)
+	}
+	ctx := context.Background()
+	providers := filterProviders(buildProviders(ctx, hf), hf.provider)
+	plan, err := pipeline.Build(def, providers, hf.gates)
+	if err != nil {
+		return emitPipelineError(hf, def.Name, err)
+	}
+	if hf.json {
+		return emitPipelineEnvelope(hf, pipeline.RenderDryRun(plan))
+	}
+	fmt.Fprintf(os.Stderr, "pipeline %q: valid (%d stages, topological order: ", plan.Def.Name, len(plan.Order))
+	for i, ps := range plan.Order {
+		if i > 0 {
+			fmt.Fprint(os.Stderr, " → ")
+		}
+		fmt.Fprint(os.Stderr, ps.Stage.ID)
+	}
+	fmt.Fprintln(os.Stderr, ")")
+	return 0
+}
+
+func filterProviders(providers []router.Provider, id string) []router.Provider {
+	if id == "" {
+		return providers
+	}
+	var out []router.Provider
+	for _, p := range providers {
+		if p.ID() == id {
+			out = append(out, p)
+		}
+	}
+	return out
+}
+
+// emitPipelineError reports a pipeline plan/validation failure as a
+// kg.pipeline.execution/v1 envelope (--json) or a stderr line.
+func emitPipelineError(hf hubFlags, name string, err error) int {
+	code, msg := protocol.ErrInvalidPipeline, err.Error()
+	if pe, ok := err.(*pipeline.Error); ok {
+		code = pe.Code
+		msg = pe.Message
+	}
+	env := pipeline.ErrorEnvelope(name, code, msg)
+	if hf.json {
+		writeJSON(env)
+	} else {
+		fmt.Fprintf(os.Stderr, "kg pipeline: %s: %s\n", code, msg)
+	}
+	return 1
+}
+
+// emitPipelineEnvelope prints the pipeline result. With --json stdout
+// carries exactly one kg.pipeline.execution/v1 envelope and nothing else.
+func emitPipelineEnvelope(hf hubFlags, env *pipeline.Envelope) int {
+	if hf.json {
+		writeJSON(env)
+	} else {
+		for _, d := range env.Diagnostics {
+			fmt.Fprintf(os.Stderr, "kg pipeline: %s: %s\n", d.Severity, d.Message)
+		}
+		for _, s := range env.Stages {
+			line := fmt.Sprintf("stage %-12s %-28s %-16s %s", s.ID, s.Capability, s.Provider, s.Status)
+			if s.Error != nil {
+				line += fmt.Sprintf(" (%s: %s)", s.Error.Code, s.Error.Message)
+			}
+			fmt.Println(line)
+			for _, a := range s.Artifacts {
+				fmt.Printf("  artifact: %s (%s %s)\n", a.Path, a.Kind, a.Checksum)
+			}
+		}
+		if env.WorkDir != "" {
+			fmt.Fprintf(os.Stderr, "kg pipeline: work dir: %s\n", env.WorkDir)
+		}
+		if env.Status == "error" && env.Error != nil {
+			fmt.Fprintf(os.Stderr, "kg pipeline: %s: %s\n", env.Error.Code, env.Error.Message)
+		}
+	}
+	if env.Status == "error" {
+		return 1
+	}
+	return 0
 }
 
 func emitError(hf hubFlags, capabilityID, provider, code, msg string) int {
