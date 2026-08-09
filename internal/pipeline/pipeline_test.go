@@ -237,6 +237,132 @@ func TestStaticInputSchemaChecked(t *testing.T) {
 	}
 }
 
+// Build rejects malformed definitions at every documented guard, each with
+// the invalid_pipeline code and a message that pinpoints the problem.
+func TestBuildValidationRules(t *testing.T) {
+	base := `{"pipeline":"kg.pipeline/v1","name":"n","stages":[{"id":"s","capability":"resolve.coref"}]}`
+	cases := []struct {
+		name     string
+		def      string
+		wantCode string
+		wantMsg  string
+	}{
+		{
+			"wrong pipeline protocol",
+			`{"pipeline":"kg.pipeline/v9","name":"n","stages":[{"id":"s","capability":"resolve.coref"}]}`,
+			protocol.ErrInvalidPipeline, "pipeline field must be",
+		},
+		{
+			"empty name",
+			`{"pipeline":"kg.pipeline/v1","name":"","stages":[{"id":"s","capability":"resolve.coref"}]}`,
+			protocol.ErrInvalidPipeline, "name must be non-empty",
+		},
+		{
+			"no stages",
+			`{"pipeline":"kg.pipeline/v1","name":"n","stages":[]}`,
+			protocol.ErrInvalidPipeline, "at least one stage",
+		},
+		{
+			"illegal stage id uppercase",
+			strings.Replace(base, `"id":"s"`, `"id":"BadID"`, 1),
+			protocol.ErrInvalidPipeline, "stage id",
+		},
+		{
+			"illegal stage id punctuation",
+			strings.Replace(base, `"id":"s"`, `"id":"s.x"`, 1),
+			protocol.ErrInvalidPipeline, "stage id",
+		},
+		{
+			"empty stage id",
+			strings.Replace(base, `"id":"s"`, `"id":""`, 1),
+			protocol.ErrInvalidPipeline, "stage id",
+		},
+		{
+			"empty capability",
+			strings.Replace(base, `"capability":"resolve.coref"`, `"capability":""`, 1),
+			protocol.ErrInvalidPipeline, "capability must be non-empty",
+		},
+		{
+			"duplicate stage id",
+			`{"pipeline":"kg.pipeline/v1","name":"n","stages":[
+			   {"id":"s","capability":"resolve.coref"},
+			   {"id":"s","capability":"resolve.coref"}]}`,
+			protocol.ErrInvalidPipeline, "duplicate stage id",
+		},
+		{
+			"unknown upstream stage in input_from",
+			`{"pipeline":"kg.pipeline/v1","name":"n","stages":[
+			   {"id":"s","capability":"resolve.coref","input_from":{"stage":"ghost","as":"document_file"}}]}`,
+			protocol.ErrInvalidPipeline, "references unknown stage",
+		},
+		{
+			"edge missing as",
+			`{"pipeline":"kg.pipeline/v1","name":"n","stages":[
+			   {"id":"e","capability":"extract.entities_relations","input":{"file":"d.md"}},
+			   {"id":"s","capability":"resolve.coref","input_from":{"stage":"e"}}]}`,
+			protocol.ErrInvalidPipeline, "must name a target property",
+		},
+		{
+			"capability no provider offers",
+			`{"pipeline":"kg.pipeline/v1","name":"n","stages":[{"id":"s","capability":"no.such"}]}`,
+			protocol.ErrCapabilityNotFound, "no provider offers",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := Build(parseDef(t, tc.def), chainProviders(), policy.Gates{})
+			pe, ok := err.(*Error)
+			if !ok {
+				t.Fatalf("expected *pipeline.Error, got %T %v", err, err)
+			}
+			if pe.Code != tc.wantCode {
+				t.Errorf("code = %q, want %q", pe.Code, tc.wantCode)
+			}
+			if !strings.Contains(pe.Message, tc.wantMsg) {
+				t.Errorf("message %q should contain %q", pe.Message, tc.wantMsg)
+			}
+		})
+	}
+}
+
+// legalStageID accepts lowercase letters, digits, dash and underscore.
+func TestLegalStageIDForms(t *testing.T) {
+	good := []string{"s", "stage-1", "stage_2", "abc-123_xyz"}
+	for _, id := range good {
+		if !legalStageID(id) {
+			t.Errorf("legalStageID(%q) = false, want true", id)
+		}
+	}
+	bad := []string{"", "A", "s.x", "s/path", "Stage", "s!", "有"}
+	for _, id := range bad {
+		if legalStageID(id) {
+			t.Errorf("legalStageID(%q) = true, want false", id)
+		}
+	}
+}
+
+// ParseDefinition surfaces invalid JSON as an invalid_pipeline Error;
+// LoadDefinition surfaces a missing file the same way.
+func TestParseAndLoadDefinitionErrors(t *testing.T) {
+	_, err := ParseDefinition([]byte(`{"pipeline":`))
+	pe, ok := err.(*Error)
+	if !ok || pe.Code != protocol.ErrInvalidPipeline {
+		t.Fatalf("ParseDefinition invalid JSON: expected invalid_pipeline *Error, got %T %v", err, err)
+	}
+	if !strings.Contains(pe.Message, "not valid JSON") {
+		t.Errorf("ParseDefinition message should mention JSON: %q", pe.Message)
+	}
+
+	_, err = LoadDefinition(filepath.Join(t.TempDir(), "does-not-exist.json"))
+	pe, ok = err.(*Error)
+	if !ok || pe.Code != protocol.ErrInvalidPipeline {
+		t.Fatalf("LoadDefinition missing file: expected invalid_pipeline *Error, got %T %v", err, err)
+	}
+	if !strings.Contains(pe.Message, "reading pipeline definition") {
+		t.Errorf("LoadDefinition message should mention reading: %q", pe.Message)
+	}
+}
+
 func TestInputFromSingleObjectOrArray(t *testing.T) {
 	single := parseDef(t, `{"pipeline":"kg.pipeline/v1","name":"x","stages":[
 	  {"id":"a","capability":"c","input_from":{"stage":"b","as":"document_file"}}]}`)
@@ -327,6 +453,24 @@ func TestExecuteFullChain(t *testing.T) {
 	storeRes := env.Stages[3]
 	if len(storeRes.Artifacts) != 0 {
 		t.Errorf("result-json stage should carry no artifacts, got %+v", storeRes.Artifacts)
+	}
+	// The result-json stage's invoke result must survive into the pipeline
+	// envelope (it has no artifacts to carry its output).
+	if len(storeRes.Result) == 0 {
+		t.Errorf("result-json stage must carry the invoke result, got %+v", storeRes)
+	} else {
+		var result map[string]any
+		if err := json.Unmarshal(storeRes.Result, &result); err != nil {
+			t.Errorf("stage result is not valid JSON: %v", err)
+		} else if result["stored"] != true {
+			t.Errorf("stage result should echo the invoke result, got %v", result)
+		}
+	}
+	// The recorded stage envelope keeps the result for resume/inspection.
+	if data, err := os.ReadFile(stageEnvelopePath(workDir, "store")); err != nil {
+		t.Errorf("stage envelope file missing for store: %v", err)
+	} else if !strings.Contains(string(data), `"result"`) {
+		t.Errorf("store stage envelope should record the result, got %s", data)
 	}
 	// Every artifact-mode stage produced a work-dir copy; per-stage
 	// envelope files exist for resume.
