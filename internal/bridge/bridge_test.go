@@ -112,6 +112,150 @@ func TestRenderArgvRequiredPositional(t *testing.T) {
 	}
 }
 
+// renderFlag / stringValue / arrayValue type and kind errors must surface a
+// descriptive error and emit no partial argv. Each case pins one branch.
+func TestRenderArgvFlagErrors(t *testing.T) {
+	cases := []struct {
+		name  string
+		spec  protocol.CLISpec
+		input map[string]any
+		want  string
+	}{
+		{
+			"boolean flag wrong type",
+			protocol.CLISpec{Flags: []protocol.FlagSpec{{Name: "coref", Flag: "--coref", Kind: protocol.FlagBoolean, Order: 1}}},
+			map[string]any{"coref": "yes"},
+			"expected boolean",
+		},
+		{
+			"array flag wrong type",
+			protocol.CLISpec{Flags: []protocol.FlagSpec{{Name: "tags", Flag: "--tags", Kind: protocol.FlagArray, Order: 1}}},
+			map[string]any{"tags": "single"},
+			"expected array",
+		},
+		{
+			"string flag given bool",
+			protocol.CLISpec{Flags: []protocol.FlagSpec{{Name: "f", Flag: "--f", Kind: protocol.FlagString, Order: 1}}},
+			map[string]any{"f": true},
+			"boolean is not a string/number value",
+		},
+		{
+			"string flag unsupported type",
+			protocol.CLISpec{Flags: []protocol.FlagSpec{{Name: "f", Flag: "--f", Kind: protocol.FlagString, Order: 1}}},
+			map[string]any{"f": []any{"x"}},
+			"unsupported value type",
+		},
+		{
+			"positional given bool",
+			protocol.CLISpec{Positionals: []protocol.PositionalSpec{{Name: "file", Required: true}}},
+			map[string]any{"file": true},
+			"boolean is not a string/number value",
+		},
+		{
+			"unknown flag kind",
+			protocol.CLISpec{Flags: []protocol.FlagSpec{{Name: "f", Flag: "--f", Kind: "wat", Order: 1}}},
+			map[string]any{"f": "x"},
+			"unknown kind",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := RenderArgv(tc.spec, tc.input)
+			if err == nil {
+				t.Fatalf("expected error containing %q, got nil", tc.want)
+			}
+			if !strings.Contains(err.Error(), tc.want) {
+				t.Errorf("error %q should contain %q", err.Error(), tc.want)
+			}
+		})
+	}
+}
+
+// An explicitly-nil positional is treated as absent: required → error,
+// optional → skipped.
+func TestRenderArgvNilPositional(t *testing.T) {
+	// Required positional with a nil value errors.
+	req := protocol.CLISpec{Positionals: []protocol.PositionalSpec{{Name: "file", Required: true}}}
+	if _, err := RenderArgv(req, map[string]any{"file": nil}); err == nil {
+		t.Error("nil required positional should error")
+	}
+	// Optional positional with a nil value is skipped, no error.
+	opt := protocol.CLISpec{
+		Always:      []string{"PRE"},
+		Positionals: []protocol.PositionalSpec{{Name: "extra"}},
+	}
+	got, err := RenderArgv(opt, map[string]any{"extra": nil})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := []string{"PRE"}; !reflect.DeepEqual(got, want) {
+		t.Errorf("nil optional positional should be skipped: got %v want %v", got, want)
+	}
+}
+
+// Array rendering edge cases: empty array emits nothing; a join flag without
+// an explicit Join separator falls back to ",".
+func TestRenderArgvArrayEdges(t *testing.T) {
+	// Empty array → flag omitted entirely.
+	emptySpec := protocol.CLISpec{Flags: []protocol.FlagSpec{
+		{Name: "tags", Flag: "--tags", Kind: protocol.FlagArray, Join: ",", Order: 1},
+	}}
+	got, err := RenderArgv(emptySpec, map[string]any{"tags": []any{}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got) != 0 {
+		t.Errorf("empty array should emit nothing, got %v", got)
+	}
+
+	// Join flag with empty Join string defaults to ",".
+	defaultJoinSpec := protocol.CLISpec{Flags: []protocol.FlagSpec{
+		{Name: "tags", Flag: "--tags", Kind: protocol.FlagArray, Order: 1}, // no Join
+	}}
+	got, err = RenderArgv(defaultJoinSpec, map[string]any{"tags": []any{"a", "b", "c"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := []string{"--tags", "a,b,c"}; !reflect.DeepEqual(got, want) {
+		t.Errorf("array default comma join: got %v want %v", got, want)
+	}
+
+	// []string (not just []any) is accepted by arrayValue.
+	strArrSpec := protocol.CLISpec{Flags: []protocol.FlagSpec{
+		{Name: "tags", Flag: "--tags", Kind: protocol.FlagArray, Join: ",", Order: 1},
+	}}
+	got, err = RenderArgv(strArrSpec, map[string]any{"tags": []string{"x", "y"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := []string{"--tags", "x,y"}; !reflect.DeepEqual(got, want) {
+		t.Errorf("[]string array: got %v want %v", got, want)
+	}
+}
+
+// stringValue formats numbers like JSON: integer-valued floats render without
+// a decimal point, fractional floats keep it.
+func TestStringValueNumberFormatting(t *testing.T) {
+	spec := protocol.CLISpec{Flags: []protocol.FlagSpec{
+		{Name: "n", Flag: "--n", Kind: protocol.FlagNumber, Order: 1},
+	}}
+	cases := map[any]string{
+		float64(42): "--n 42",
+		float64(3.14): "--n 3.14",
+		int(7):        "--n 7",
+		int64(9):      "--n 9",
+	}
+	for v, want := range cases {
+		got, err := RenderArgv(spec, map[string]any{"n": v})
+		if err != nil {
+			t.Fatalf("stringValue(%v): %v", v, err)
+		}
+		if joined := strings.Join(got, " "); joined != want {
+			t.Errorf("stringValue(%v) = %q, want %q", v, joined, want)
+		}
+	}
+}
+
 func TestFallbackTableCoversKnownCLIs(t *testing.T) {
 	table := Table()
 	byID := map[string]FallbackProvider{}

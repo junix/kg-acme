@@ -90,6 +90,7 @@ func TestParseValidationRules(t *testing.T) {
 		  {"command_path":["a"],"semantic_id":"a","title":"A","description":"A.","capability_id":"kg.a"}]}`, "duplicate semantic_id"},
 		{"bad json", `{`, "invalid JSON"},
 		{"no commands", `{"version":1,"commands":[]}`, "no commands"},
+		{"empty command path", `{"version":1,"commands":[{"command_path":[],"semantic_id":"","title":"X","description":"X.","capability_id":"kg.x"}]}`, "empty command_path"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

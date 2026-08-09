@@ -106,3 +106,32 @@ func TestValidateInputAdditionalProperties(t *testing.T) {
 		t.Errorf("enum member must pass: %v", err)
 	}
 }
+
+// ValidateInput short-circuits to nil when a capability declares no
+// input_schema (nil or zero-byte RawMessage) — the hub cannot validate
+// against nothing, so everything passes.
+func TestValidateInputEmptySchema(t *testing.T) {
+	for _, sch := range []json.RawMessage{nil, json.RawMessage(``)} {
+		if err := ValidateInput(sch, map[string]any{"anything": 1}); err != nil {
+			t.Errorf("empty input_schema must short-circuit to nil, got %v (schema=%q)", err, sch)
+		}
+	}
+}
+
+// An input_schema that is itself invalid JSON (truncated, or non-empty
+// whitespace that cannot compile) reports an "invalid input_schema" error — a
+// provider bug, distinct from an input that violates a valid schema.
+func TestValidateInputInvalidSchema(t *testing.T) {
+	for _, bad := range []json.RawMessage{
+		json.RawMessage(`{"type": "object", "properties": `), // truncated
+		json.RawMessage(`   `),                               // non-empty whitespace, not valid JSON
+	} {
+		err := ValidateInput(bad, map[string]any{})
+		if err == nil {
+			t.Fatalf("invalid input_schema must error (schema=%q)", bad)
+		}
+		if !strings.Contains(err.Error(), "invalid input_schema") {
+			t.Errorf("error should mention invalid input_schema: %v (schema=%q)", err, bad)
+		}
+	}
+}

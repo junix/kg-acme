@@ -2,6 +2,8 @@ package protocol
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -28,6 +30,19 @@ func TestNegotiateNoIntersection(t *testing.T) {
 		var verr *VersionError
 		if !errors.As(err, &verr) {
 			t.Errorf("versions %v: expected *VersionError, got %T", versions, err)
+			continue
+		}
+		// The error must carry the provider's offered versions verbatim and
+		// the hub's supported set, so diagnostics can explain the mismatch.
+		if fmt.Sprintf("%v", verr.ProviderVersions) != fmt.Sprintf("%v", versions) {
+			t.Errorf("versions %v: ProviderVersions = %v", versions, verr.ProviderVersions)
+		}
+		if fmt.Sprintf("%v", verr.HubVersions) != fmt.Sprintf("%v", SupportedVersions) {
+			t.Errorf("HubVersions = %v, want %v", verr.HubVersions, SupportedVersions)
+		}
+		// The message names both sides.
+		if !strings.Contains(verr.Error(), "provider offers") || !strings.Contains(verr.Error(), "hub supports") {
+			t.Errorf("error message should describe both sides: %q", verr.Error())
 		}
 	}
 }
