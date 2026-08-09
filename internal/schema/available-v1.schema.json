@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kg-acme/schemas/available-v1.schema.json",
+  "title": "kg.provider/v1 available report",
+  "type": "object",
+  "required": ["available", "ready", "missing"],
+  "properties": {
+    "available": {"type": "boolean"},
+    "ready": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "kind"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "kind": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "missing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "kind"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "kind": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "cache_dir": {"type": "string"}
+  },
+  "additionalProperties": true
+}

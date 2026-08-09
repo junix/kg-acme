@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "commands": [
+    {
+      "command_path": ["extract"],
+      "semantic_id": "extract",
+      "title": "Extract a knowledge graph",
+      "description": "Extract entities and relations from documents into a knowledge graph.",
+      "capability_id": "extract.entities_relations"
+    },
+    {
+      "command_path": ["dedup"],
+      "semantic_id": "dedup",
+      "title": "Deduplicate graph entities",
+      "description": "Resolve coreference and merge duplicate entities and relations in a knowledge graph.",
+      "capability_id": "resolve.coref"
+    },
+    {
+      "command_path": ["communities"],
+      "semantic_id": "communities",
+      "title": "Detect graph communities",
+      "description": "Detect flat communities over a knowledge graph.",
+      "capability_id": "detect.communities"
+    },
+    {
+      "command_path": ["communities", "hierarchy"],
+      "semantic_id": "communities hierarchy",
+      "title": "Detect hierarchical communities",
+      "description": "Detect the community hierarchy of a knowledge graph.",
+      "capability_id": "detect.communities_hierarchy"
+    },
+    {
+      "command_path": ["communities", "summaries"],
+      "semantic_id": "communities summaries",
+      "title": "Summarize graph communities",
+      "description": "Generate GraphRAG-style summaries for the communities of a knowledge graph.",
+      "capability_id": "summarize.communities"
+    },
+    {
+      "command_path": ["store"],
+      "semantic_id": "store",
+      "title": "Store a knowledge graph",
+      "description": "Load a knowledge graph document into a graph database backend.",
+      "capability_id": "store.triples"
+    },
+    {
+      "command_path": ["ask"],
+      "semantic_id": "ask",
+      "title": "Ask over a knowledge graph",
+      "description": "Answer a natural-language question using a GraphRAG dataset.",
+      "capability_id": "retrieve.ask"
+    },
+    {
+      "command_path": ["parse"],
+      "semantic_id": "parse",
+      "title": "Parse multimodal documents",
+      "description": "Parse multimodal documents into typed chunks.",
+      "capability_id": "parse.multimodal"
+    },
+    {
+      "command_path": ["provider"],
+      "semantic_id": "provider",
+      "title": "Invoke a provider directly",
+      "description": "Send a raw request envelope to a provider capability.",
+      "builtin": true
+    },
+    {
+      "command_path": ["pipeline"],
+      "semantic_id": "pipeline",
+      "title": "Run a capability pipeline",
+      "description": "Compose provider capabilities into a staged pipeline.",
+      "builtin": true,
+      "stub": true
+    }
+  ]
+}
