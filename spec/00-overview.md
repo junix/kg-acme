@@ -59,6 +59,7 @@ internal/
   discover/        findExecutable 顺序 + describe/available probe
   router/          capability → provider 解析、argv→input、执行
   policy/          side-effect 策略门
+  pipeline/        kg.pipeline/v1 定义、DAG 计划/校验、执行与 resume（spec/05）
   bridge/          兼容桥 fallback argv 表 + renderArgv
   schema/          内嵌 JSON Schema + santhosh-tekuri/jsonschema 校验
 spec/              设计文档（本目录）

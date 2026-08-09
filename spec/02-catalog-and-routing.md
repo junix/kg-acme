@@ -16,7 +16,8 @@
 | `ask` | `retrieve.ask` | GraphRAG 问答 |
 | `parse` | `parse.multimodal` | 多模态文档解析 → chunks |
 | `provider` | （builtin） | 长尾逃生口：raw 协议调用 |
-| `pipeline` | （builtin, stub） | Phase 2 流水线 |
+| `pipeline run` | （builtin） | 执行 kg.pipeline/v1 流水线（Phase 2，spec/05） |
+| `pipeline validate` | （builtin） | 校验流水线定义，零执行 |
 
 capability id 的唯一真相源是 **provider 的发布命名空间**
 （`extract.*` / `detect.*` / `summarize.*` / `resolve.*` / `store.*` /

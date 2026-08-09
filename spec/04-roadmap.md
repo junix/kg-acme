@@ -21,32 +21,35 @@ fallback 表退化为纯兜底。若 provider 自描述与 hub 表漂移，hub �
 - 策略门 + dry-run；版本协商；JSON Schema 校验；
 - 假 provider 端到端测试。
 
-## Phase 2 — pipeline runner（DAG）
+## Phase 2 — pipeline runner（DAG，已完成，见 spec/05）
 
-`kg pipeline` 从 stub 变为真正的流水线执行器：
+`kg pipeline` 已从 stub 变为真正的流水线执行器：
 
-- 声明式流水线文件（YAML/JSON）：stage = `(capability_id, input mapping)`，
-  stage 间以 `output.kind` 衔接（kg-document → communities → store）；
-- hub 把 stage 编译成 DAG，拓扑序执行，每 stage 复用 Phase 1 的
+- 声明式流水线文件（`kg.pipeline/v1` JSON）：stage =
+  `(capability_id, input, input_from)`，stage 间以 artifact kind + 通道
+  兼容的类型边衔接（kg-document → document_file 等）；
+- hub 把 stage 编译成 DAG，Kahn 拓扑序执行，每 stage 复用 Phase 1 的
   resolve / 策略门 / envelope 机制；
-- 流水线级策略：各 stage 副作用并集一次过门，一次 dry-run 渲染全图；
-- 接口预留（Phase 1 已就位）：
-  - `router.Resolve` / `router.Execute` 以 `capability_id` 为单位，天然
-    是 pipeline 的单步；
-  - envelope 的 `output.kind` / `artifacts[].kind` 是 stage 间类型匹配的
-    依据；
-  - `catalog.Command{Builtin, Stub}` 已占住 `pipeline` 命令位。
+- 流水线级策略：各 stage 副作用并集一次过门（fail fast 列出所需
+  flag），`--dry-run` 一次渲染全图；
+- artifact 统一落 `--work-dir`（含 checksum 校验与复制），
+  `--resume <dir>` 按 stage envelope 断点重跑；
+- `optional: true` stage 失败跳过记 diagnostic，其余失败中止；
+- 命令面：`kg pipeline run <def.json>` / `kg pipeline validate <def.json>`，
+  `--json` 输出 `kg.pipeline.execution/v1` envelope。
 
-## Phase 3 — kg-mcp 同源展开
+## Phase 3 — kg-mcp 同源展开（已完成，见 spec/06）
 
-同一套 catalog / discovery / router / policy 以 MCP server 形态展开
-（`kg mcp` 或独立 `kg-mcp`）：
+同一套 catalog / discovery / router / policy / pipeline 以 MCP server
+形态展开（独立 `cmd/kg-mcp`，stdio JSON-RPC 2.0）：
 
-- 每个 catalog 能力命令 ↔ 一个 MCP tool；tool 的 inputSchema 直接来自
-  provider 的 `input_schema`（铁律 2 的天然延伸：LLM 看到的参数面与
-  CLI 完全一致）；
-- 策略门在 MCP 形态下由 server 配置而非 `--allow-*` flag 提供；
-- envelope 即 tool 的结构化输出；diagnostics 映射为 MCP annotations。
+- 每个 catalog 命令 ↔ 一个 MCP tool（`kg_extract`、`kg_pipeline_run`…）；
+  能力 tool 的 inputSchema 直接来自 provider 的 `input_schema`
+  （铁律 2 的天然延伸：LLM 看到的参数面与 CLI 完全一致）；
+- 策略门由 server 启动配置供给（`--allow-*` flag / `KG_ACME_ALLOW`
+  env），未授权返回 policy_denied 结构化错误，不 crash；
+- envelope 即 tool 的 structured content；大 artifact 只回
+  path+checksum。
 
 ## 非目标（长期）
 

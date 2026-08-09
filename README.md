@@ -16,7 +16,7 @@ CLI）组织成统一的能力目录：发现、路由、策略治理、执行�
 ## 构建与测试
 
 ```sh
-just build   # go build ./... && go build -o kg ./cmd/kg
+just build   # go build ./... && go build -o kg ./cmd/kg && go build -o kg-mcp ./cmd/kg-mcp
 just test    # go test ./...
 just vet     # go vet ./...
 just check   # vet + test + build
@@ -34,8 +34,18 @@ kg store                                # store.triples（graph-in，经协议 i
 kg ask --dataset d --question q [--mode local|global]         # retrieve.ask
 kg parse <sidecar.json> [--backend mock] ...                  # parse.multimodal
 kg provider <id> <capability_id> --request <file|->     # 长尾逃生口
-kg pipeline ...                         # stub（Phase 2）
+kg pipeline run <def.json> [--dry-run] [--work-dir d | --resume d]   # kg.pipeline/v1 流水线
+kg pipeline validate <def.json>                       # 只校验不执行
 ```
+
+pipeline（Phase 2，详见 `spec/05-pipeline.md`）：声明式 `kg.pipeline/v1`
+定义把多个能力串成 DAG——stage 间以 artifact 类型边衔接（定义期校验，
+不兼容报 `incompatible_stage_edge`），拓扑序执行，每 stage 走
+router（probed 优先 + 策略门）；策略门按全部 stage 副作用并集预检
+fail fast；artifact 统一落 `--work-dir`（默认 `kg-pipeline-<ts>/`），
+`--resume <dir>` 跳过已完成 stage（checksum 复验）；`optional: true`
+stage 失败跳过。`--json` 输出恰好一个 `kg.pipeline.execution/v1`
+envelope。
 
 catalog 稳定命令映射的是 **provider 发布的能力命名空间**（`extract.*` /
 `detect.*` / `summarize.*` / `resolve.*` / `store.*` / `retrieve.*` /
@@ -46,7 +56,35 @@ catalog 稳定命令映射的是 **provider 发布的能力命名空间**（`ext
 hub 标志：`--json`（stdout 恰好一个 kg.execution/v1 envelope）、
 `--dry-run`（零副作用执行计划）、`--allow-network` / `--allow-data-egress` /
 `--allow-model-download` / `--allow-db-write`（策略门，默认全拒）、
-`--provider <id>`、`--provider-bin ID=PATH`。
+`--provider <id>`、`--provider-bin ID=PATH`、`--work-dir <dir>` /
+`--resume <dir>`（pipeline 专用）。
+
+## kg-mcp：MCP server 形态（Phase 3，详见 spec/06）
+
+`kg-mcp` 把同一 hub 以 MCP stdio server 展开：每个 catalog 命令是一个
+tool（`kg_extract` … `kg_pipeline_run`），能力 tool 的 inputSchema 就是
+provider 发布的 `input_schema` 原样；策略门由启动配置供给
+（`--allow-*` flag 或 `KG_ACME_ALLOW` env，OR 合并）；envelope 即
+structured content，policy_denied 等失败是结构化 `isError: true`，
+server 不退出。
+
+```sh
+kg-mcp --allow-network --provider-bin kg-extract=/path/to/kg-extract
+```
+
+Claude Code / Claude Desktop 配置：
+
+```json
+{
+  "mcpServers": {
+    "kg": {
+      "command": "/Users/junix/projects/kg/kg-acme/kg-mcp",
+      "args": ["--allow-network", "--allow-data-egress"],
+      "env": {"KG_ACME_ALLOW": "network,data_egress"}
+    }
+  }
+}
+```
 
 ## 示例
 
@@ -85,14 +123,17 @@ echo '{"file":"doc.md"}' | kg provider kg-provider-fake extract.entities_relatio
 
 ```
 cmd/kg/            CLI 入口
+cmd/kg-mcp/        MCP server（stdio）入口
 internal/
   protocol/        kg.provider/v1 + kg.execution/v1 类型与版本协商
   catalog/         稳定命令目录（go:embed catalog.json + Load 校验）
   discover/        可执行文件发现 + describe/available probe
-  router/          capability 解析、argv→input、执行（协议/桥两路）
+  router/          capability 解析、argv→input、执行（协议/桥两路）+ 共享 provider 集装配
   policy/          side-effect 策略门
+  pipeline/        kg.pipeline/v1 定义、DAG 计划/校验、执行与 resume
+  mcp/             stdio JSON-RPC 帧循环 + catalog→tool 同源展开
   bridge/          兼容桥 fallback argv 表 + renderArgv
   schema/          JSON Schema 校验（santhosh-tekuri/jsonschema）
 spec/              设计文档
-tests/             端到端测试（假 provider shell 脚本）
+tests/             端到端测试（假 provider shell 脚本 + kg-mcp 真进程对话）
 ```
