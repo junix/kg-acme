@@ -422,3 +422,160 @@ func pipelineProtocol() string {
 	env := pipeline.ErrorEnvelope("", "", "")
 	return env.Protocol
 }
+
+// A request frame carrying an id but no method is an invalid request (-32600),
+// distinct from method-not-found (-32601).
+func TestEmptyMethodInvalidRequest(t *testing.T) {
+	srv := newTestServer(policy.Gates{}, nil, nil)
+	frames := exchange(t, srv, `{"jsonrpc":"2.0","id":5}`)
+	if len(frames) != 1 {
+		t.Fatalf("expected 1 frame, got %d", len(frames))
+	}
+	errObj := frames[0]["error"].(map[string]any)
+	if errObj["code"].(float64) != -32600 {
+		t.Errorf("expected -32600 invalid request, got %v", frames[0])
+	}
+	if frames[0]["id"].(float64) != 5 {
+		t.Errorf("error must echo the request id: %v", frames[0]["id"])
+	}
+}
+
+func TestToolsCallParamValidation(t *testing.T) {
+	srv := newTestServer(policy.Gates{}, []router.Provider{fakeProvider()}, nil)
+	cases := []struct {
+		name string
+		call string
+	}{
+		// params without a name.
+		{"missing name", `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"arguments":{}}}`},
+		// params with an empty name.
+		{"empty name", `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"","arguments":{}}}`},
+		// arguments is not a JSON object.
+		{"arguments not object", `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_extract","arguments":[1,2]}}`},
+		// arguments is a JSON string rather than an object.
+		{"arguments string", `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_extract","arguments":"nope"}}`},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			frames := exchange(t, srv, tc.call)
+			if len(frames) != 1 {
+				t.Fatalf("expected 1 frame, got %d", len(frames))
+			}
+			errObj, ok := frames[0]["error"].(map[string]any)
+			if !ok {
+				t.Fatalf("expected error frame, got %v", frames[0])
+			}
+			if errObj["code"].(float64) != -32602 {
+				t.Errorf("expected -32602 invalid params, got %v", errObj)
+			}
+		})
+	}
+}
+
+// Hub-owned extras (dry_run, provider) are type-checked before routing: a
+// wrong-typed value is invalid params, not a provider failure.
+func TestPopHubArgsTypeChecks(t *testing.T) {
+	srv := newTestServer(policy.Gates{AllowNetwork: true}, []router.Provider{fakeProvider()}, nil)
+	cases := []struct {
+		name string
+		call string
+		want string
+	}{
+		{
+			"dry_run not boolean",
+			`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_extract","arguments":{"fake_field":"d.md","dry_run":"yes"}}}`,
+			"dry_run must be a boolean",
+		},
+		{
+			"provider not string",
+			`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_extract","arguments":{"fake_field":"d.md","provider":5}}}`,
+			"provider must be a string",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			frames := exchange(t, srv, tc.call)
+			errObj := frames[0]["error"].(map[string]any)
+			if errObj["code"].(float64) != -32602 {
+				t.Errorf("expected -32602, got %v", errObj)
+			}
+			if !strings.Contains(errObj["message"].(string), tc.want) {
+				t.Errorf("message %q should contain %q", errObj["message"], tc.want)
+			}
+		})
+	}
+}
+
+// The kg_provider escape hatch validates its required fields before routing.
+func TestCallProviderToolValidation(t *testing.T) {
+	srv := newTestServer(policy.Gates{AllowNetwork: true}, []router.Provider{fakeProvider()}, nil)
+	cases := []struct {
+		name string
+		args string
+	}{
+		{"missing provider_id", `"capability_id":"extract.entities_relations","request":{}`},
+		{"missing capability_id", `"provider_id":"fake","request":{}`},
+		{"missing request", `"provider_id":"fake","capability_id":"extract.entities_relations"`},
+		{"request not object", `"provider_id":"fake","capability_id":"extract.entities_relations","request":"x"`},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			call := fmt.Sprintf(`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_provider","arguments":{%s}}}`, tc.args)
+			frames := exchange(t, srv, call)
+			errObj := frames[0]["error"].(map[string]any)
+			if errObj["code"].(float64) != -32602 {
+				t.Errorf("expected -32602 invalid params, got %v", errObj)
+			}
+		})
+	}
+}
+
+// An unknown provider filter degrades to a provider_not_found envelope (not a
+// JSON-RPC error): the hub stays callable, the failure is structured content.
+func TestFilterProvidersNotFoundStructured(t *testing.T) {
+	srv := newTestServer(policy.Gates{AllowNetwork: true}, []router.Provider{fakeProvider()}, nil)
+	call := `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_extract","arguments":{"fake_field":"d.md","provider":"ghost"}}}`
+	frames := exchange(t, srv, call)
+	result := frames[0]["result"].(map[string]any)
+	if result["isError"] != true {
+		t.Fatalf("expected isError:true for unknown provider: %v", result)
+	}
+	sc := result["structuredContent"].(map[string]any)
+	if sc["status"] != "error" {
+		t.Fatalf("envelope status: %v", sc)
+	}
+	errInfo := sc["error"].(map[string]any)
+	if errInfo["code"] != protocol.ErrProviderNotFound {
+		t.Errorf("expected provider_not_found, got %v", errInfo)
+	}
+	if sc["provider"] != "ghost" {
+		t.Errorf("envelope should carry the unknown provider id: %v", sc["provider"])
+	}
+}
+
+// loadPipelineDef accepts exactly one definition source; zero or both are
+// invalid params.
+func TestLoadPipelineDefSourceRules(t *testing.T) {
+	srv := newTestServer(policy.Gates{AllowNetwork: true}, []router.Provider{fakeProvider()}, nil)
+	inline := `"definition":{"pipeline":"kg.pipeline/v1","name":"n","stages":[{"id":"e","capability":"extract.entities_relations","input":{"fake_field":"d.md"}}]}`
+	cases := []struct {
+		name string
+		args string // inner contents of the arguments object
+	}{
+		{"neither source", ""},
+		{"both sources", inline + `,"definition_path":"/tmp/x.json"`},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			call := fmt.Sprintf(`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_pipeline_validate","arguments":{%s}}}`, tc.args)
+			frames := exchange(t, srv, call)
+			errObj := frames[0]["error"].(map[string]any)
+			if errObj["code"].(float64) != -32602 {
+				t.Errorf("expected -32602 invalid params, got %v", errObj)
+			}
+			if !strings.Contains(errObj["message"].(string), "exactly one of") {
+				t.Errorf("message should explain the one-of rule: %v", errObj["message"])
+			}
+		})
+	}
+}
