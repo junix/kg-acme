@@ -134,6 +134,7 @@ schema），零执行。
     {"id": "extract", "capability": "extract.entities_relations",
      "provider": "kg-extract", "status": "ok | error | skipped | planned",
      "artifacts": [{"path": "...", "kind": "kg-document", "checksum": "sha256:..."}],
+     "result": {"...": "result-json 能力的内联 invoke 结果（omitempty）"},
      "error": {"code": "...", "message": "..."}}
   ],
   "diagnostics": [{"severity": "...", "message": "..."}],

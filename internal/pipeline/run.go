@@ -25,7 +25,10 @@ type StageResult struct {
 	Input       map[string]any      `json:"input,omitempty"`
 	SideEffects []string            `json:"side_effects,omitempty"`
 	Artifacts   []protocol.Artifact `json:"artifacts,omitempty"`
-	Error       *protocol.ErrorInfo `json:"error,omitempty"`
+	// Result carries the stage's invoke result payload (result-json
+	// capabilities return their output inline instead of as artifacts).
+	Result json.RawMessage     `json:"result,omitempty"`
+	Error  *protocol.ErrorInfo `json:"error,omitempty"`
 }
 
 // Envelope is the single stdout payload of `kg pipeline run`
@@ -195,6 +198,14 @@ func Execute(ctx context.Context, plan *Plan, opts RunOptions) *Envelope {
 				res.Error = stageEnv.Error
 			} else {
 				res.Status = "ok"
+				// Keep the invoke result payload visible in the pipeline
+				// envelope: result-json capabilities produce no artifacts,
+				// so without this their output would vanish from the run.
+				if stageEnv.Result != nil {
+					if data, merr := json.Marshal(stageEnv.Result); merr == nil {
+						res.Result = data
+					}
+				}
 				res.Artifacts, err = collectArtifacts(workDir, ps.Stage.ID, stageEnv.Artifacts)
 				if err != nil {
 					res.Status = "error"
