@@ -493,9 +493,13 @@ func TestCatalogCommandsRouteToNewNamespace(t *testing.T) {
 		{[]string{"communities"}, "detect.communities"},
 		{[]string{"communities", "hierarchy"}, "detect.communities_hierarchy"},
 		{[]string{"communities", "summaries"}, "summarize.communities"},
+		{[]string{"communities", "semantic"}, "detect.communities_semantic"},
 		{[]string{"store"}, "store.triples"},
 		{[]string{"ask"}, "retrieve.ask"},
 		{[]string{"parse"}, "parse.multimodal"},
+		{[]string{"layout", "compute"}, "layout.compute"},
+		{[]string{"analyze", "centrality"}, "analyze.centrality"},
+		{[]string{"embed", "nodes"}, "embed.nodes"},
 	}
 	for _, tc := range cases {
 		// Constrain routing to a provider that offers none of these

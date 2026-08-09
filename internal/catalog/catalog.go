@@ -1,12 +1,13 @@
 // Package catalog loads and validates the hub's stable command catalog.
 //
 // The catalog declares the hub's stable command surface (extract, dedup,
-// communities [hierarchy|summaries], store, ask, parse, provider, pipeline).
+// communities [hierarchy|summaries|semantic], store, ask, parse,
+// layout compute, analyze centrality, embed nodes, provider, pipeline).
 // Each capability command maps to a provider capability_id in the
 // provider-published namespace (extract.*/detect.*/summarize.*/resolve.*/
-// store.*/retrieve.*/parse.*); builtin commands are implemented by the hub
-// itself. The catalog never declares provider flags or enums — those come
-// from provider self-description.
+// store.*/retrieve.*/parse.*/layout.*/analyze.*/embed.*); builtin commands
+// are implemented by the hub itself. The catalog never declares provider
+// flags or enums — those come from provider self-description.
 package catalog
 
 import (

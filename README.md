@@ -29,10 +29,13 @@ kg list [--json]                        # 发现的 provider 与能力表
 kg describe <provider> [--json]         # provider 自描述（或 fallback 表）
 kg extract [--file f] [--backend b] [--mock-response r] ...   # extract.entities_relations
 kg dedup                                # resolve.coref（graph-in，经协议 invoke）
-kg communities [hierarchy|summaries]    # detect.communities[_hierarchy] / summarize.communities
+kg communities [hierarchy|summaries|semantic]   # detect.communities[_hierarchy|_semantic] / summarize.communities
 kg store                                # store.triples（graph-in，经协议 invoke）
 kg ask --dataset d --question q [--mode local|global]         # retrieve.ask
 kg parse <sidecar.json> [--backend mock] ...                  # parse.multimodal
+kg layout compute --edges '["a","b"]' --algorithm circular    # layout.compute
+kg analyze centrality --edges '["a","b"]' --method pagerank   # analyze.centrality
+kg embed nodes --edges '["a","b"]' [--dimensions 8] ...       # embed.nodes
 kg provider <id> <capability_id> --request <file|->     # 长尾逃生口
 kg pipeline run <def.json> [--dry-run] [--work-dir d | --resume d]   # kg.pipeline/v1 流水线
 kg pipeline validate <def.json>                       # 只校验不执行
@@ -49,9 +52,11 @@ envelope。
 
 catalog 稳定命令映射的是 **provider 发布的能力命名空间**（`extract.*` /
 `detect.*` / `summarize.*` / `resolve.*` / `store.*` / `retrieve.*` /
-`parse.*`）；能力命令的参数面完全来自 provider 的 cli_spec（或 fallback
-桥表），hub 不自有任何 provider flag。graph-in 能力（输入是图谱文档）
-经协议 `invoke --request -` 调用，也可用逃生口直接送请求。
+`parse.*` / `layout.*` / `analyze.*` / `embed.*`）；能力命令的参数面完全
+来自 provider 的 cli_spec（或 fallback 桥表），hub 不自有任何 provider
+flag。graph-in 能力（输入是图谱文档）经协议 `invoke --request -` 调用，
+也可用逃生口直接送请求。array 类参数支持 JSON 值
+（`--edges '["a","b"]'` 追加一个结构化元素，见 spec/02）。
 
 hub 标志：`--json`（stdout 恰好一个 kg.execution/v1 envelope）、
 `--dry-run`（零副作用执行计划）、`--allow-network` / `--allow-data-egress` /
@@ -118,6 +123,13 @@ echo '{"file":"doc.md"}' | kg provider kg-provider-fake extract.entities_relatio
 `kg-mm`（parse.multimodal）、`ygr`（retrieve.ask）。provider 一旦实现
 `kg.provider/v1` 自描述，自动切换为协议模式（probed 优先）；provider
 自描述与 fallback 表漂移时发射 `cli_spec differs ...` diagnostic。
+
+已知协议原生 provider（按名发现，无 fallback 桥，只能 probe 后使用，
+`router.ProtocolNativeBins`）：`kg-layout`（layout.compute /
+layout.draw，布局算法）、`graph-kg`（analyze.centrality /
+detect.communities_semantic / embed.nodes，图算法）。其 CLI 是各仓库
+venv 里的 console script，经 `~/sync/bin/` 下的 wrapper
+（`exec uv run --project <repo> <bin> "$@"`）进入发现顺序。
 
 ## 布局
 

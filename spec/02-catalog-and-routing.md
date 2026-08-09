@@ -12,27 +12,37 @@
 | `communities` | `detect.communities` | 社区检测（平铺） |
 | `communities hierarchy` | `detect.communities_hierarchy` | 层级社区检测 |
 | `communities summaries` | `summarize.communities` | GraphRAG 社区摘要 |
+| `communities semantic` | `detect.communities_semantic` | 结构 + 句向量混合的社区检测 |
 | `store` | `store.triples` | 写入图数据库 |
 | `ask` | `retrieve.ask` | GraphRAG 问答 |
 | `parse` | `parse.multimodal` | 多模态文档解析 → chunks |
+| `layout compute` | `layout.compute` | 图布局算法 → 节点坐标 |
+| `analyze centrality` | `analyze.centrality` | 节点中心性分数 |
+| `embed nodes` | `embed.nodes` | Node2Vec 节点嵌入 |
 | `provider` | （builtin） | 长尾逃生口：raw 协议调用 |
 | `pipeline run` | （builtin） | 执行 kg.pipeline/v1 流水线（Phase 2，spec/05） |
 | `pipeline validate` | （builtin） | 校验流水线定义，零执行 |
 
 capability id 的唯一真相源是 **provider 的发布命名空间**
 （`extract.*` / `detect.*` / `summarize.*` / `resolve.*` / `store.*` /
-`retrieve.*` / `parse.*`）；catalog 只是稳定命令到该命名空间的映射。
+`retrieve.*` / `parse.*` / `layout.*` / `analyze.*` / `embed.*`）；
+catalog 只是稳定命令到该命名空间的映射。
 旧 `kg.*` 命名空间已退役（无已发布用户），hub 不再识别。
 
-两个映射决策（读 provider 发布面后的连贯选择）：
+映射决策（读 provider 发布面后的连贯选择）：
 
 - `--canonical-direction` 不是 `dedup` 的参数：它是 kg-extract 为
   `extract.entities_relations` 发布的 bool flag（抽取时归正方向），
   独立能力 `resolve.canonical_direction` 经 `kg provider` 逃生口触达。
   `dedup` 只映射 `resolve.coref`。
-- 社区三能力走**子命令**而非 flag 切换：hub 不在命令里硬编码能力
-  语义，`communities hierarchy` / `communities summaries` 是独立的
+- 社区能力走**子命令**而非 flag 切换：hub 不在命令里硬编码能力
+  语义，`communities hierarchy` / `communities summaries` /
+  `communities semantic`（graph-kg 的结构 + 句向量混合检测）是独立的
   catalog entry（semantic_id 镜像两段 command_path）。
+- `layout.draw`（kg-layout 的 artifact 模式能力，产出 PNG 文件）不进
+  稳定面：catalog 现有 entry 全部是 result-json 能力，artifact 类能力
+  暂经 `kg provider kg-layout layout.draw` 逃生口触达，等稳定面真正
+  需要文件产出时再进 catalog。
 
 每条 entry 的约束（`catalog.Load()` 强制校验，非法即拒绝启动）：
 
@@ -56,6 +66,11 @@ catalog **不**声明任何 provider 的 flag/枚举——那是 provider
 3. `~/sync/bin/`；
 4. `PATH` 查找；
 5. `PATH` 扫描 `kg-provider-*` 前缀可执行文件（协议原生 provider）。
+
+以上顺序解析的是 hub **知道名字**的二进制：fallback 桥表
+（kg-extract / kg-mm / ygr）、已知协议原生 provider（`router.ProtocolNativeBins`：
+`kg-layout`、`graph-kg`——无 fallback argv 数据，只能 probe 后使用）、
+以及 `kg-provider-*` 扫描结果。
 
 发现的每个 provider 做 **best-effort probe**：
 
@@ -92,7 +107,11 @@ protocol-only——未 probe 时对这些能力报 `capability_not_found`，而�
   array 按 JSON Schema 类型映射，object 不派生）。派生 flag 的值进
   invoke request 的 input——graph-in 能力因此可以直接从顶层命令驱动
   （`kg communities --document-file kg.json`），hub 不硬编码任何
-  provider 选项。
+  provider 选项。**array flag 的值支持 JSON**：以 `[` 或 `{` 开头且
+  可解析的值作为**一个**结构化元素追加（嵌套结构如 edges 的
+  `[source,target]` 对、triples 的对象经重复 flag 逐个传入：
+  `--edges '["a","b"]' --edges '["b","c"]'`）；其余值按原样字符串追加
+  （legacy string-array 行为不变）。
 
 - **probed**：`invoke <capability_id> --request -`，stdin 送
   `{"capability_id","input"}`，stdout 收 envelope，hub 透传（合并自身

@@ -37,9 +37,13 @@ tool 面由 **catalog 运行时派生**，不另维护清单：
 | `communities` | `kg_communities` | 同上 |
 | `communities hierarchy` | `kg_communities_hierarchy` | 同上 |
 | `communities summaries` | `kg_communities_summaries` | 同上 |
+| `communities semantic` | `kg_communities_semantic` | 同上 |
 | `store` | `kg_store` | 同上 |
 | `ask` | `kg_ask` | 同上 |
 | `parse` | `kg_parse` | 同上 |
+| `layout compute` | `kg_layout_compute` | 同上 |
+| `analyze centrality` | `kg_analyze_centrality` | 同上 |
+| `embed nodes` | `kg_embed_nodes` | 同上 |
 | `provider` | `kg_provider` | hub 自有（逃生口：`provider_id`/`capability_id`/`request`/`dry_run`） |
 | `pipeline run` | `kg_pipeline_run` | hub 自有（`definition` 或 `definition_path`、`work_dir`、`resume`、`dry_run`、`provider`） |
 | `pipeline validate` | `kg_pipeline_validate` | hub 自有（`definition` 或 `definition_path`、`provider`） |

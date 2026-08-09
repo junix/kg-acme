@@ -2,8 +2,9 @@
 
 kg-acme 是 acme 家族（audio-acme / image-acme / video-acme / office-acme）
 **capability hub** 模式在知识图谱工具集上的落地：一个 `kg` CLI 作为 KG
-工具链的统一入口，把分散的 provider CLI（kg-extract、kg-mm、ygr、以及
-任何实现了 `kg.provider/v1` 协议的 `kg-provider-*` 二进制）组织成一张
+工具链的统一入口，把分散的 provider CLI（kg-extract、kg-mm、ygr、
+kg-layout、graph-kg、以及任何实现了 `kg.provider/v1` 协议的
+`kg-provider-*` 二进制）组织成一张
 可发现、可路由、可治理的能力表。
 
 ## 两条铁律
@@ -33,7 +34,8 @@ kg-acme 是 acme 家族（audio-acme / image-acme / video-acme / office-acme）
                  └───────┬───────────────────────────────────┬─────────────────────┘
                          │ kg.provider/v1                    │ fallback argv
                          ▼                                   ▼
-              kg-provider-* (protocol-native)     kg-extract · kg-mm · ygr (legacy)
+       kg-provider-* · kg-layout · graph-kg         kg-extract · kg-mm · ygr (legacy)
+       (protocol-native)
 ```
 
 ## 数据流（一次能力调用）

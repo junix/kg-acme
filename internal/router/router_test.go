@@ -212,6 +212,54 @@ func TestParseInputSchemaDerivedFlags(t *testing.T) {
 	}
 }
 
+// Array flags carry JSON: a value starting with '[' or '{' that parses is
+// appended as one structured element (nested structures like edges
+// [source,target] pairs and triple objects); anything else stays a raw
+// string (legacy string-array behavior).
+func TestParseInputArrayFlagJSONValues(t *testing.T) {
+	schema := json.RawMessage(`{"type":"object","properties":{
+		"edges": {"type": "array"},
+		"triples": {"type": "array"},
+		"tags": {"type": "array"}
+	}}`)
+	input, err := ParseInput(protocol.CLISpec{}, schema, []string{
+		"--edges", `["a","b"]`, "--edges", `["b","c"]`,
+		"--triples", `{"subject":"a","predicate":"r","object":"b"}`,
+		"--tags", "x", "--tags", "y",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	edges, ok := input["edges"].([]any)
+	if !ok || len(edges) != 2 {
+		t.Fatalf("edges: %v", input["edges"])
+	}
+	pair, ok := edges[0].([]any)
+	if !ok || len(pair) != 2 || pair[0] != "a" || pair[1] != "b" {
+		t.Errorf("edges[0] must be the parsed pair: %v", edges[0])
+	}
+	triples, ok := input["triples"].([]any)
+	if !ok || len(triples) != 1 {
+		t.Fatalf("triples: %v", input["triples"])
+	}
+	if tr, ok := triples[0].(map[string]any); !ok || tr["predicate"] != "r" {
+		t.Errorf("triples[0] must be the parsed object: %v", triples[0])
+	}
+	// Bare strings keep the legacy string-array behavior.
+	tags, ok := input["tags"].([]any)
+	if !ok || len(tags) != 2 || tags[0] != "x" || tags[1] != "y" {
+		t.Errorf("tags must stay raw strings: %v", input["tags"])
+	}
+	// A '['-prefixed value that does not parse stays a raw string.
+	input, err = ParseInput(protocol.CLISpec{}, schema, []string{"--tags", "[broken"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tags, ok := input["tags"].([]any); !ok || len(tags) != 1 || tags[0] != "[broken" {
+		t.Errorf("unparsable value must stay a raw string: %v", input["tags"])
+	}
+}
+
 func TestResolvePrefersProbed(t *testing.T) {
 	providers := []Provider{fallbackProvider(), probedProvider(t, protocol.CLISpec{})}
 	res, err := Resolve(providers, "extract.entities_relations")

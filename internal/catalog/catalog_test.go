@@ -11,7 +11,8 @@ func TestLoadEmbeddedValid(t *testing.T) {
 		t.Fatalf("embedded catalog must be valid: %v", err)
 	}
 	want := []string{"extract", "dedup", "communities", "communities hierarchy", "communities summaries",
-		"store", "ask", "parse", "provider", "pipeline run", "pipeline validate"}
+		"communities semantic", "store", "ask", "parse", "layout compute", "analyze centrality",
+		"embed nodes", "provider", "pipeline run", "pipeline validate"}
 	if len(c.Commands) != len(want) {
 		t.Fatalf("expected %d commands, got %d", len(want), len(c.Commands))
 	}
@@ -40,9 +41,13 @@ func TestCatalogCapabilityMapping(t *testing.T) {
 		"communities":           "detect.communities",
 		"communities hierarchy": "detect.communities_hierarchy",
 		"communities summaries": "summarize.communities",
+		"communities semantic":  "detect.communities_semantic",
 		"store":                 "store.triples",
 		"ask":                   "retrieve.ask",
 		"parse":                 "parse.multimodal",
+		"layout compute":        "layout.compute",
+		"analyze centrality":    "analyze.centrality",
+		"embed nodes":           "embed.nodes",
 	}
 	got := map[string]string{}
 	for _, cmd := range c.CapabilityCommands() {

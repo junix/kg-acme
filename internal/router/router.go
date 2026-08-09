@@ -40,10 +40,18 @@ func (p Provider) ID() string {
 	return p.Status.ID
 }
 
+// ProtocolNativeBins names the protocol-native provider binaries the hub
+// knows by name. Unlike the legacy bridge table they carry no fallback argv
+// data: they self-describe via `describe --json` and are only usable once
+// probed. Discovery follows the standard FindExecutable order
+// (--provider-bin override, ~/sync bins, PATH).
+var ProtocolNativeBins = []string{"kg-layout", "graph-kg"}
+
 // DiscoverProviders assembles the routable provider set: legacy bridges
-// found on disk plus protocol-native kg-provider-* binaries, honoring
-// explicit --provider-bin overrides. This is the one discovery assembly
-// shared by every hub front end (kg CLI, kg-mcp server).
+// found on disk, known protocol-native binaries, plus protocol-native
+// kg-provider-* binaries, honoring explicit --provider-bin overrides. This
+// is the one discovery assembly shared by every hub front end (kg CLI,
+// kg-mcp server).
 func DiscoverProviders(ctx context.Context, overrides discover.Overrides) []Provider {
 	env := discover.DefaultEnv()
 	var out []Provider
@@ -57,6 +65,15 @@ func DiscoverProviders(ctx context.Context, overrides discover.Overrides) []Prov
 		fbCopy := fb
 		st := discover.Probe(ctx, fb.ID, path)
 		out = append(out, Provider{Status: st, Fallback: &fbCopy})
+		seen[st.ID] = true
+	}
+	for _, name := range ProtocolNativeBins {
+		path := discover.FindExecutable(name, overrides, env)
+		if path == "" {
+			continue
+		}
+		st := discover.Probe(ctx, name, path)
+		out = append(out, Provider{Status: st})
 		seen[st.ID] = true
 	}
 	for name, path := range discover.ScanProviders(env) {
@@ -199,7 +216,7 @@ func ParseInput(spec protocol.CLISpec, inputSchema json.RawMessage, args []strin
 					return nil, fmt.Errorf("flag %q expects a value", tok)
 				}
 				i++
-				input[f.Name] = append(asSlice(input[f.Name]), args[i])
+				input[f.Name] = appendArrayValue(input[f.Name], args[i])
 			case protocol.FlagString:
 				if i+1 >= len(args) {
 					return nil, fmt.Errorf("flag %q expects a value", tok)
@@ -236,6 +253,21 @@ func asSlice(v any) []any {
 		return s
 	}
 	return nil
+}
+
+// appendArrayValue appends one array-flag value to the input property. A
+// value starting with '[' or '{' that parses as JSON is appended as one
+// structured element — this is how nested structures (edges as [source,target]
+// pairs, triples) travel through argv. Anything else stays a raw string,
+// preserving the legacy string-array behavior.
+func appendArrayValue(existing any, raw string) []any {
+	if strings.HasPrefix(raw, "[") || strings.HasPrefix(raw, "{") {
+		var v any
+		if err := json.Unmarshal([]byte(raw), &v); err == nil {
+			return append(asSlice(existing), v)
+		}
+	}
+	return append(asSlice(existing), raw)
 }
 
 // schemaDerivedFlags maps input_schema properties not covered by the

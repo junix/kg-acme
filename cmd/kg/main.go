@@ -109,7 +109,7 @@ func usage() {
 Usage:
   kg list [--json]                       list discovered providers and capabilities
   kg describe <provider> [--json]        show a provider's self-description
-  kg <command> [args] [hub flags]        run a capability (extract/dedup/communities/store/ask/parse)
+  kg <command> [args] [hub flags]        run a capability (extract/dedup/communities/store/ask/parse/layout/analyze/embed)
   kg provider <id> <capability_id> --request <file|->  raw protocol escape hatch
   kg pipeline run <def.json> [--dry-run] [--work-dir d | --resume d]  run a kg.pipeline/v1 pipeline
   kg pipeline validate <def.json>        validate a pipeline definition without executing
@@ -210,8 +210,8 @@ func parseHubFlags(args []string) (hubFlags, []string, error) {
 	return hf, rest, nil
 }
 
-// buildProviders assembles the routable provider set: legacy bridges found
-// on disk plus protocol-native kg-provider-* binaries.
+// buildProviders assembles the routable provider set: legacy bridges and
+// known protocol-native binaries found on disk, plus kg-provider-* binaries.
 func buildProviders(ctx context.Context, hf hubFlags) []router.Provider {
 	return router.DiscoverProviders(ctx, hf.providerBin)
 }

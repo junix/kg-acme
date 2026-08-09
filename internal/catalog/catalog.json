@@ -37,6 +37,13 @@
       "capability_id": "summarize.communities"
     },
     {
+      "command_path": ["communities", "semantic"],
+      "semantic_id": "communities semantic",
+      "title": "Detect semantic graph communities",
+      "description": "Detect communities over a knowledge graph blending graph structure with sentence embeddings.",
+      "capability_id": "detect.communities_semantic"
+    },
+    {
       "command_path": ["store"],
       "semantic_id": "store",
       "title": "Store a knowledge graph",
@@ -56,6 +63,27 @@
       "title": "Parse multimodal documents",
       "description": "Parse multimodal documents into typed chunks.",
       "capability_id": "parse.multimodal"
+    },
+    {
+      "command_path": ["layout", "compute"],
+      "semantic_id": "layout compute",
+      "title": "Compute graph layout positions",
+      "description": "Run a graph layout algorithm over an edges list and return node positions.",
+      "capability_id": "layout.compute"
+    },
+    {
+      "command_path": ["analyze", "centrality"],
+      "semantic_id": "analyze centrality",
+      "title": "Compute node centrality scores",
+      "description": "Compute centrality scores for the nodes of a graph given as an edges list.",
+      "capability_id": "analyze.centrality"
+    },
+    {
+      "command_path": ["embed", "nodes"],
+      "semantic_id": "embed nodes",
+      "title": "Compute node embeddings",
+      "description": "Compute Node2Vec embeddings for the nodes of a graph given as an edges list.",
+      "capability_id": "embed.nodes"
     },
     {
       "command_path": ["provider"],

@@ -10,6 +10,13 @@
 - `kg-mm`（kg-multimodal）：同上，`parse.multimodal` 能力。
 - `ygr`（kg-graphrag）：同上，`retrieve.ask` 能力。
 
+已完成适配的协议原生 provider（无 legacy argv 形态，无 fallback 桥；
+hub 经 `router.ProtocolNativeBins` 按名发现）：
+
+- `kg-layout`（kg-layout，Python）：`layout.compute` / `layout.draw`。
+- `graph-kg`（graph，Python）：`analyze.centrality` /
+  `detect.communities_semantic` / `embed.nodes`。
+
 适配完成后 hub 自动从 fallback 桥切换到协议模式（probed 优先），
 fallback 表退化为纯兜底。若 provider 自描述与 hub 表漂移，hub 会发射
 `cli_spec differs ...` diagnostic 提醒收敛。
