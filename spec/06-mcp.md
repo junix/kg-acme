@@ -43,12 +43,17 @@ tool 面由 **catalog 运行时派生**，不另维护清单：
 | `parse` | `kg_parse` | 同上 |
 | `layout compute` | `kg_layout_compute` | 同上 |
 | `analyze centrality` | `kg_analyze_centrality` | 同上 |
+| `analyze pagerank` | `kg_analyze_pagerank` | 同上 |
+| `analyze shortest-paths` | `kg_analyze_shortest_paths` | 同上 |
+| `analyze components` | `kg_analyze_components` | 同上 |
+| `analyze triangles` | `kg_analyze_triangles` | 同上 |
+| `analyze topology` | `kg_analyze_topology` | 同上 |
 | `embed nodes` | `kg_embed_nodes` | 同上 |
 | `provider` | `kg_provider` | hub 自有（逃生口：`provider_id`/`capability_id`/`request`/`dry_run`） |
 | `pipeline run` | `kg_pipeline_run` | hub 自有（`definition` 或 `definition_path`、`work_dir`、`resume`、`dry_run`、`provider`） |
 | `pipeline validate` | `kg_pipeline_validate` | hub 自有（`definition` 或 `definition_path`、`provider`） |
 
-- 命名规则稳定：`kg_` + semantic_id（空格→下划线），见
+- 命名规则稳定：`kg_` + semantic_id（空格/连字符→下划线），见
   `mcp.ToolName`。
 - **能力 tool 的 inputSchema 就是 provider 发布的 `input_schema`
   原样**（probed 优先于 fallback 表，与 router.Resolve 同源）。hub

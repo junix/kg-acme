@@ -18,6 +18,11 @@
 | `parse` | `parse.multimodal` | 多模态文档解析 → chunks |
 | `layout compute` | `layout.compute` | 图布局算法 → 节点坐标 |
 | `analyze centrality` | `analyze.centrality` | 节点中心性分数 |
+| `analyze pagerank` | `analyze.pagerank` | Rust PageRank（可选执行引擎） |
+| `analyze shortest-paths` | `analyze.shortest_paths` | 单源非负权最短路 |
+| `analyze components` | `analyze.components` | 弱/强连通分量 |
+| `analyze triangles` | `analyze.triangles` | 全局三角计数 |
+| `analyze topology` | `analyze.topology` | 拓扑序/桥/割点 |
 | `embed nodes` | `embed.nodes` | Node2Vec 节点嵌入 |
 | `provider` | （builtin） | 长尾逃生口：raw 协议调用 |
 | `pipeline run` | （builtin） | 执行 kg.pipeline/v1 流水线（Phase 2，spec/05） |
@@ -69,7 +74,7 @@ catalog **不**声明任何 provider 的 flag/枚举——那是 provider
 
 以上顺序解析的是 hub **知道名字**的二进制：fallback 桥表
 （kg-extract / kg-mm / ygr）、已知协议原生 provider（`router.ProtocolNativeBins`：
-`kg-layout`、`graph-kg`——无 fallback argv 数据，只能 probe 后使用）、
+`kg-layout`、`graph-kg`、`kg-algorithms`——无 fallback argv 数据，只能 probe 后使用）、
 以及 `kg-provider-*` 扫描结果。
 
 发现的每个 provider 做 **best-effort probe**：

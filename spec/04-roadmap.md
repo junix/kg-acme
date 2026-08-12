@@ -16,6 +16,9 @@ hub 经 `router.ProtocolNativeBins` 按名发现）：
 - `kg-layout`（kg-layout，Python）：`layout.compute` / `layout.draw`。
 - `graph-kg`（graph，Python）：`analyze.centrality` /
   `detect.communities_semantic` / `embed.nodes`。
+- `kg-algorithms`（Rust，neo4j-labs/graph + petgraph）：
+  `analyze.pagerank` / `analyze.shortest_paths` / `analyze.components` /
+  `analyze.triangles` / `analyze.topology`。
 
 适配完成后 hub 自动从 fallback 桥切换到协议模式（probed 优先），
 fallback 表退化为纯兜底。若 provider 自描述与 hub 表漂移，hub 会发射

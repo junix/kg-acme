@@ -79,6 +79,41 @@
       "capability_id": "analyze.centrality"
     },
     {
+      "command_path": ["analyze", "pagerank"],
+      "semantic_id": "analyze pagerank",
+      "title": "Compute PageRank scores",
+      "description": "Compute PageRank scores using a selectable Rust graph engine.",
+      "capability_id": "analyze.pagerank"
+    },
+    {
+      "command_path": ["analyze", "shortest-paths"],
+      "semantic_id": "analyze shortest-paths",
+      "title": "Compute single-source shortest paths",
+      "description": "Compute non-negative weighted shortest-path distances from one graph node.",
+      "capability_id": "analyze.shortest_paths"
+    },
+    {
+      "command_path": ["analyze", "components"],
+      "semantic_id": "analyze components",
+      "title": "Compute graph components",
+      "description": "Compute weakly or strongly connected components over a graph.",
+      "capability_id": "analyze.components"
+    },
+    {
+      "command_path": ["analyze", "triangles"],
+      "semantic_id": "analyze triangles",
+      "title": "Count graph triangles",
+      "description": "Count triangles in the underlying simple undirected graph.",
+      "capability_id": "analyze.triangles"
+    },
+    {
+      "command_path": ["analyze", "topology"],
+      "semantic_id": "analyze topology",
+      "title": "Analyze graph topology",
+      "description": "Compute a topological order, bridges, or articulation points.",
+      "capability_id": "analyze.topology"
+    },
+    {
       "command_path": ["embed", "nodes"],
       "semantic_id": "embed nodes",
       "title": "Compute node embeddings",

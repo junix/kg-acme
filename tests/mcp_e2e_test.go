@@ -161,6 +161,8 @@ func TestMCPHandshakeAndToolsList(t *testing.T) {
 	for _, want := range []string{
 		"kg_extract", "kg_dedup", "kg_communities", "kg_communities_hierarchy",
 		"kg_communities_summaries", "kg_store", "kg_ask", "kg_parse",
+		"kg_analyze_centrality", "kg_analyze_pagerank", "kg_analyze_shortest_paths", "kg_analyze_components",
+		"kg_analyze_triangles", "kg_analyze_topology",
 		"kg_provider", "kg_pipeline_run", "kg_pipeline_validate",
 	} {
 		if _, ok := byName[want]; !ok {

@@ -499,6 +499,11 @@ func TestCatalogCommandsRouteToNewNamespace(t *testing.T) {
 		{[]string{"parse"}, "parse.multimodal"},
 		{[]string{"layout", "compute"}, "layout.compute"},
 		{[]string{"analyze", "centrality"}, "analyze.centrality"},
+		{[]string{"analyze", "pagerank"}, "analyze.pagerank"},
+		{[]string{"analyze", "shortest-paths"}, "analyze.shortest_paths"},
+		{[]string{"analyze", "components"}, "analyze.components"},
+		{[]string{"analyze", "triangles"}, "analyze.triangles"},
+		{[]string{"analyze", "topology"}, "analyze.topology"},
 		{[]string{"embed", "nodes"}, "embed.nodes"},
 	}
 	for _, tc := range cases {

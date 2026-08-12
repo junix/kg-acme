@@ -45,7 +45,7 @@ func (p Provider) ID() string {
 // data: they self-describe via `describe --json` and are only usable once
 // probed. Discovery follows the standard FindExecutable order
 // (--provider-bin override, ~/sync bins, PATH).
-var ProtocolNativeBins = []string{"kg-layout", "graph-kg"}
+var ProtocolNativeBins = []string{"kg-layout", "graph-kg", "kg-algorithms"}
 
 // DiscoverProviders assembles the routable provider set: legacy bridges
 // found on disk, known protocol-native binaries, plus protocol-native

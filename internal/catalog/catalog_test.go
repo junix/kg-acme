@@ -12,6 +12,7 @@ func TestLoadEmbeddedValid(t *testing.T) {
 	}
 	want := []string{"extract", "dedup", "communities", "communities hierarchy", "communities summaries",
 		"communities semantic", "store", "ask", "parse", "layout compute", "analyze centrality",
+		"analyze pagerank", "analyze shortest-paths", "analyze components", "analyze triangles", "analyze topology",
 		"embed nodes", "provider", "pipeline run", "pipeline validate"}
 	if len(c.Commands) != len(want) {
 		t.Fatalf("expected %d commands, got %d", len(want), len(c.Commands))
@@ -36,18 +37,23 @@ func TestCatalogCapabilityMapping(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := map[string]string{
-		"extract":               "extract.entities_relations",
-		"dedup":                 "resolve.coref",
-		"communities":           "detect.communities",
-		"communities hierarchy": "detect.communities_hierarchy",
-		"communities summaries": "summarize.communities",
-		"communities semantic":  "detect.communities_semantic",
-		"store":                 "store.triples",
-		"ask":                   "retrieve.ask",
-		"parse":                 "parse.multimodal",
-		"layout compute":        "layout.compute",
-		"analyze centrality":    "analyze.centrality",
-		"embed nodes":           "embed.nodes",
+		"extract":                "extract.entities_relations",
+		"dedup":                  "resolve.coref",
+		"communities":            "detect.communities",
+		"communities hierarchy":  "detect.communities_hierarchy",
+		"communities summaries":  "summarize.communities",
+		"communities semantic":   "detect.communities_semantic",
+		"store":                  "store.triples",
+		"ask":                    "retrieve.ask",
+		"parse":                  "parse.multimodal",
+		"layout compute":         "layout.compute",
+		"analyze centrality":     "analyze.centrality",
+		"analyze pagerank":       "analyze.pagerank",
+		"analyze shortest-paths": "analyze.shortest_paths",
+		"analyze components":     "analyze.components",
+		"analyze triangles":      "analyze.triangles",
+		"analyze topology":       "analyze.topology",
+		"embed nodes":            "embed.nodes",
 	}
 	got := map[string]string{}
 	for _, cmd := range c.CapabilityCommands() {

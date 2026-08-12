@@ -35,6 +35,11 @@ kg ask --dataset d --question q [--mode local|global]         # retrieve.ask
 kg parse <sidecar.json> [--backend mock] ...                  # parse.multimodal
 kg layout compute --edges '["a","b"]' --algorithm circular    # layout.compute
 kg analyze centrality --edges '["a","b"]' --method pagerank   # analyze.centrality
+kg analyze pagerank --edges '["a","b"]' --edges '["b","a"]' --directed  # analyze.pagerank
+kg analyze shortest-paths --edges '["a","b",2]' --source a    # analyze.shortest_paths
+kg analyze components --edges '["a","b"]' --kind weak         # analyze.components
+kg analyze triangles --edges '["a","b"]'                      # analyze.triangles
+kg analyze topology --edges '["a","b"]' --operation bridges   # analyze.topology
 kg embed nodes --edges '["a","b"]' [--dimensions 8] ...       # embed.nodes
 kg provider <id> <capability_id> --request <file|->     # 长尾逃生口
 kg pipeline run <def.json> [--dry-run] [--work-dir d | --resume d]   # kg.pipeline/v1 流水线
@@ -127,9 +132,10 @@ echo '{"file":"doc.md"}' | kg provider kg-provider-fake extract.entities_relatio
 已知协议原生 provider（按名发现，无 fallback 桥，只能 probe 后使用，
 `router.ProtocolNativeBins`）：`kg-layout`（layout.compute /
 layout.draw，布局算法）、`graph-kg`（analyze.centrality /
-detect.communities_semantic / embed.nodes，图算法）。其 CLI 是各仓库
-venv 里的 console script，经 `~/sync/bin/` 下的 wrapper
-（`exec uv run --project <repo> <bin> "$@"`）进入发现顺序。
+detect.communities_semantic / embed.nodes，Python 图分析）、`kg-algorithms`
+（analyze.pagerank / shortest_paths / components / triangles / topology，
+Rust 图算法）。Python provider 由 `~/sync/bin/` wrapper 进入发现顺序；
+Rust provider 安装到 `~/sync/<os>-<arch>-bin/`。
 
 ## 布局
 

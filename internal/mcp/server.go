@@ -200,9 +200,9 @@ type Tool struct {
 }
 
 // ToolName maps a catalog semantic_id to a stable MCP tool name
-// ("communities hierarchy" → kg_communities_hierarchy).
+// ("analyze shortest-paths" → kg_analyze_shortest_paths).
 func ToolName(semanticID string) string {
-	return "kg_" + strings.ReplaceAll(semanticID, " ", "_")
+	return "kg_" + strings.NewReplacer(" ", "_", "-", "_").Replace(semanticID)
 }
 
 func (s *Server) onToolsList(ctx context.Context, req rpcRequest) {
