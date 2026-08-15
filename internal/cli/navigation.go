@@ -8,6 +8,8 @@ import (
 	"strings"
 	"text/tabwriter"
 
+	coreprotocol "github.com/junix/acme-core/protocol"
+
 	"kg-acme/internal/surface"
 )
 
@@ -22,6 +24,7 @@ type listItem struct {
 	CapabilityID string `json:"capability_id"`
 	Description  string `json:"description"`
 	Kind         string `json:"kind"`
+	Available    bool   `json:"available"`
 }
 
 func (r Runner) rootHelp(snapshot surface.Snapshot) {
@@ -90,7 +93,12 @@ func (r Runner) describeGroup(snapshot surface.Snapshot, reference string) error
 }
 
 func publicDescription(value surface.Capability) map[string]any {
-	return map[string]any{"schema_version": "kg.capability-description/v3", "capability_id": surface.PublicID(value), "title": value.Title, "description": value.Description, "input_schema": json.RawMessage(value.InputSchema), "output": value.Output, "side_effects": candidateEffects(value), "source": value.Source}
+	return map[string]any{
+		"schema_version": "kg.capability-description/v3", "capability_id": surface.PublicID(value), "title": value.Title, "description": value.Description,
+		"input_schema": json.RawMessage(value.InputSchema), "output_schema": json.RawMessage(value.OutputSchema), "output": value.Output,
+		"side_effects": candidateEffects(value), "source": value.Source,
+		"error_contract": map[string]any{"schema_version": "kg.error/v1", "exit_codes": []map[string]any{{"exit_code": 0, "name": "ok"}, {"exit_code": 1, "name": "error"}}},
+	}
 }
 
 func candidateEffects(value surface.Capability) []string {
@@ -114,18 +122,55 @@ func (r Runner) capabilityHelp(value surface.Capability) {
 	for _, positional := range value.CLISpec.Positionals {
 		fmt.Fprintf(r.Stdout, " <%s>", strings.ToUpper(positional.Name))
 	}
-	fmt.Fprintln(r.Stdout, ` [options]
-
-Options:
-  --params <JSON|@FILE>        Read the complete argument object.
-  -o, --output <PATH>          Write a new output artifact.
-  --describe                   Emit the machine-readable capability contract.
-  --dry-run                    Validate without starting providers or models.
-  --allow-network              Allow declared network access.
-  --allow-data-egress          Allow declared data egress.
-  --allow-model-download       Allow selected model downloads.
-  --allow-db-write             Allow declared graph-database writes.
-  --json                       Emit one versioned JSON result.`)
+	fmt.Fprintln(r.Stdout, " [options]")
+	var schema struct {
+		Properties map[string]struct {
+			Description string `json:"description"`
+		} `json:"properties"`
+	}
+	_ = json.Unmarshal(value.InputSchema, &schema)
+	if len(value.CLISpec.Positionals) > 0 {
+		fmt.Fprintln(r.Stdout, "\nArguments:")
+		for _, positional := range value.CLISpec.Positionals {
+			fmt.Fprintf(r.Stdout, "  %-27s %s\n", strings.ToUpper(positional.Name), oneLine(schema.Properties[positional.Name].Description))
+		}
+	}
+	fmt.Fprintln(r.Stdout, "\nOptions:")
+	fmt.Fprintln(r.Stdout, "  --params <JSON|@FILE>        Read the complete argument object.")
+	ordered := make([]int, len(value.CLISpec.Flags))
+	for index := range ordered {
+		ordered[index] = index
+	}
+	sort.SliceStable(ordered, func(i, j int) bool {
+		left, right := value.CLISpec.Flags[ordered[i]], value.CLISpec.Flags[ordered[j]]
+		if left.Order != right.Order {
+			return left.Order < right.Order
+		}
+		return left.Flag < right.Flag
+	})
+	for _, index := range ordered {
+		flag := value.CLISpec.Flags[index]
+		kind := strings.ToUpper(flag.Kind)
+		label := flag.Flag
+		if flag.Kind != "boolean" {
+			label += " <" + kind + ">"
+		}
+		fmt.Fprintf(r.Stdout, "  %-27s %s\n", label, oneLine(schema.Properties[flag.Name].Description))
+	}
+	fmt.Fprintln(r.Stdout, "  -o, --output <PATH>          Write a new output artifact.")
+	fmt.Fprintln(r.Stdout, "  --describe                   Emit the machine-readable capability contract.")
+	fmt.Fprintln(r.Stdout, "  --dry-run                    Validate without starting providers or models.")
+	fmt.Fprintln(r.Stdout, "  --allow-network              Allow declared network access.")
+	fmt.Fprintln(r.Stdout, "  --allow-data-egress          Allow declared data egress.")
+	fmt.Fprintln(r.Stdout, "  --allow-model-download       Allow selected model downloads.")
+	fmt.Fprintln(r.Stdout, "  --allow-db-write             Allow declared graph-database writes.")
+	fmt.Fprintln(r.Stdout, "  --json                       Emit one versioned JSON result.")
+	fmt.Fprintf(r.Stdout, "\nExamples:\n  kg %s", id)
+	for _, positional := range value.CLISpec.Positionals {
+		fmt.Fprintf(r.Stdout, " <%s>", strings.ToUpper(positional.Name))
+	}
+	fmt.Fprintln(r.Stdout, " --json")
+	fmt.Fprintf(r.Stdout, "  kg %s --params @request.json --json\n", id)
 	fmt.Fprintf(r.Stdout, "\nSource:\n  Integration: %s\n", value.Source.IntegrationPath)
 	for _, path := range value.Source.ImplementationPaths {
 		fmt.Fprintf(r.Stdout, "  Implementation: %s\n", path)
@@ -133,6 +178,23 @@ Options:
 }
 
 func (r Runner) list(snapshot surface.Snapshot, opts options, arguments []string) error {
+	if opts.Params != "" || opts.Output != "" || opts.DryRun || opts.Describe || opts.Gates != (policyZero()) {
+		return fmt.Errorf("kg list accepts only --prefix, --level, --tree, and --json")
+	}
+	if len(arguments) == 1 && isHelp(arguments[0]) {
+		fmt.Fprint(r.Stdout, `kg list — discover available knowledge-graph capabilities
+
+Usage:
+  kg list [--prefix PREFIX] [--level N] [--tree] [--json]
+
+Options:
+  --prefix <DOTTED-PREFIX>  Select one segment-aware capability subtree.
+  --level <N>               Reveal N relative levels; 0 means all levels.
+  --tree                    Render the selected capabilities as a description tree.
+  --json                    Emit the stable list object instead of a table/tree.
+`)
+		return nil
+	}
 	parsed, err := parseListOptions(arguments)
 	if err != nil {
 		return err
@@ -155,7 +217,7 @@ func (r Runner) list(snapshot surface.Snapshot, opts options, arguments []string
 		return writeJSON(r.Stdout, map[string]any{"schema_version": "kg.capability-list/v1", "items": items})
 	}
 	if parsed.Tree {
-		fmt.Fprintln(r.Stdout, renderTree(items, parsed))
+		fmt.Fprintln(r.Stdout, renderTree(items, parsed, snapshot.Groups))
 		return nil
 	}
 	w := tabwriter.NewWriter(r.Stdout, 0, 4, 2, ' ', 0)
@@ -228,7 +290,7 @@ func projectList(snapshot surface.Snapshot, opts listOptions) ([]listItem, error
 		}
 		matched = true
 		if id == opts.Prefix || len(strings.Split(id, "."))-prefixDepth <= opts.Level {
-			items[id] = listItem{id, value.Description, "capability"}
+			items[id] = listItem{id, value.Description, "capability", true}
 			continue
 		}
 		parts := strings.Split(id, ".")
@@ -237,7 +299,7 @@ func projectList(snapshot surface.Snapshot, opts listOptions) ([]listItem, error
 		if !ok {
 			return nil, fmt.Errorf("snapshot group missing: %s", groupID)
 		}
-		items[groupID] = listItem{groupID, description, "group"}
+		items[groupID] = listItem{groupID, description, "group", true}
 	}
 	if !matched {
 		return nil, fmt.Errorf("unknown or empty capability prefix: %s", opts.Prefix)
@@ -259,22 +321,34 @@ type treeNode struct {
 	Children    map[string]*treeNode
 }
 
-func renderTree(items []listItem, opts listOptions) string {
+func renderTree(items []listItem, opts listOptions, groups []coreprotocol.CapabilityGroup) string {
 	root := &treeNode{Children: map[string]*treeNode{}}
 	anchor := []string{}
 	lines := []string{"Knowledge-graph capabilities"}
+	groupDescriptions := map[string]string{}
+	for _, group := range groups {
+		groupDescriptions[group.ID] = group.Description
+	}
 	if opts.PrefixSet {
 		anchor = strings.Split(opts.Prefix, ".")
-		lines = []string{"Knowledge-graph capabilities under " + opts.Prefix, opts.Prefix}
+		anchorLine := opts.Prefix
+		if description := groupDescriptions[opts.Prefix]; description != "" {
+			anchorLine += " — " + oneLine(description)
+		}
+		lines = []string{"Knowledge-graph capabilities under " + opts.Prefix, anchorLine}
 	}
 	for _, item := range items {
 		parts := strings.Split(item.CapabilityID, ".")
 		node := root
-		for _, part := range parts[len(anchor):] {
+		for index, part := range parts[len(anchor):] {
 			if node.Children[part] == nil {
 				node.Children[part] = &treeNode{Children: map[string]*treeNode{}}
 			}
 			node = node.Children[part]
+			fullID := strings.Join(parts[:len(anchor)+index+1], ".")
+			if description := groupDescriptions[fullID]; description != "" {
+				node.Description = description
+			}
 		}
 		node.Description = item.Description
 	}
@@ -316,7 +390,7 @@ func maxDepth(values []surface.Capability) int {
 }
 func matchesPrefix(id, prefix string) bool { return id == prefix || strings.HasPrefix(id, prefix+".") }
 func validPrefix(value string) bool {
-	if value == "" {
+	if value == "" || strings.HasPrefix(value, "kg.") {
 		return false
 	}
 	for _, segment := range strings.Split(value, ".") {

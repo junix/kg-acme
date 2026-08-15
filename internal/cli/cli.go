@@ -85,6 +85,9 @@ func (r Runner) Run(ctx context.Context, arguments []string) int {
 	if args[0] == "list" {
 		return r.finish(r.list(snapshot, opts, args[1:]), opts.JSON)
 	}
+	if opts.Describe && (len(args) != 1 || opts.Params != "" || opts.Output != "" || opts.DryRun || opts.Gates != (policy.Gates{})) {
+		return r.fail(fmt.Errorf("--describe cannot be combined with execution arguments or options"), opts.JSON)
+	}
 	capability, found := surface.Find(snapshot, args[0])
 	if !found {
 		if opts.Describe {
@@ -243,6 +246,9 @@ func argumentsObject(capability surface.Capability, opts options, args []string)
 		if len(args) > 0 {
 			return nil, fmt.Errorf("--params cannot be combined with positional capability arguments")
 		}
+		if opts.DryRun && strings.HasPrefix(strings.TrimSpace(opts.Params), "@") {
+			return nil, fmt.Errorf("dry-run does not read files; pass --params as inline JSON")
+		}
 		return decodeParams(opts.Params)
 	}
 	values, err := router.ParseInput(capability.CLISpec, capability.InputSchema, args)
@@ -277,6 +283,10 @@ func decodeParams(spec string) (map[string]any, error) {
 	}
 	if result == nil {
 		return nil, fmt.Errorf("--params must contain a JSON object")
+	}
+	var extra any
+	if err := decoder.Decode(&extra); !errors.Is(err, io.EOF) {
+		return nil, fmt.Errorf("--params must contain exactly one JSON object")
 	}
 	return result, nil
 }

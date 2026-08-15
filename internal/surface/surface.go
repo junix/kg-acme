@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"os"
 	"path/filepath"
 	"runtime"
 	"sort"
@@ -39,15 +40,16 @@ type Source struct {
 }
 
 type Capability struct {
-	SemanticID  string              `json:"semantic_id"`
-	Title       string              `json:"title"`
-	Description string              `json:"description"`
-	Available   bool                `json:"available"`
-	InputSchema json.RawMessage     `json:"input_schema"`
-	Output      protocol.OutputSpec `json:"output"`
-	CLISpec     protocol.CLISpec    `json:"cli_spec"`
-	Candidates  []Candidate         `json:"candidates"`
-	Source      Source              `json:"source"`
+	SemanticID   string              `json:"semantic_id"`
+	Title        string              `json:"title"`
+	Description  string              `json:"description"`
+	Available    bool                `json:"available"`
+	InputSchema  json.RawMessage     `json:"input_schema"`
+	OutputSchema json.RawMessage     `json:"output_schema"`
+	Output       protocol.OutputSpec `json:"output"`
+	CLISpec      protocol.CLISpec    `json:"cli_spec"`
+	Candidates   []Candidate         `json:"candidates"`
+	Source       Source              `json:"source"`
 }
 
 type Snapshot struct {
@@ -90,7 +92,7 @@ func Build(providers []router.Provider) Snapshot {
 				if description == "" {
 					description = "Execute the " + publicID + " knowledge-graph capability."
 				}
-				view = &Capability{SemanticID: semanticID, Title: title, Description: description, InputSchema: item.InputSchema, Output: item.Output, CLISpec: item.CLISpec, Source: Source{IntegrationPath: integration}}
+				view = &Capability{SemanticID: semanticID, Title: title, Description: description, InputSchema: item.InputSchema, OutputSchema: outputSchema(item.Output), Output: item.Output, CLISpec: item.CLISpec, Source: Source{IntegrationPath: integration}}
 				byID[semanticID] = view
 			}
 			available := provider.Status.Path != "" && (provider.Status.Available == nil || provider.Status.Available.Available)
@@ -109,8 +111,8 @@ func Build(providers []router.Provider) Snapshot {
 
 	// Pipelines are orchestration capabilities of the hub, not KG algorithms.
 	for _, value := range []Capability{
-		{SemanticID: "kg.pipeline.run", Title: "Run a capability pipeline", Description: "Execute a declarative kg.pipeline/v1 pipeline definition.", Available: true, InputSchema: json.RawMessage(`{"type":"object","properties":{"definition":{"type":"string"},"work_dir":{"type":"string"},"resume":{"type":"string"}},"required":["definition"],"additionalProperties":false}`), CLISpec: protocol.CLISpec{Positionals: []protocol.PositionalSpec{{Name: "definition", Required: true}}}, Source: Source{IntegrationPath: integration}},
-		{SemanticID: "kg.pipeline.validate", Title: "Validate a capability pipeline", Description: "Validate a declarative kg.pipeline/v1 pipeline definition without executing providers.", Available: true, InputSchema: json.RawMessage(`{"type":"object","properties":{"definition":{"type":"string"}},"required":["definition"],"additionalProperties":false}`), CLISpec: protocol.CLISpec{Positionals: []protocol.PositionalSpec{{Name: "definition", Required: true}}}, Source: Source{IntegrationPath: integration}},
+		{SemanticID: "kg.pipeline.run", Title: "Run a capability pipeline", Description: "Execute a declarative kg.pipeline/v1 pipeline definition.", Available: true, InputSchema: json.RawMessage(`{"type":"object","properties":{"definition":{"type":"string","description":"Read the kg.pipeline/v1 definition from this path."},"work_dir":{"type":"string","description":"Write pipeline artifacts beneath this working directory."},"resume":{"type":"string","description":"Resume from this previous pipeline run."}},"required":["definition"],"additionalProperties":false}`), OutputSchema: json.RawMessage(`{"type":"object","description":"A pipeline execution result with stage outputs and diagnostics."}`), Output: protocol.OutputSpec{Mode: "result-json", Kind: "json"}, CLISpec: protocol.CLISpec{Positionals: []protocol.PositionalSpec{{Name: "definition", Required: true}}}, Source: Source{IntegrationPath: integration, ImplementationPaths: []string{integration}}},
+		{SemanticID: "kg.pipeline.validate", Title: "Validate a capability pipeline", Description: "Validate a declarative kg.pipeline/v1 pipeline definition without executing providers.", Available: true, InputSchema: json.RawMessage(`{"type":"object","properties":{"definition":{"type":"string","description":"Read the kg.pipeline/v1 definition to validate from this path."}},"required":["definition"],"additionalProperties":false}`), OutputSchema: json.RawMessage(`{"type":"object","description":"A validated pipeline plan with its ordered stages."}`), Output: protocol.OutputSpec{Mode: "result-json", Kind: "json"}, CLISpec: protocol.CLISpec{Positionals: []protocol.PositionalSpec{{Name: "definition", Required: true}}}, Source: Source{IntegrationPath: integration, ImplementationPaths: []string{integration}}},
 	} {
 		copy := value
 		byID[value.SemanticID] = &copy
@@ -174,7 +176,6 @@ func providerCapabilities(provider router.Provider) []providerCapability {
 func PublicID(capability Capability) string { return strings.TrimPrefix(capability.SemanticID, "kg.") }
 
 func Find(snapshot Snapshot, id string) (Capability, bool) {
-	id = strings.TrimPrefix(id, "kg.")
 	for _, capability := range snapshot.Capabilities {
 		if PublicID(capability) == id {
 			return capability, true
@@ -224,11 +225,47 @@ func buildGroups(capabilities []Capability) []coreprotocol.CapabilityGroup {
 				continue
 			}
 			seen[id] = true
-			groups = append(groups, coreprotocol.CapabilityGroup{ID: id, Title: titleize(id), Description: "Knowledge-graph capabilities in the " + id + " group.", Order: len(groups)})
+			groups = append(groups, coreprotocol.CapabilityGroup{ID: id, Title: titleize(id), Description: groupDescription(id, capabilities), Order: len(groups)})
 		}
 	}
 	sort.Slice(groups, func(i, j int) bool { return groups[i].ID < groups[j].ID })
 	return groups
+}
+
+func groupDescription(id string, capabilities []Capability) string {
+	curated := map[string]string{
+		"analyze":   "Measure graph structure, connectivity, importance, and topology.",
+		"detect":    "Find structural or semantic communities in a knowledge graph.",
+		"embed":     "Compute vector representations for graph nodes.",
+		"extract":   "Extract entities and relationships from source documents.",
+		"layout":    "Compute visual positions for graph nodes and edges.",
+		"parse":     "Turn multimodal source documents into typed graph-ready chunks.",
+		"pipeline":  "Validate or execute declarative multi-capability graph workflows.",
+		"resolve":   "Merge duplicate or coreferent entities and relations.",
+		"retrieve":  "Answer questions from a prepared knowledge-graph dataset.",
+		"store":     "Persist knowledge-graph data in supported graph databases.",
+		"summarize": "Generate summaries from graph communities and their evidence.",
+	}
+	if description := curated[id]; description != "" {
+		return description
+	}
+	for _, capability := range capabilities {
+		if matchesGroup(PublicID(capability), id) {
+			return "Discover operations related to " + strings.TrimSuffix(strings.ToLower(capability.Title), ".") + "."
+		}
+	}
+	return "Discover operations published for " + id + "."
+}
+
+func matchesGroup(capabilityID, groupID string) bool {
+	return capabilityID == groupID || strings.HasPrefix(capabilityID, groupID+".")
+}
+
+func outputSchema(output protocol.OutputSpec) json.RawMessage {
+	if output.Mode == "artifact" {
+		return json.RawMessage(`{"type":"object","required":["path","kind"],"properties":{"path":{"type":"string","description":"Path of the newly written artifact."},"kind":{"type":"string","description":"Artifact kind declared by the selected capability."}}}`)
+	}
+	return json.RawMessage(`{"type":"object","description":"Structured JSON result returned by the selected capability."}`)
 }
 
 func titleize(value string) string {
@@ -257,20 +294,24 @@ func integrationPath() string {
 }
 
 func implementationPath(id string) string {
-	home := "~/projects"
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	projects := filepath.Join(home, "projects")
 	switch id {
 	case "kg-extract":
-		return home + "/kg/kg-extract"
+		return filepath.Join(projects, "kg", "kg-extract")
 	case "kg-layout":
-		return home + "/kg/kg-layout"
+		return filepath.Join(projects, "kg", "kg-layout")
 	case "graph-kg":
-		return home + "/kg/kg-analyze"
+		return filepath.Join(projects, "kg", "kg-analyze")
 	case "kg-algorithms":
-		return home + "/kg/kg-algorithms"
+		return filepath.Join(projects, "kg", "kg-algorithms")
 	case "kg-mm":
-		return home + "/kg/kg-mm"
+		return filepath.Join(projects, "kg", "kg-mm")
 	case "ygr":
-		return home + "/kg/ygr"
+		return filepath.Join(projects, "kg", "ygr")
 	default:
 		return ""
 	}

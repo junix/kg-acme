@@ -92,6 +92,20 @@ func TestDiscoveryAndDescriptionContract(t *testing.T) {
 	if strings.Contains(first, "STATUS") || strings.Contains(first, "AVAILABLE") {
 		t.Fatalf("default list must have exactly ID and description columns:\n%s", list)
 	}
+	listHelp := run(t, home, "kg", "list", "--help")
+	if !strings.Contains(listHelp, "--prefix <DOTTED-PREFIX>") || !strings.Contains(listHelp, "0 means all levels") {
+		t.Fatalf("list help is incomplete:\n%s", listHelp)
+	}
+	listJSON := run(t, home, "kg", "list", "--json")
+	var inventory struct {
+		Items []struct {
+			CapabilityID string `json:"capability_id"`
+			Available    *bool  `json:"available"`
+		} `json:"items"`
+	}
+	if err := json.Unmarshal([]byte(listJSON), &inventory); err != nil || len(inventory.Items) == 0 || inventory.Items[0].Available == nil {
+		t.Fatalf("list JSON must publish capability_id and available: %v %s", err, listJSON)
+	}
 	description := run(t, home, "kg", "test.echo", "--describe")
 	var atomic map[string]any
 	if err := json.Unmarshal([]byte(description), &atomic); err != nil {
@@ -104,6 +118,13 @@ func TestDiscoveryAndDescriptionContract(t *testing.T) {
 	}
 	if !strings.Contains(description, "integration_path") {
 		t.Fatalf("source integration path missing: %s", description)
+	}
+	if !strings.Contains(description, "implementation_paths") || !strings.Contains(description, "output_schema") || !strings.Contains(description, "error_contract") {
+		t.Fatalf("describe contract is incomplete: %s", description)
+	}
+	tree := run(t, home, "kg", "list", "--tree")
+	if !strings.Contains(tree, "test — Discover operations related to echo a value.") {
+		t.Fatalf("tree group description is not informative: %s", tree)
 	}
 }
 

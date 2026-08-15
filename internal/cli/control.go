@@ -155,6 +155,9 @@ func (r Runner) controlCapabilities(path string, opts options, args []string) er
 	}
 	values := snapshot.Capabilities
 	if action == "search" {
+		if len(args) < 2 || strings.TrimSpace(strings.Join(args[1:], " ")) == "" {
+			return fmt.Errorf("usage: kgctl capabilities search <query>")
+		}
 		query := strings.ToLower(strings.Join(args[1:], " "))
 		var filtered []surface.Capability
 		for _, value := range values {
@@ -174,6 +177,8 @@ func (r Runner) controlCapabilities(path string, opts options, args []string) er
 		return r.outputAny(opts.JSON, publicDescription(value))
 	} else if action != "list" {
 		return fmt.Errorf("unknown capabilities command: %s", action)
+	} else if len(args) > 1 {
+		return fmt.Errorf("usage: kgctl capabilities list [--all] [--json]")
 	}
 	if opts.JSON {
 		var items []map[string]any
@@ -181,10 +186,7 @@ func (r Runner) controlCapabilities(path string, opts options, args []string) er
 			if !opts.All && !value.Available {
 				continue
 			}
-			item := map[string]any{"semantic_id": surface.PublicID(value), "description": value.Description}
-			if opts.All {
-				item["available"] = value.Available
-			}
+			item := map[string]any{"capability_id": surface.PublicID(value), "description": value.Description, "available": value.Available}
 			items = append(items, item)
 		}
 		return writeJSON(r.Stdout, map[string]any{"schema_version": "kg.capabilities-list/v3", "capabilities": items})
