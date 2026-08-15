@@ -12,6 +12,7 @@ default: test
 build:
     go build ./...
     go build -o kg ./cmd/kg
+    go build -o kgctl ./cmd/kgctl
     go build -o kg-mcp ./cmd/kg-mcp
 
 test:
@@ -22,11 +23,13 @@ vet:
 
 check: vet test build
 
-# 安装 kg 与 kg-mcp 到 ~/sync/<os>-<arch>-bin/
+# 安装执行面、控制面与 MCP，并发布不可变能力快照。
 install: build
     mkdir -p "{{ install_bin }}"
     cp kg "{{ install_bin }}/kg"
+    cp kgctl "{{ install_bin }}/kgctl"
     cp kg-mcp "{{ install_bin }}/kg-mcp"
+    "{{ install_bin }}/kgctl" refresh
 
 clean:
-    rm -f kg kg-mcp
+    rm -f kg kgctl kg-mcp

@@ -29,7 +29,13 @@ type Manifest struct {
 	Protocol         string       `json:"protocol"`
 	ProtocolVersions []int        `json:"protocol_versions"`
 	Provider         ProviderInfo `json:"provider"`
+	Source           *SourceInfo  `json:"source,omitempty"`
 	Capabilities     []Capability `json:"capabilities"`
+}
+
+// SourceInfo points maintainers from capability help to the provider checkout.
+type SourceInfo struct {
+	LocalCodePath string `json:"local_code_path,omitempty"`
 }
 
 // ProviderInfo identifies a provider binary.
@@ -63,10 +69,10 @@ type OutputSpec struct {
 // Emission order is: Always ++ Subcommand ++ Positionals ++ Flags
 // (flags sorted by Order, tiebreak on Flag).
 type CLISpec struct {
-	Subcommand  []string          `json:"subcommand"`
-	Always      []string          `json:"always"`
-	Positionals []PositionalSpec  `json:"positionals"`
-	Flags       []FlagSpec        `json:"flags"`
+	Subcommand  []string         `json:"subcommand"`
+	Always      []string         `json:"always"`
+	Positionals []PositionalSpec `json:"positionals"`
+	Flags       []FlagSpec       `json:"flags"`
 }
 
 // PositionalSpec binds a positional argv slot to an input property name.

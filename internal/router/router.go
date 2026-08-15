@@ -96,6 +96,25 @@ func DiscoverProviders(ctx context.Context, overrides discover.Overrides) []Prov
 	return out
 }
 
+// RevalidateProvider probes exactly one provider selected from the immutable
+// snapshot. Metadata commands never call this function.
+func RevalidateProvider(ctx context.Context, snapshot Provider) Provider {
+	status := discover.Probe(ctx, snapshot.ID(), snapshot.Status.Path)
+	return Provider{Status: status, Fallback: snapshot.Fallback}
+}
+
+// ValidateInvocation performs the schema and policy checks available from the
+// snapshot before any provider process is started.
+func ValidateInvocation(r *Resolved, input map[string]any, gates policy.Gates, dryRun bool) error {
+	if err := schema.ValidateInput(r.InputSchema, input); err != nil {
+		return err
+	}
+	if !dryRun {
+		return gates.Check(r.SideEffects)
+	}
+	return nil
+}
+
 // Resolved binds a capability_id to a concrete provider plus the effective
 // spec (provider-authoritative when probed, fallback otherwise).
 type Resolved struct {

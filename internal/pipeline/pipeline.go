@@ -154,6 +154,19 @@ func legalStageID(s string) bool {
 // plan. Gate denial is reported (Plan.Denied) but not fatal here — the run
 // path fails fast on it, validate/dry-run paths just report it.
 func Build(def *Definition, providers []router.Provider, gates policy.Gates) (*Plan, error) {
+	return build(def, func(capability string) (*router.Resolved, error) {
+		return router.Resolve(providers, capability)
+	}, gates)
+}
+
+// BuildWithResolver validates a pipeline whose stage capability strings use a
+// public ACME namespace. The caller supplies the snapshot-aware route resolver;
+// provider protocol IDs never need to leak into pipeline definitions.
+func BuildWithResolver(def *Definition, resolve func(string) (*router.Resolved, error), gates policy.Gates) (*Plan, error) {
+	return build(def, resolve, gates)
+}
+
+func build(def *Definition, resolve func(string) (*router.Resolved, error), gates policy.Gates) (*Plan, error) {
 	if def.Pipeline != protocol.PipelineProtocol {
 		return nil, &Error{protocol.ErrInvalidPipeline,
 			fmt.Sprintf("pipeline field must be %q, got %q", protocol.PipelineProtocol, def.Pipeline)}
@@ -183,7 +196,7 @@ func Build(def *Definition, providers []router.Provider, gates policy.Gates) (*P
 
 	// Resolve capabilities and bind edges.
 	for _, ps := range byID {
-		res, err := router.Resolve(providers, ps.Stage.Capability)
+		res, err := resolve(ps.Stage.Capability)
 		if err != nil {
 			return nil, &Error{protocol.ErrCapabilityNotFound,
 				fmt.Sprintf("stage %q: %v", ps.Stage.ID, err)}

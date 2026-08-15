@@ -38,8 +38,8 @@ type Command struct {
 	Stub         bool     `json:"stub,omitempty"`
 }
 
-// Path renders the command path as "extract" / "provider" etc.
-func (c Command) Path() string { return strings.Join(c.CommandPath, " ") }
+// Path renders the public dotted Semantic ID.
+func (c Command) Path() string { return strings.Join(c.CommandPath, ".") }
 
 var segmentRe = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
 
@@ -47,7 +47,7 @@ var segmentRe = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
 func Load() (*Catalog, error) { return Parse(embedded) }
 
 // Parse parses and validates catalog JSON. Validation rules:
-//   - semantic_id must mirror command_path (segments joined by spaces);
+//   - semantic_id must mirror command_path (segments joined by dots);
 //   - every path segment must be a lowercase kebab-case word;
 //   - title must be non-empty and carry no ending punctuation;
 //   - description must be a single sentence ending in a period;

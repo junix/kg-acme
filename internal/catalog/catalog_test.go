@@ -10,10 +10,9 @@ func TestLoadEmbeddedValid(t *testing.T) {
 	if err != nil {
 		t.Fatalf("embedded catalog must be valid: %v", err)
 	}
-	want := []string{"extract", "dedup", "communities", "communities hierarchy", "communities summaries",
-		"communities semantic", "store", "ask", "parse", "layout compute", "analyze centrality",
-		"analyze pagerank", "analyze shortest-paths", "analyze components", "analyze triangles", "analyze topology",
-		"embed nodes", "provider", "pipeline run", "pipeline validate"}
+	want := []string{"extract.entities-relations", "resolve.coref", "detect.communities", "detect.communities-hierarchy", "summarize.communities",
+		"detect.communities-semantic", "store.triples", "retrieve.ask", "parse.multimodal", "layout.compute", "analyze.centrality",
+		"analyze.pagerank", "analyze.shortest-paths", "analyze.components", "analyze.triangles", "analyze.topology", "embed.nodes"}
 	if len(c.Commands) != len(want) {
 		t.Fatalf("expected %d commands, got %d", len(want), len(c.Commands))
 	}
@@ -37,23 +36,23 @@ func TestCatalogCapabilityMapping(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := map[string]string{
-		"extract":                "extract.entities_relations",
-		"dedup":                  "resolve.coref",
-		"communities":            "detect.communities",
-		"communities hierarchy":  "detect.communities_hierarchy",
-		"communities summaries":  "summarize.communities",
-		"communities semantic":   "detect.communities_semantic",
-		"store":                  "store.triples",
-		"ask":                    "retrieve.ask",
-		"parse":                  "parse.multimodal",
-		"layout compute":         "layout.compute",
-		"analyze centrality":     "analyze.centrality",
-		"analyze pagerank":       "analyze.pagerank",
-		"analyze shortest-paths": "analyze.shortest_paths",
-		"analyze components":     "analyze.components",
-		"analyze triangles":      "analyze.triangles",
-		"analyze topology":       "analyze.topology",
-		"embed nodes":            "embed.nodes",
+		"extract.entities-relations":   "extract.entities_relations",
+		"resolve.coref":                "resolve.coref",
+		"detect.communities":           "detect.communities",
+		"detect.communities-hierarchy": "detect.communities_hierarchy",
+		"summarize.communities":        "summarize.communities",
+		"detect.communities-semantic":  "detect.communities_semantic",
+		"store.triples":                "store.triples",
+		"retrieve.ask":                 "retrieve.ask",
+		"parse.multimodal":             "parse.multimodal",
+		"layout.compute":               "layout.compute",
+		"analyze.centrality":           "analyze.centrality",
+		"analyze.pagerank":             "analyze.pagerank",
+		"analyze.shortest-paths":       "analyze.shortest_paths",
+		"analyze.components":           "analyze.components",
+		"analyze.triangles":            "analyze.triangles",
+		"analyze.topology":             "analyze.topology",
+		"embed.nodes":                  "embed.nodes",
 	}
 	got := map[string]string{}
 	for _, cmd := range c.CapabilityCommands() {
@@ -71,7 +70,7 @@ func TestCatalogCapabilityMapping(t *testing.T) {
 
 func validDoc(t *testing.T) string {
 	t.Helper()
-	return `{"version":1,"commands":[{"command_path":["extract"],"semantic_id":"extract","title":"Extract things","description":"Extracts things.","capability_id":"extract.entities_relations"}]}`
+	return `{"version":1,"commands":[{"command_path":["extract","things"],"semantic_id":"extract.things","title":"Extract things","description":"Extracts things.","capability_id":"extract.entities_relations"}]}`
 }
 
 func mutate(t *testing.T, old, new string) string {
@@ -89,8 +88,8 @@ func TestParseValidationRules(t *testing.T) {
 		doc     string
 		wantErr string
 	}{
-		{"semantic_id mirror", mutate(t, `"semantic_id":"extract"`, `"semantic_id":"ext"`), "must mirror command_path"},
-		{"illegal segment", mutate(t, `"command_path":["extract"]`, `"command_path":["Extract"]`), "illegal segment"},
+		{"semantic_id mirror", mutate(t, `"semantic_id":"extract.things"`, `"semantic_id":"extract.other"`), "must mirror command_path"},
+		{"illegal segment", mutate(t, `"command_path":["extract","things"]`, `"command_path":["Extract","things"]`), "illegal segment"},
 		{"title punctuation", mutate(t, `"title":"Extract things"`, `"title":"Extract things."`), "must not end with punctuation"},
 		{"empty title", mutate(t, `"title":"Extract things"`, `"title":""`), "empty title"},
 		{"description not sentence", mutate(t, `"description":"Extracts things."`, `"description":"Extracts things"`), "single sentence ending"},
@@ -122,7 +121,7 @@ func TestFind(t *testing.T) {
 		t.Fatal(err)
 	}
 	if c.Find("extract") == nil {
-		t.Error("extract should be found")
+		t.Error("extract group should be found")
 	}
 	if c.Find("nonexistent") != nil {
 		t.Error("nonexistent should not be found")
@@ -135,13 +134,13 @@ func TestFindPath(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Longest prefix wins: the subcommand beats its parent.
-	cmd, n := c.FindPath([]string{"communities", "hierarchy", "--json"})
+	cmd, n := c.FindPath([]string{"detect", "communities-hierarchy", "--json"})
 	if cmd == nil || n != 2 || cmd.CapabilityID != "detect.communities_hierarchy" {
-		t.Errorf("communities hierarchy: got %v consumed %d", cmd, n)
+		t.Errorf("detect.communities-hierarchy: got %v consumed %d", cmd, n)
 	}
-	cmd, n = c.FindPath([]string{"communities", "doc.json"})
-	if cmd == nil || n != 1 || cmd.CapabilityID != "detect.communities" {
-		t.Errorf("communities: got %v consumed %d", cmd, n)
+	cmd, n = c.FindPath([]string{"detect", "communities", "doc.json"})
+	if cmd == nil || n != 2 || cmd.CapabilityID != "detect.communities" {
+		t.Errorf("detect.communities: got %v consumed %d", cmd, n)
 	}
 	if cmd, _ = c.FindPath([]string{"nope"}); cmd != nil {
 		t.Errorf("unknown command should not match, got %v", cmd)
