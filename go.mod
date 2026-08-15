@@ -3,7 +3,7 @@ module kg-acme
 go 1.23
 
 require (
-	github.com/junix/acme-core v0.0.0-20260815131646-07c8f5757222
+	github.com/junix/acme-core v0.0.0-20260815184543-920b48aebee9
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 )
 

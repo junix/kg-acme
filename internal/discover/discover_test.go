@@ -1,10 +1,16 @@
 package discover
 
 import (
+	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
+	"strings"
 	"testing"
+
+	"kg-acme/internal/protocol"
 )
 
 // setupEnv builds a fake filesystem layout:
@@ -160,4 +166,54 @@ func TestIsExecutable(t *testing.T) {
 	if IsExecutable(filepath.Join(dir, "missing")) {
 		t.Error("missing file should not be executable")
 	}
+}
+
+// probeFixture writes a fake provider script whose describe output carries one
+// capability with the given description, and returns its path.
+func probeFixture(t *testing.T, description string) string {
+	t.Helper()
+	manifest := fmt.Sprintf(`{"protocol":"kg.provider/v1","protocol_versions":[1],"provider":{"id":"fake","version":"1.0.0","description":"Fake provider"},"capabilities":[{"capability_id":"test.echo","title":"Echo a value","description":%s,"side_effects":[],"input_schema":{"type":"object","properties":{"value":{"type":"string"}},"required":["value"],"additionalProperties":false},"output":{"mode":"result-json","kind":"json"},"cli_spec":{"subcommand":[],"always":[],"positionals":[],"flags":[]}}]}`,
+		strconv.Quote(description))
+	script := "#!/bin/sh\ncase \"$1\" in\n" +
+		"  describe) printf '%s\\n' '" + manifest + "' ;;\n" +
+		"  available) printf '%s\\n' '{\"available\":true,\"ready\":[],\"missing\":[]}' ;;\n" +
+		"esac\n"
+	path := filepath.Join(t.TempDir(), "fake-provider")
+	if err := os.WriteFile(path, []byte(script), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
+
+func TestProbeDescriptionFloor(t *testing.T) {
+	t.Run("title restatement rejected as malformed manifest", func(t *testing.T) {
+		st := Probe(context.Background(), "fake", probeFixture(t, "Echo a value."))
+		if st.Probed {
+			t.Fatal("a description that just restates the title must fail the floor")
+		}
+		if st.ProbeErrorCode != protocol.ErrMalformedManifest {
+			t.Fatalf("want probe error %q, got %q", protocol.ErrMalformedManifest, st.ProbeErrorCode)
+		}
+		var messages []string
+		for _, d := range st.Diagnostics {
+			messages = append(messages, d.Message)
+		}
+		if !strings.Contains(strings.Join(messages, "\n"), `"test.echo"`) {
+			t.Fatalf("floor diagnostic must name the capability id: %v", messages)
+		}
+	})
+
+	t.Run("missing terminal period rejected", func(t *testing.T) {
+		st := Probe(context.Background(), "fake", probeFixture(t, "Return the supplied value without changing it"))
+		if st.Probed || st.ProbeErrorCode != protocol.ErrMalformedManifest {
+			t.Fatalf("description without terminal period must fail: probed=%v code=%q", st.Probed, st.ProbeErrorCode)
+		}
+	})
+
+	t.Run("clean description accepted", func(t *testing.T) {
+		st := Probe(context.Background(), "fake", probeFixture(t, "Return the supplied value without changing it."))
+		if !st.Probed || st.ProbeErrorCode != "" {
+			t.Fatalf("clean manifest must probe: probed=%v code=%q diags=%v", st.Probed, st.ProbeErrorCode, st.Diagnostics)
+		}
+	})
 }

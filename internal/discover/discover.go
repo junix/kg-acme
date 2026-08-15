@@ -21,6 +21,8 @@ import (
 	"strings"
 	"time"
 
+	coreprotocol "github.com/junix/acme-core/protocol"
+
 	"kg-acme/internal/protocol"
 	"kg-acme/internal/schema"
 )
@@ -195,6 +197,10 @@ func Probe(ctx context.Context, id, path string) ProviderStatus {
 			st.ProbeErrorCode = protocol.ErrMalformedManifest
 			st.Diagnostics = append(st.Diagnostics, protocol.Diagnostic{
 				Severity: "warning", Message: fmt.Sprintf("describe output is not valid JSON: %v", err)})
+		} else if err := validateDescriptionFloor(&m); err != nil {
+			st.ProbeErrorCode = protocol.ErrMalformedManifest
+			st.Diagnostics = append(st.Diagnostics, protocol.Diagnostic{
+				Severity: "warning", Message: err.Error()})
 		} else if v, err := protocol.Negotiate(m.ProtocolVersions); err != nil {
 			st.ProbeErrorCode = protocol.ErrUnsupportedSchemaVersion
 			st.Diagnostics = append(st.Diagnostics, protocol.Diagnostic{
@@ -237,4 +243,23 @@ func firstNonEmpty(v, fallback string) string {
 		return v
 	}
 	return fallback
+}
+
+// validateDescriptionFloor applies the acme-core description-quality floor to
+// every capability in a probed manifest. A violation rejects the manifest as
+// malformed, like a schema breach: provider-published text is the provider's
+// contract, and low-information descriptions must be fixed at the source.
+// (The hub's own catalog style validator in internal/catalog is separate and
+// unaffected.)
+func validateDescriptionFloor(m *protocol.Manifest) error {
+	for _, capability := range m.Capabilities {
+		if err := coreprotocol.ValidateDescriptionFloor(coreprotocol.Capability{
+			ID:          capability.CapabilityID,
+			Title:       capability.Title,
+			Description: capability.Description,
+		}); err != nil {
+			return err
+		}
+	}
+	return nil
 }
