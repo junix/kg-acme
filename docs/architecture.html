@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script data-code2arch-runtime-bootstrap>
+    window.__docReady = false;
+    window.__docErrors = [];
+    window.addEventListener("error", (event) => {
+      window.__docErrors.push(String(event.error || event.message || "unknown error"));
+    });
+    window.addEventListener("unhandledrejection", (event) => {
+      window.__docErrors.push(String(event.reason || "unhandled rejection"));
+    });
+  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kg-acme — Architecture Overview</title>
+<meta name="doc-meta" content="id=architecture">
+<style>
+  :root {
+    --bg: #f8f7f4; --surface: #ffffff; --ink: #17212b; --slate: #52606d;
+    --fog: #dce4e6; --ocean: #356a79; --teal: #2a9d8f; --mint: #9fd5c9;
+    --coral: #e76f51; --gold: #e9c46a; --indigo: #5a5b9f; --sky: #77b8c8;
+    --moss: #728c69; --night: #111a24; --paper-deep: #ece7de;
+    --radius: 8px; --shadow: 0 1px 3px rgba(23,33,43,.08), 0 1px 2px rgba(23,33,43,.06);
+    --shadow-lg: 0 4px 12px rgba(23,33,43,.10), 0 2px 4px rgba(23,33,43,.06);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: 'Source Sans Pro', 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header { background: linear-gradient(135deg, var(--ocean) 0%, var(--teal) 100%); color: #fff; padding: 56px 0 48px; }
+  header h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  header p { font-size: 1.1rem; opacity: .9; max-width: 640px; }
+  header .eyebrow { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; opacity: .7; margin-bottom: 8px; }
+
+  /* Section */
+  section { padding: 48px 0; }
+  section h2 { font-size: 1.5rem; font-weight: 700; color: var(--ocean); margin-bottom: 16px; letter-spacing: -0.01em; }
+  section h3 { font-size: 1.15rem; font-weight: 600; color: var(--ink); margin: 24px 0 8px; }
+  section p, section li { color: var(--slate); }
+  section p { margin-bottom: 12px; }
+  ul, ol { padding-left: 20px; margin-bottom: 16px; }
+  li { margin-bottom: 4px; }
+  code { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: .875em; background: var(--paper-deep); padding: 1px 5px; border-radius: 3px; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--fog); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .card h4 { font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .card p { font-size: .9rem; }
+
+  /* Feature badges */
+  .badge { display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 4px; margin-right: 4px; }
+  .badge-ocean { background: var(--ocean); color: #fff; }
+  .badge-teal { background: var(--teal); color: #fff; }
+  .badge-coral { background: var(--coral); color: #fff; }
+  .badge-indigo { background: var(--indigo); color: #fff; }
+  .badge-moss { background: var(--moss); color: #fff; }
+
+  /* SVG diagrams */
+  .diagram-wrap { background: var(--surface); border: 1px solid var(--fog); border-radius: var(--radius); padding: 32px 24px; box-shadow: var(--shadow-lg); margin: 24px 0; overflow-x: auto; }
+  .diagram-wrap svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  .diagram-caption { text-align: center; font-size: .82rem; color: var(--slate); margin-top: 12px; font-style: italic; }
+
+  /* Walkthrough */
+  .step { display: flex; gap: 16px; margin-bottom: 24px; }
+  .step-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--ocean); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem; }
+  .step-body { flex: 1; }
+  .step-body h4 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+  .step-body p { font-size: .9rem; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .9rem; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--fog); }
+  th { font-weight: 600; color: var(--ink); background: var(--paper-deep); }
+
+  /* Footer */
+  footer { background: var(--night); color: rgba(255,255,255,.5); padding: 24px 0; font-size: .8rem; text-align: center; }
+
+  /* Animation keyframes */
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes draw { from { stroke-dashoffset: var(--dash-length, 400); } to { stroke-dashoffset: 0; } }
+  @keyframes pulse { 0%,100% { opacity: .6; } 50% { opacity: 1; } }
+  @keyframes flowDash { from { stroke-dashoffset: 16; } to { stroke-dashoffset: 0; } }
+  .animate-in { opacity: 0; animation: fadeInUp .5s ease forwards; }
+  .animate-in.visible { opacity: 1; }
+  .flow-line { stroke-dasharray: 6 4; animation: flowDash .8s linear infinite; }
+  .pulse-glow { animation: pulse 2s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- HEADER                                                        -->
+<!-- ============================================================ -->
+<header>
+  <div class="container">
+    <div class="eyebrow">Architecture Overview</div>
+    <h1>kg-acme</h1>
+    <p>A knowledge-graph capability hub that discovers, validates, and routes every KG operation through a single CLI, while keeping all algorithm logic inside independent provider binaries.</p>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- PRODUCT INTRO                                                 -->
+<!-- ============================================================ -->
+<section id="intro">
+  <div class="container">
+    <h2>Product Introduction</h2>
+    <p><strong>kg-acme</strong> is a capability hub following the <em>acme family</em> pattern: the hub owns integration (discovery, protocol, catalog, policy, routing) while every KG algorithm lives in a separate <strong>provider</strong> binary. The hub never invents provider options &mdash; everything about a capability's flags, enums, and input schema comes from the provider's own <code>describe --json</code> self-description.</p>
+    <p>Three entry points share one immutable capability snapshot:</p>
+    <ul>
+      <li><strong><code>kg</code></strong> &mdash; the execution surface. Accepts prefix-free dotted Semantic IDs (e.g. <code>kg analyze.pagerank</code>).</li>
+      <li><strong><code>kgctl</code></strong> &mdash; the control plane. Manages refresh, provider diagnostics, capability search, route configuration, and shell completion.</li>
+      <li><strong><code>kg-mcp</code></strong> &mdash; a stdio MCP server. Publishes every available capability as a JSON-RPC tool over newline-delimited stdin/stdout.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FEATURES                                                      -->
+<!-- ============================================================ -->
+<section id="features" style="background:var(--paper-deep)">
+  <div class="container">
+    <h2>Features</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h4><span class="badge badge-ocean">Discovery</span> Provider Auto-Discovery</h4>
+        <p>Scans <code>~/sync</code> bins and <code>PATH</code> for protocol-native and legacy provider binaries. Probes each via <code>describe --json</code> and <code>available --json</code>.</p>
+      </div>
+      <div class="card">
+        <h4><span class="badge badge-teal">Protocol</span> Self-Describing Providers</h4>
+        <p>Providers declare capabilities, input schemas, CLI specs, and side effects through <code>kg.provider/v1</code>. The hub negotiates versions and validates manifests against embedded JSON Schemas.</p>
+      </div>
+      <div class="card">
+        <h4><span class="badge badge-coral">Policy</span> Side-Effect Gates</h4>
+        <p>All gates (network, data egress, model download, DB write) are closed by default. Each must be opened explicitly with <code>--allow-*</code> flags. <code>--dry-run</code> plans with zero side effects.</p>
+      </div>
+      <div class="card">
+        <h4><span class="badge badge-indigo">Pipeline</span> Declarative DAG Execution</h4>
+        <p>Multi-stage pipelines (<code>kg.pipeline/v1</code>) with typed artifact edges, topological ordering, checksum-verified artifacts, and work-dir-based resume.</p>
+      </div>
+      <div class="card">
+        <h4><span class="badge badge-moss">MCP</span> AI-Agent Integration</h4>
+        <p><code>kg-mcp</code> serves every capability as a JSON-RPC tool over stdio, exposing <code>dry_run</code> and <code>allow_*</code> parameters. Compatible with Claude Code, Codex, and other MCP hosts.</p>
+      </div>
+      <div class="card">
+        <h4><span class="badge badge-ocean">Snapshot</span> Immutable Capability Catalog</h4>
+        <p><code>kgctl refresh</code> generates a fingerprinted snapshot. All help, list, describe, completion, and MCP operations read only this snapshot &mdash; no provider processes start.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DIAGRAM 1: SYSTEM CONTEXT                                     -->
+<!-- ============================================================ -->
+<section id="context">
+  <div class="container">
+    <h2>System Context</h2>
+    <p>The kg-acme hub sits between operators (human or AI agent) and a fleet of independent KG provider binaries. It enforces a strict boundary: the hub handles protocol negotiation, catalog routing, schema validation, and policy enforcement. All computation (entity extraction, community detection, graph storage, etc.) happens inside provider processes.</p>
+
+    <div class="diagram-wrap" id="diag-context">
+      <svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
+        <!-- External actors -->
+        <g class="actor" data-anim="1">
+          <rect x="20" y="40" width="140" height="56" rx="28" fill="var(--indigo)" stroke="var(--indigo)" stroke-width="1.5"/>
+          <text x="90" y="74" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">Human Operator</text>
+        </g>
+        <g class="actor" data-anim="2">
+          <rect x="20" y="310" width="140" height="56" rx="28" fill="var(--indigo)" stroke="var(--indigo)" stroke-width="1.5"/>
+          <text x="90" y="340" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">AI Agent</text>
+          <text x="90" y="355" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="10">(MCP Host)</text>
+        </g>
+
+        <!-- Hub -->
+        <g class="hub" data-anim="3">
+          <rect x="260" y="80" width="300" height="260" rx="12" fill="var(--surface)" stroke="var(--ocean)" stroke-width="2"/>
+          <text x="410" y="115" text-anchor="middle" fill="var(--ocean)" font-size="16" font-weight="700">kg-acme Hub</text>
+          <!-- Sub-modules -->
+          <rect x="280" y="130" width="120" height="40" rx="6" fill="var(--ocean)" opacity=".12" stroke="var(--ocean)" stroke-width="1"/>
+          <text x="340" y="155" text-anchor="middle" fill="var(--ocean)" font-size="11" font-weight="600">Catalog</text>
+          <rect x="420" y="130" width="120" height="40" rx="6" fill="var(--teal)" opacity=".12" stroke="var(--teal)" stroke-width="1"/>
+          <text x="480" y="155" text-anchor="middle" fill="var(--teal)" font-size="11" font-weight="600">Discover</text>
+          <rect x="280" y="185" width="120" height="40" rx="6" fill="var(--coral)" opacity=".12" stroke="var(--coral)" stroke-width="1"/>
+          <text x="340" y="210" text-anchor="middle" fill="var(--coral)" font-size="11" font-weight="600">Policy</text>
+          <rect x="420" y="185" width="120" height="40" rx="6" fill="var(--indigo)" opacity=".12" stroke="var(--indigo)" stroke-width="1"/>
+          <text x="480" y="210" text-anchor="middle" fill="var(--indigo)" font-size="11" font-weight="600">Router</text>
+          <rect x="280" y="240" width="120" height="40" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1"/>
+          <text x="340" y="265" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">Pipeline</text>
+          <rect x="420" y="240" width="120" height="40" rx="6" fill="var(--sky)" opacity=".12" stroke="var(--sky)" stroke-width="1"/>
+          <text x="480" y="265" text-anchor="middle" fill="var(--sky)" font-size="11" font-weight="600">Schema</text>
+          <rect x="340" y="295" width="140" height="30" rx="6" fill="var(--gold)" opacity=".15" stroke="var(--gold)" stroke-width="1"/>
+          <text x="410" y="314" text-anchor="middle" fill="#8a6d00" font-size="10" font-weight="600">Snapshot (immutable)</text>
+        </g>
+
+        <!-- Providers -->
+        <g class="providers" data-anim="4">
+          <rect x="650" y="30" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="725" y="57" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-extract</text>
+          <rect x="650" y="90" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="725" y="117" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-mm (multimodal)</text>
+          <rect x="650" y="150" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="725" y="177" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">ygr (GraphRAG)</text>
+          <rect x="650" y="210" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="725" y="237" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-layout</text>
+          <rect x="650" y="270" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="725" y="297" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">graph-kg (analyze)</text>
+          <rect x="650" y="330" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="725" y="357" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-algorithms</text>
+          <text x="725" y="395" text-anchor="middle" fill="var(--slate)" font-size="10">kg-provider-* (PATH scan)</text>
+        </g>
+
+        <!-- Edges: actors → hub -->
+        <line x1="160" y1="68" x2="255" y2="170" class="flow-line" stroke="var(--indigo)" stroke-width="1.5"/>
+        <text x="195" y="108" fill="var(--indigo)" font-size="9" font-weight="600" transform="rotate(-25,195,108)">kg CLI</text>
+        <line x1="160" y1="338" x2="255" y2="260" class="flow-line" stroke="var(--indigo)" stroke-width="1.5"/>
+        <text x="190" y="310" fill="var(--indigo)" font-size="9" font-weight="600" transform="rotate(25,190,310)">MCP</text>
+
+        <!-- Edges: hub → providers -->
+        <g class="flow-arrows">
+          <line x1="560" y1="150" x2="645" y2="52" class="flow-line" stroke="var(--ocean)" stroke-width="1.5"/>
+          <line x1="560" y1="170" x2="645" y2="112" class="flow-line" stroke="var(--ocean)" stroke-width="1.5"/>
+          <line x1="560" y1="190" x2="645" y2="172" class="flow-line" stroke="var(--ocean)" stroke-width="1.5"/>
+          <line x1="560" y1="210" x2="645" y2="232" class="flow-line" stroke="var(--ocean)" stroke-width="1.5"/>
+          <line x1="560" y1="230" x2="645" y2="292" class="flow-line" stroke="var(--ocean)" stroke-width="1.5"/>
+          <line x1="560" y1="250" x2="645" y2="352" class="flow-line" stroke="var(--ocean)" stroke-width="1.5"/>
+        </g>
+
+        <!-- Legend -->
+        <g transform="translate(20,390)">
+          <text x="0" y="0" fill="var(--slate)" font-size="9">Legend:</text>
+          <line x1="55" y1="-3" x2="90" y2="-3" stroke="var(--ocean)" stroke-width="1.5" class="flow-line"/>
+          <text x="96" y="0" fill="var(--slate)" font-size="9">describe/invoke</text>
+          <line x1="190" y1="-3" x2="225" y2="-3" stroke="var(--indigo)" stroke-width="1.5" class="flow-line"/>
+          <text x="231" y="0" fill="var(--slate)" font-size="9">CLI/MCP input</text>
+        </g>
+      </svg>
+      <div class="diagram-caption">Figure 1 &mdash; System context: operators and AI agents interact through the hub; all KG computation is delegated to provider binaries.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DIAGRAM 2: EXECUTION FLOW                                     -->
+<!-- ============================================================ -->
+<section id="execution-flow" style="background:var(--paper-deep)">
+  <div class="container">
+    <h2>Execution Flow</h2>
+    <p>When a user runs <code>kg extract.entities-relations --file doc.pdf --json</code>, the request passes through the following stages. Metadata commands (<code>--help</code>, <code>--describe</code>, <code>list</code>) read only the snapshot and never start a provider.</p>
+
+    <div class="diagram-wrap" id="diag-flow">
+      <svg viewBox="0 0 840 320" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
+        <!-- Stage boxes -->
+        <g data-anim="1">
+          <rect x="10" y="40" width="120" height="56" rx="8" fill="var(--indigo)" opacity=".15" stroke="var(--indigo)" stroke-width="1.5"/>
+          <text x="70" y="63" text-anchor="middle" fill="var(--indigo)" font-size="12" font-weight="700">1. Parse</text>
+          <text x="70" y="80" text-anchor="middle" fill="var(--indigo)" font-size="9">argv + global flags</text>
+        </g>
+        <g data-anim="2">
+          <rect x="170" y="40" width="120" height="56" rx="8" fill="var(--ocean)" opacity=".15" stroke="var(--ocean)" stroke-width="1.5"/>
+          <text x="230" y="63" text-anchor="middle" fill="var(--ocean)" font-size="12" font-weight="700">2. Snapshot</text>
+          <text x="230" y="80" text-anchor="middle" fill="var(--ocean)" font-size="9">load immutable</text>
+        </g>
+        <g data-anim="3">
+          <rect x="330" y="40" width="120" height="56" rx="8" fill="var(--teal)" opacity=".15" stroke="var(--teal)" stroke-width="1.5"/>
+          <text x="390" y="63" text-anchor="middle" fill="var(--teal)" font-size="12" font-weight="700">3. Resolve</text>
+          <text x="390" y="80" text-anchor="middle" fill="var(--teal)" font-size="9">capability &rarr; provider</text>
+        </g>
+        <g data-anim="4">
+          <rect x="490" y="40" width="120" height="56" rx="8" fill="var(--sky)" opacity=".15" stroke="var(--sky)" stroke-width="1.5"/>
+          <text x="550" y="63" text-anchor="middle" fill="var(--sky)" font-size="12" font-weight="700">4. Validate</text>
+          <text x="550" y="80" text-anchor="middle" fill="var(--sky)" font-size="9">schema + policy gates</text>
+        </g>
+        <g data-anim="5">
+          <rect x="650" y="40" width="120" height="56" rx="8" fill="var(--coral)" opacity=".15" stroke="var(--coral)" stroke-width="1.5"/>
+          <text x="710" y="63" text-anchor="middle" fill="var(--coral)" font-size="12" font-weight="700">5. Execute</text>
+          <text x="710" y="80" text-anchor="middle" fill="var(--coral)" font-size="9">invoke or dry-run</text>
+        </g>
+
+        <!-- Arrows between stages -->
+        <g class="stage-arrows">
+          <line x1="130" y1="68" x2="165" y2="68" stroke="var(--ink)" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+          <line x1="290" y1="68" x2="325" y2="68" stroke="var(--ink)" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+          <line x1="450" y1="68" x2="485" y2="68" stroke="var(--ink)" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+          <line x1="610" y1="68" x2="645" y2="68" stroke="var(--ink)" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+        </g>
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="var(--ink)" opacity=".6"/>
+          </marker>
+        </defs>
+
+        <!-- Detail panel -->
+        <g data-anim="6">
+          <rect x="10" y="120" width="820" height="185" rx="10" fill="var(--surface)" stroke="var(--fog)" stroke-width="1"/>
+          <text x="30" y="148" fill="var(--ocean)" font-size="13" font-weight="700">Invocation Path (non-dry-run)</text>
+
+          <!-- Substeps -->
+          <g transform="translate(30,165)">
+            <rect x="0" y="0" width="240" height="115" rx="6" fill="var(--indigo)" opacity=".06" stroke="var(--fog)" stroke-width=".8"/>
+            <text x="12" y="20" fill="var(--indigo)" font-size="10" font-weight="700">Snapshot Phase (no provider start)</text>
+            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; Find capability in snapshot</text>
+            <text x="12" y="53" fill="var(--slate)" font-size="9.5">&bull; Select candidate provider</text>
+            <text x="12" y="68" fill="var(--slate)" font-size="9.5">&bull; Parse argv via cli_spec</text>
+            <text x="12" y="83" fill="var(--slate)" font-size="9.5">&bull; Validate input_schema</text>
+            <text x="12" y="98" fill="var(--slate)" font-size="9.5">&bull; Check policy gates</text>
+          </g>
+          <g transform="translate(290,165)">
+            <rect x="0" y="0" width="240" height="115" rx="6" fill="var(--coral)" opacity=".06" stroke="var(--fog)" stroke-width=".8"/>
+            <text x="12" y="20" fill="var(--coral)" font-size="10" font-weight="700">Live Revalidation</text>
+            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; Re-probe selected provider</text>
+            <text x="12" y="53" fill="var(--slate)" font-size="9.5">&bull; Re-resolve capability</text>
+            <text x="12" y="68" fill="var(--slate)" font-size="9.5">&bull; Detect contract drift</text>
+          </g>
+          <g transform="translate(550,165)">
+            <rect x="0" y="0" width="250" height="115" rx="6" fill="var(--moss)" opacity=".06" stroke="var(--fog)" stroke-width=".8"/>
+            <text x="12" y="20" fill="var(--moss)" font-size="10" font-weight="700">Dispatch</text>
+            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; Probed: kg.execution/v1 invoke</text>
+            <text x="12" y="53" fill="var(--slate)" font-size="9.5">  (stdin JSON, stdout envelope)</text>
+            <text x="12" y="73" fill="var(--slate)" font-size="9.5">&bull; Fallback: argv bridge</text>
+            <text x="12" y="88" fill="var(--slate)" font-size="9.5">  (render argv from cli_spec)</text>
+            <text x="12" y="103" fill="var(--slate)" font-size="9.5">&bull; Wrap output in Envelope</text>
+          </g>
+        </g>
+      </svg>
+      <div class="diagram-caption">Figure 2 &mdash; Invocation flow from CLI argument parsing through snapshot resolution, live revalidation, and provider dispatch.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DIAGRAM 3: MODULE DEPENDENCY                                  -->
+<!-- ============================================================ -->
+<section id="modules">
+  <div class="container">
+    <h2>Module Architecture</h2>
+    <p>kg-acme is organized as a flat Go module (<code>kg-acme</code>) with all business logic under <code>internal/</code>. Each package has a single responsibility and depends only downward.</p>
+
+    <div class="diagram-wrap" id="diag-modules">
+      <svg viewBox="0 0 720 480" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+            <polygon points="0 0, 7 2.5, 0 5" fill="var(--slate)" opacity=".5"/>
+          </marker>
+        </defs>
+
+        <!-- Layer labels -->
+        <text x="16" y="30" fill="var(--slate)" font-size="10" font-weight="700" text-transform="uppercase" letter-spacing=".06em">Entry Points</text>
+        <text x="16" y="120" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">CLI / Surface</text>
+        <text x="16" y="210" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">Core Logic</text>
+        <text x="16" y="340" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">Infrastructure</text>
+
+        <!-- Entry points -->
+        <g data-anim="1">
+          <rect x="120" y="10" width="90" height="38" rx="6" fill="var(--indigo)" opacity=".15" stroke="var(--indigo)" stroke-width="1.2"/>
+          <text x="165" y="34" text-anchor="middle" fill="var(--indigo)" font-size="11" font-weight="600">cmd/kg</text>
+          <rect x="230" y="10" width="90" height="38" rx="6" fill="var(--indigo)" opacity=".15" stroke="var(--indigo)" stroke-width="1.2"/>
+          <text x="275" y="34" text-anchor="middle" fill="var(--indigo)" font-size="11" font-weight="600">cmd/kgctl</text>
+          <rect x="340" y="10" width="90" height="38" rx="6" fill="var(--indigo)" opacity=".15" stroke="var(--indigo)" stroke-width="1.2"/>
+          <text x="385" y="34" text-anchor="middle" fill="var(--indigo)" font-size="11" font-weight="600">cmd/kg-mcp</text>
+        </g>
+
+        <!-- CLI / Surface layer -->
+        <g data-anim="2">
+          <rect x="120" y="70" width="130" height="38" rx="6" fill="var(--ocean)" opacity=".12" stroke="var(--ocean)" stroke-width="1.2"/>
+          <text x="185" y="94" text-anchor="middle" fill="var(--ocean)" font-size="11" font-weight="600">cli</text>
+          <rect x="270" y="70" width="130" height="38" rx="6" fill="var(--sky)" opacity=".12" stroke="var(--sky)" stroke-width="1.2"/>
+          <text x="335" y="94" text-anchor="middle" fill="var(--sky)" font-size="11" font-weight="600">surface</text>
+          <rect x="420" y="70" width="130" height="38" rx="6" fill="var(--teal)" opacity=".12" stroke="var(--teal)" stroke-width="1.2"/>
+          <text x="485" y="94" text-anchor="middle" fill="var(--teal)" font-size="11" font-weight="600">state</text>
+        </g>
+
+        <!-- Core logic layer -->
+        <g data-anim="3">
+          <rect x="120" y="170" width="110" height="38" rx="6" fill="var(--coral)" opacity=".12" stroke="var(--coral)" stroke-width="1.2"/>
+          <text x="175" y="194" text-anchor="middle" fill="var(--coral)" font-size="11" font-weight="600">router</text>
+          <rect x="245" y="170" width="110" height="38" rx="6" fill="var(--gold)" opacity=".2" stroke="var(--gold)" stroke-width="1.2"/>
+          <text x="300" y="194" text-anchor="middle" fill="#8a6d00" font-size="11" font-weight="600">pipeline</text>
+          <rect x="370" y="170" width="110" height="38" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="425" y="194" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">policy</text>
+          <rect x="495" y="170" width="110" height="38" rx="6" fill="var(--sky)" opacity=".12" stroke="var(--sky)" stroke-width="1.2"/>
+          <text x="550" y="194" text-anchor="middle" fill="var(--sky)" font-size="11" font-weight="600">schema</text>
+        </g>
+
+        <!-- Infrastructure layer -->
+        <g data-anim="4">
+          <rect x="120" y="300" width="110" height="38" rx="6" fill="var(--slate)" opacity=".12" stroke="var(--slate)" stroke-width="1.2"/>
+          <text x="175" y="324" text-anchor="middle" fill="var(--slate)" font-size="11" font-weight="600">protocol</text>
+          <rect x="245" y="300" width="110" height="38" rx="6" fill="var(--slate)" opacity=".12" stroke="var(--slate)" stroke-width="1.2"/>
+          <text x="300" y="324" text-anchor="middle" fill="var(--slate)" font-size="11" font-weight="600">catalog</text>
+          <rect x="370" y="300" width="110" height="38" rx="6" fill="var(--slate)" opacity=".12" stroke="var(--slate)" stroke-width="1.2"/>
+          <text x="425" y="324" text-anchor="middle" fill="var(--slate)" font-size="11" font-weight="600">discover</text>
+          <rect x="495" y="300" width="110" height="38" rx="6" fill="var(--slate)" opacity=".12" stroke="var(--slate)" stroke-width="1.2"/>
+          <text x="550" y="324" text-anchor="middle" fill="var(--slate)" font-size="11" font-weight="600">bridge</text>
+        </g>
+
+        <!-- External -->
+        <g data-anim="5">
+          <rect x="580" y="390" width="130" height="38" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
+          <text x="645" y="414" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">Provider Binaries</text>
+        </g>
+        <g>
+          <rect x="120" y="390" width="130" height="38" rx="6" fill="var(--fog)" stroke="var(--fog)" stroke-width="1"/>
+          <text x="185" y="414" text-anchor="middle" fill="var(--slate)" font-size="10" font-weight="600">acme-core (shared)</text>
+        </g>
+
+        <!-- Dependency arrows -->
+        <g class="deps">
+          <!-- Entry → CLI -->
+          <line x1="165" y1="48" x2="175" y2="68" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="275" y1="48" x2="260" y2="68" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="385" y1="48" x2="210" y2="68" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="385" y1="48" x2="345" y2="68" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+
+          <!-- CLI → Core -->
+          <line x1="170" y1="108" x2="175" y2="168" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="185" y1="108" x2="290" y2="168" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="195" y1="108" x2="420" y2="168" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="335" y1="108" x2="175" y2="168" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="485" y1="108" x2="550" y2="168" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+
+          <!-- Core → Infra -->
+          <line x1="175" y1="208" x2="175" y2="298" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="175" y1="208" x2="425" y2="298" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="300" y1="208" x2="175" y2="298" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="300" y1="208" x2="300" y2="298" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="300" y1="208" x2="550" y2="298" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="425" y1="208" x2="175" y2="298" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="550" y1="208" x2="175" y2="298" stroke="var(--slate)" stroke-width="1" marker-end="url(#arr)"/>
+
+          <!-- Infra → external -->
+          <line x1="425" y1="338" x2="620" y2="388" stroke="var(--moss)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="550" y1="338" x2="630" y2="388" stroke="var(--moss)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="175" y1="338" x2="185" y2="388" stroke="var(--fog)" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="300" y1="338" x2="185" y2="388" stroke="var(--fog)" stroke-width="1" marker-end="url(#arr)"/>
+        </g>
+      </svg>
+      <div class="diagram-caption">Figure 3 &mdash; Module dependency graph. Each package has one responsibility; dependencies flow downward. External dependencies (acme-core, jsonschema) sit at the infrastructure layer.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DIAGRAM 4: PIPELINE DAG                                       -->
+<!-- ============================================================ -->
+<section id="pipeline" style="background:var(--paper-deep)">
+  <div class="container">
+    <h2>Pipeline Architecture</h2>
+    <p>A pipeline is a declarative <code>kg.pipeline/v1</code> JSON file. Each stage references a capability ID; stages are wired through typed artifact edges (<code>input_from</code>). The runner compiles the DAG, validates typed edges, and executes in topological order.</p>
+
+    <div class="diagram-wrap" id="diag-pipeline">
+      <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
+        <defs>
+          <marker id="pipearr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="var(--ocean)"/>
+          </marker>
+        </defs>
+
+        <!-- Stages -->
+        <g data-anim="1">
+          <rect x="20" y="70" width="140" height="70" rx="8" fill="var(--ocean)" opacity=".15" stroke="var(--ocean)" stroke-width="1.5"/>
+          <text x="90" y="97" text-anchor="middle" fill="var(--ocean)" font-size="12" font-weight="700">extract</text>
+          <text x="90" y="114" text-anchor="middle" fill="var(--ocean)" font-size="9">entities-relations</text>
+          <text x="90" y="130" text-anchor="middle" fill="var(--slate)" font-size="8">output: kg-document</text>
+        </g>
+        <g data-anim="2">
+          <rect x="210" y="70" width="140" height="70" rx="8" fill="var(--teal)" opacity=".15" stroke="var(--teal)" stroke-width="1.5"/>
+          <text x="280" y="97" text-anchor="middle" fill="var(--teal)" font-size="12" font-weight="700">resolve</text>
+          <text x="280" y="114" text-anchor="middle" fill="var(--teal)" font-size="9">coref</text>
+          <text x="280" y="130" text-anchor="middle" fill="var(--slate)" font-size="8">input: document_file</text>
+        </g>
+        <g data-anim="3">
+          <rect x="400" y="70" width="140" height="70" rx="8" fill="var(--coral)" opacity=".15" stroke="var(--coral)" stroke-width="1.5"/>
+          <text x="470" y="97" text-anchor="middle" fill="var(--coral)" font-size="12" font-weight="700">detect</text>
+          <text x="470" y="114" text-anchor="middle" fill="var(--coral)" font-size="9">communities</text>
+          <text x="470" y="130" text-anchor="middle" fill="var(--slate)" font-size="8">input: document_file</text>
+        </g>
+        <g data-anim="4">
+          <rect x="590" y="70" width="140" height="70" rx="8" fill="var(--moss)" opacity=".15" stroke="var(--moss)" stroke-width="1.5"/>
+          <text x="660" y="97" text-anchor="middle" fill="var(--moss)" font-size="12" font-weight="700">store</text>
+          <text x="660" y="114" text-anchor="middle" fill="var(--moss)" font-size="9">triples</text>
+          <text x="660" y="130" text-anchor="middle" fill="var(--slate)" font-size="8">input: document_file</text>
+        </g>
+
+        <!-- Pipeline edges -->
+        <g class="pipe-edges">
+          <line x1="160" y1="105" x2="205" y2="105" class="flow-line" stroke="var(--ocean)" stroke-width="2" marker-end="url(#pipearr)"/>
+          <text x="183" y="97" text-anchor="middle" fill="var(--ocean)" font-size="8" font-weight="600">as</text>
+          <line x1="350" y1="105" x2="395" y2="105" class="flow-line" stroke="var(--ocean)" stroke-width="2" marker-end="url(#pipearr)"/>
+          <text x="373" y="97" text-anchor="middle" fill="var(--ocean)" font-size="8" font-weight="600">as</text>
+          <line x1="540" y1="105" x2="585" y2="105" class="flow-line" stroke="var(--ocean)" stroke-width="2" marker-end="url(#pipearr)"/>
+          <text x="563" y="97" text-anchor="middle" fill="var(--ocean)" font-size="8" font-weight="600">as</text>
+        </g>
+
+        <!-- Title -->
+        <text x="380" y="35" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">End-to-End KG Pipeline</text>
+        <text x="380" y="52" text-anchor="middle" fill="var(--slate)" font-size="10">extract &rarr; resolve.coref &rarr; detect.communities &rarr; store.triples</text>
+
+        <!-- Work dir -->
+        <g data-anim="5">
+          <rect x="200" y="165" width="360" height="40" rx="6" fill="var(--gold)" opacity=".12" stroke="var(--gold)" stroke-width="1"/>
+          <text x="380" y="190" text-anchor="middle" fill="#8a6d00" font-size="10" font-weight="600">Work Dir: stage-*.envelope.json + collected artifacts (checksum-verified, resume-capable)</text>
+        </g>
+      </svg>
+      <div class="diagram-caption">Figure 4 &mdash; A representative pipeline DAG. Artifacts flow between stages through typed edges; each stage writes its envelope to the work directory for resumability.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CAPABILITY TABLE                                              -->
+<!-- ============================================================ -->
+<section id="capabilities">
+  <div class="container">
+    <h2>Registered Capabilities</h2>
+    <p>The catalog declares 17 stable commands across 11 capability groups. Each maps to a provider-published capability ID in the dotted namespace.</p>
+    <table>
+      <thead><tr><th>Group</th><th>Capability</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>extract</td><td><code>extract.entities-relations</code></td><td>Extract entities and relations from documents</td></tr>
+        <tr><td>resolve</td><td><code>resolve.coref</code></td><td>Resolve coreference and merge duplicates</td></tr>
+        <tr><td>detect</td><td><code>detect.communities</code></td><td>Detect flat communities</td></tr>
+        <tr><td>detect</td><td><code>detect.communities-hierarchy</code></td><td>Detect hierarchical communities</td></tr>
+        <tr><td>detect</td><td><code>detect.communities-semantic</code></td><td>Detect semantic communities</td></tr>
+        <tr><td>summarize</td><td><code>summarize.communities</code></td><td>Generate GraphRAG-style community summaries</td></tr>
+        <tr><td>store</td><td><code>store.triples</code></td><td>Load a KG into a graph database backend</td></tr>
+        <tr><td>retrieve</td><td><code>retrieve.ask</code></td><td>Answer questions from a GraphRAG dataset</td></tr>
+        <tr><td>parse</td><td><code>parse.multimodal</code></td><td>Parse multimodal documents into graph-ready chunks</td></tr>
+        <tr><td>layout</td><td><code>layout.compute</code></td><td>Compute graph layout positions</td></tr>
+        <tr><td>analyze</td><td><code>analyze.centrality</code></td><td>Compute node centrality scores</td></tr>
+        <tr><td>analyze</td><td><code>analyze.pagerank</code></td><td>Compute PageRank scores</td></tr>
+        <tr><td>analyze</td><td><code>analyze.shortest-paths</code></td><td>Compute single-source shortest paths</td></tr>
+        <tr><td>analyze</td><td><code>analyze.components</code></td><td>Compute connected components</td></tr>
+        <tr><td>analyze</td><td><code>analyze.triangles</code></td><td>Count graph triangles</td></tr>
+        <tr><td>analyze</td><td><code>analyze.topology</code></td><td>Analyze bridges and articulation points</td></tr>
+        <tr><td>embed</td><td><code>embed.nodes</code></td><td>Compute Node2Vec embeddings</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- WALKTHROUGH                                                   -->
+<!-- ============================================================ -->
+<section id="walkthrough" style="background:var(--paper-deep)">
+  <div class="container">
+    <h2>Architecture Walkthrough</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Provider Discovery (<code>discover</code>)</h4>
+        <p>On <code>kgctl refresh</code>, the hub scans for provider binaries in four locations: explicit <code>--provider-bin</code> overrides, <code>~/sync/&lt;os&gt;-&lt;arch&gt;-bin/</code>, <code>~/sync/bin/</code>, and <code>PATH</code>. Additionally, it scans <code>PATH</code> for any <code>kg-provider-*</code> executables. Each binary is probed with <code>describe --json</code> and <code>available --json</code> (15-second timeout per probe).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Protocol Negotiation (<code>protocol</code>)</h4>
+        <p>The manifest's <code>protocol_versions</code> are intersected with the hub's <code>SupportedVersions</code> ([1]). The highest common version wins. A version mismatch produces a <code>VersionError</code> diagnostic, not a hard failure &mdash; the provider remains usable via the fallback bridge.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Schema Validation (<code>schema</code>)</h4>
+        <p>Provider manifests are validated against the embedded <code>provider-v1.schema.json</code>. A description-quality floor (from <code>acme-core</code>) rejects manifests with low-information descriptions. Input objects are validated against each capability's declared <code>input_schema</code> before execution.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Surface Building (<code>surface</code>)</h4>
+        <p>The snapshot merges all provider capabilities into a flat public inventory. Each capability gets a <code>kg.</code>-prefixed Semantic ID (e.g. <code>kg.extract.entities-relations</code>). Candidates are ranked: probed providers beat fallback bridges; ties break on weight (desc), then provider ID. The snapshot is fingerprinted with SHA-256 and written atomically.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Routing &amp; Resolution (<code>router</code>)</h4>
+        <p>At invocation time, the snapshot's candidate list selects a provider. The hub first validates input against the snapshot (no provider process needed). Only then does it <strong>re-probe</strong> the selected provider to catch contract drift between snapshot creation and invocation.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>Policy Enforcement (<code>policy</code>)</h4>
+        <p>Four side-effect gates (network, data_egress, downloads_models, writes_db) are all closed by default. Each capability declares its side effects; the hub checks all are explicitly allowed before execution. Unknown side effects fail closed. <code>--dry-run</code> bypasses all gates and renders the execution plan instead.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h4>Provider Dispatch (<code>router.Execute</code>)</h4>
+        <p>Probed providers are invoked via <code>kg.execution/v1</code>: the hub writes a JSON request to stdin and reads one Envelope from stdout. Legacy providers are invoked through the <code>bridge</code>: the hub renders an argv vector from the <code>cli_spec</code> and wraps stdout into an Envelope. Both paths produce the same output contract.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <h4>Pipeline Execution (<code>pipeline</code>)</h4>
+        <p>Pipelines declare stages with typed artifact edges. The runner compiles the DAG via Kahn's algorithm, validates edge types (only artifact-mode outputs can feed downstream), checks the union of all side-effect gates upfront, then executes stages in topological order. Each stage's envelope is written to <code>&lt;work-dir&gt;/stage-&lt;id&gt;.envelope.json</code>, enabling resume with checksum-verified artifact reuse.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">9</div>
+      <div class="step-body">
+        <h4>MCP Integration (<code>kg-mcp</code>)</h4>
+        <p>The MCP server reads the snapshot at startup and exposes each available capability as a JSON-RPC tool named <code>kg_&lt;capability&gt;</code> (dots and dashes replaced with underscores). Tool calls are dispatched to <code>cli.Runner</code> with the appropriate flags, including <code>dry_run</code> and <code>allow_*</code> parameters injected into every tool's input schema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- KEY DESIGN DECISIONS                                          -->
+<!-- ============================================================ -->
+<section id="decisions">
+  <div class="container">
+    <h2>Key Design Decisions</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Hub Never Implements Algorithms</h4>
+        <p>All KG computation lives in provider binaries. The hub only does integration: discovery, protocol, catalog, policy, routing, and pipeline orchestration. This keeps the hub small and the algorithm surface independently testable.</p>
+      </div>
+      <div class="card">
+        <h4>Provider Self-Description Is Authoritative</h4>
+        <p>When a provider's <code>describe --json</code> conflicts with the hub's fallback bridge table, the provider wins. A diagnostic is emitted, but no hub-side hardcoding overrides the provider contract.</p>
+      </div>
+      <div class="card">
+        <h4>Snapshot Isolation</h4>
+        <p>Metadata operations (help, list, describe, completion, MCP tools/list) never start provider processes. They read only the immutable snapshot generated at <code>kgctl refresh</code> time.</p>
+      </div>
+      <div class="card">
+        <h4>Fail-Closed Policy</h4>
+        <p>All side-effect gates default to denied. Unknown side effects are denied. Pipeline pre-check computes the union of all stage side effects before any provider starts. This prevents accidental network egress or database writes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FOOTER                                                        -->
+<!-- ============================================================ -->
+<footer>
+  <div class="container">
+    kg-acme architecture documentation &bull; Generated from source analysis &bull; Go 1.23 &bull; acme-core protocol
+  </div>
+</footer>
+
+<!-- ============================================================ -->
+<!-- ANIMATION JS                                                  -->
+<!-- ============================================================ -->
+<script>
+(function() {
+  // Intersection Observer for scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+
+  // Staggered SVG group animation
+  const svgObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const svg = entry.target.querySelector('svg');
+      if (!svg) return;
+      const groups = svg.querySelectorAll('[data-anim]');
+      groups.forEach(g => {
+        const delay = parseInt(g.getAttribute('data-anim'), 10) * 120;
+        g.style.opacity = '0';
+        g.style.transform = 'translateY(8px)';
+        g.style.transition = 'opacity .45s ease ' + delay + 'ms, transform .45s ease ' + delay + 'ms';
+        requestAnimationFrame(() => { g.style.opacity = '1'; g.style.transform = 'translateY(0)'; });
+      });
+      svgObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.10 });
+  document.querySelectorAll('.diagram-wrap').forEach(el => svgObserver.observe(el));
+
+  // Animate flow lines: restart dash animation on visibility
+  const lineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.flow-line').forEach(line => {
+          line.style.animation = 'none';
+          void line.offsetHeight; // reflow
+          line.style.animation = '';
+        });
+      }
+    });
+  }, { threshold: 0.20 });
+  document.querySelectorAll('.diagram-wrap').forEach(el => lineObserver.observe(el));
+})();
+</script>
+<script data-code2arch-svg-text-floor>
+    (() => {
+      // Leave sub-pixel headroom above the 12px hard gate. Chromium rounds
+      // glyph boxes differently across fonts, so a nominal 12.2px target can
+      // still render as 11.98px and fail the geometry audit.
+      const minimumHeight = 12.8;
+      const repair = () => {
+        document.querySelectorAll("svg text").forEach((label) => {
+          const box = label.getBoundingClientRect();
+          if (box.height <= 0 || box.height >= minimumHeight) return;
+          const fontSize = parseFloat(getComputedStyle(label).fontSize);
+          if (!Number.isFinite(fontSize) || fontSize <= 0) return;
+          const next = Math.ceil(fontSize * minimumHeight / box.height * 10) / 10;
+          label.style.fontSize = `${next}px`;
+        });
+      };
+      repair();
+      repair();
+      requestAnimationFrame(repair);
+      setTimeout(repair, 250);
+      setTimeout(repair, 750);
+      setTimeout(repair, 1500);
+    })();
+  </script>
+  <script data-code2arch-runtime-ready>
+    window.__docReady = true;
+  </script>
+</body>
+</html>

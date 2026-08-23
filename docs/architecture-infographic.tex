@@ -1,0 +1,184 @@
+% kg-acme architecture infographic — standalone TikZ figure
+% Uses showcase.sty from ~/projects/plot/tikz/styles/
+% Compile: xelatex (or lualatex) with -output-directory pointing here.
+\documentclass[border=8pt]{standalone}
+
+\usepackage{styles/showcase}
+\usepackage{fontspec}
+\usepackage[UTF8, heading=false]{ctex}
+\setCJKmainfont{Source Han Serif SC}[BoldFont=Source Han Serif SC Bold]
+\setmainfont{Source Sans Pro}
+
+\begin{document}
+\begin{tikzpicture}[
+  x=1mm, y=1mm,
+  every node/.style={font=\small},
+]
+
+% ============================================================
+% Title
+% ============================================================
+\ShowcaseTitle{0,0}{Architecture Overview}{kg-acme: Knowledge-Graph Capability Hub}
+
+% ============================================================
+% Layer 1: Entry Points (top)
+% ============================================================
+\node[showcase/node, fill=Indigo!8, draw=Indigo, minimum width=28mm, minimum height=10mm]
+  (cmd-kg) at (35, -16) {\scriptsize\bfseries cmd/kg};
+\node[showcase/node, fill=Indigo!8, draw=Indigo, minimum width=28mm, minimum height=10mm]
+  (cmd-kgctl) at (70, -16) {\scriptsize\bfseries cmd/kgctl};
+\node[showcase/node, fill=Indigo!8, draw=Indigo, minimum width=28mm, minimum height=10mm]
+  (cmd-kgmcp) at (105, -16) {\scriptsize\bfseries cmd/kg-mcp};
+
+\node[showcase/pill, fill=Indigo!15, text=Indigo, anchor=west]
+  at (3, -16) {\scriptsize Entry Points};
+
+% ============================================================
+% Layer 2: CLI / Surface
+% ============================================================
+\node[showcase/node, fill=Ocean!8, draw=Ocean, minimum width=26mm, minimum height=10mm]
+  (cli) at (35, -35) {\scriptsize\bfseries cli};
+\node[showcase/node, fill=Sky!8, draw=Sky, minimum width=26mm, minimum height=10mm]
+  (surface) at (70, -35) {\scriptsize\bfseries surface};
+\node[showcase/node, fill=Teal!8, draw=Teal, minimum width=26mm, minimum height=10mm]
+  (state) at (105, -35) {\scriptsize\bfseries state};
+
+\node[showcase/pill, fill=Ocean!15, text=Ocean, anchor=west]
+  at (3, -35) {\scriptsize CLI / Surface};
+
+% ============================================================
+% Layer 3: Core Logic
+% ============================================================
+\node[showcase/node, fill=Coral!8, draw=Coral, minimum width=26mm, minimum height=10mm]
+  (router) at (35, -56) {\scriptsize\bfseries router};
+\node[showcase/node, fill=Gold!15, draw=Gold!80!Ink, minimum width=26mm, minimum height=10mm]
+  (pipeline) at (70, -56) {\scriptsize\bfseries pipeline};
+\node[showcase/node, fill=Moss!8, draw=Moss, minimum width=26mm, minimum height=10mm]
+  (policy) at (105, -56) {\scriptsize\bfseries policy};
+\node[showcase/node, fill=Sky!8, draw=Sky, minimum width=26mm, minimum height=10mm]
+  (schema) at (140, -56) {\scriptsize\bfseries schema};
+
+\node[showcase/pill, fill=Coral!15, text=Coral, anchor=west]
+  at (3, -56) {\scriptsize Core Logic};
+
+% ============================================================
+% Layer 4: Infrastructure
+% ============================================================
+\node[showcase/node, fill=Slate!8, draw=Slate, minimum width=26mm, minimum height=10mm]
+  (protocol) at (35, -77) {\scriptsize\bfseries protocol};
+\node[showcase/node, fill=Slate!8, draw=Slate, minimum width=26mm, minimum height=10mm]
+  (catalog) at (70, -77) {\scriptsize\bfseries catalog};
+\node[showcase/node, fill=Slate!8, draw=Slate, minimum width=26mm, minimum height=10mm]
+  (discover) at (105, -77) {\scriptsize\bfseries discover};
+\node[showcase/node, fill=Slate!8, draw=Slate, minimum width=26mm, minimum height=10mm]
+  (bridge) at (140, -77) {\scriptsize\bfseries bridge};
+
+\node[showcase/pill, fill=Slate!15, text=Slate, anchor=west]
+  at (3, -77) {\scriptsize Infrastructure};
+
+% ============================================================
+% Layer 5: External (right side)
+% ============================================================
+\node[showcase/node, fill=Moss!8, draw=Moss, minimum width=32mm, minimum height=14mm]
+  (providers) at (172, -77) {\scriptsize\bfseries Provider Binaries};
+\node[showcase/pill, fill=Fog, text=Slate, anchor=west]
+  at (152, -95) {\tiny kg-extract, kg-mm, ygr, kg-layout, graph-kg, kg-algorithms};
+
+\node[showcase/node, fill=Fog, draw=none, minimum width=28mm, minimum height=10mm]
+  (acme-core) at (172, -56) {\scriptsize acme-core};
+
+% ============================================================
+% Dependency edges
+% ============================================================
+% Entry → CLI
+\draw[showcase/softflow] (cmd-kg.south) -- (cli.north);
+\draw[showcase/softflow] (cmd-kgctl.south) -- (cli.north);
+\draw[showcase/softflow] (cmd-kgmcp.south) |- (surface.north);
+
+% CLI → Core
+\draw[showcase/softflow] (cli.south) -- (router.north);
+\draw[showcase/softflow] (cli.south) -- (pipeline.north);
+\draw[showcase/softflow] (surface.south) -- (router.north);
+\draw[showcase/softflow] (state.south) -- (schema.north);
+
+% Core → Infra
+\draw[showcase/softflow] (router.south) -- (protocol.north);
+\draw[showcase/softflow] (router.south) -- (discover.north);
+\draw[showcase/softflow] (pipeline.south) -- (catalog.north);
+\draw[showcase/softflow] (policy.south) -- (protocol.north);
+\draw[showcase/softflow] (schema.south) -- (protocol.north);
+\draw[showcase/softflow] (bridge.south) -- (protocol.south);
+
+% Infra → Providers
+\draw[showcase/flow] (discover.east) -- (providers.west);
+\draw[showcase/flow] (bridge.east) -- (providers.west);
+
+% ============================================================
+% Pipeline sub-diagram (bottom section)
+% ============================================================
+\ShowcaseTitle{0,-108}{Data Flow}{End-to-End Pipeline: extract $\to$ resolve $\to$ detect $\to$ store}
+
+\node[showcase/node, fill=Ocean!10, draw=Ocean, minimum width=30mm]
+  (p-ext) at (20, -125) {\scriptsize\bfseries extract\\[-1pt]\tiny entities-relations};
+\node[showcase/node, fill=Teal!10, draw=Teal, minimum width=30mm]
+  (p-res) at (62, -125) {\scriptsize\bfseries resolve\\[-1pt]\tiny coref};
+\node[showcase/node, fill=Coral!10, draw=Coral, minimum width=30mm]
+  (p-det) at (104, -125) {\scriptsize\bfseries detect\\[-1pt]\tiny communities};
+\node[showcase/node, fill=Moss!10, draw=Moss, minimum width=30mm]
+  (p-sto) at (146, -125) {\scriptsize\bfseries store\\[-1pt]\tiny triples};
+
+\draw[showcase/flow] (p-ext) -- node[above, showcase/eyebrow]{\tiny kg-document} (p-res);
+\draw[showcase/flow] (p-res) -- node[above, showcase/eyebrow]{\tiny kg-document} (p-det);
+\draw[showcase/flow] (p-det) -- node[above, showcase/eyebrow]{\tiny kg-document} (p-sto);
+
+% Work-dir box
+\node[draw=Gold!70, fill=Gold!8, rounded corners=2mm, minimum width=150mm, minimum height=8mm,
+      font=\tiny, text=Slate, anchor=north west]
+  (workdir) at (5, -135) {Work Dir: stage-*.envelope.json + artifacts (SHA-256 checksums, resume support)};
+
+% ============================================================
+% Snapshot card (bottom right)
+% ============================================================
+\node[showcase/card, anchor=north east, minimum width=58mm, text width=54mm]
+  (snap) at (190, -108) {
+    \scriptsize\bfseries\color{Ocean}Immutable Snapshot\\[-2pt]
+    {\tiny\ttfamily \string~/Library/Caches/kg-acme/}\\[-1pt]
+    {\tiny capability-snapshot.json}\\[2pt]
+    {\color{Slate}\tiny 17 capabilities $\cdot$ fingerprinted $\cdot$\\
+    atomic write $\cdot$ all help/list/describe\\
+    read only this file}
+  };
+
+% ============================================================
+% Policy gates annotation
+% ============================================================
+\node[showcase/card, anchor=north west, minimum width=52mm, text width=48mm]
+  (gates) at (3, -150) {
+    \scriptsize\bfseries\color{Coral}Policy Gates (fail-closed)\\[-2pt]
+    {\color{Slate}\tiny
+    \texttt{--allow-network}\\
+    \texttt{--allow-data-egress}\\
+    \texttt{--allow-model-download}\\
+    \texttt{--allow-db-write}\\[1pt]
+    Default: all denied. \texttt{-{-}dry-run}\\
+    plans with zero side effects.}
+  };
+
+% ============================================================
+% Provider table annotation
+% ============================================================
+\node[showcase/card, anchor=north west, minimum width=68mm, text width=64mm]
+  (ptable) at (60, -150) {
+    \scriptsize\bfseries\color{Moss}Provider Discovery\\[-2pt]
+    {\color{Slate}\tiny
+    1. \texttt{-{-}provider-bin ID=PATH}\\
+    2. \texttt{\string~/sync/<os>-<arch>-bin/}\\
+    3. \texttt{\string~/sync/bin/}\\
+    4. PATH lookup\\
+    5. PATH scan for \texttt{kg-provider-*}\\[1pt]
+    Each probed: \texttt{describe -{-}json} +\\
+    \texttt{available -{-}json} (15s timeout)}
+  };
+
+\end{tikzpicture}
+\end{document}
