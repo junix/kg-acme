@@ -4,6 +4,13 @@
 \documentclass[border=8pt]{standalone}
 
 \usepackage{styles/showcase}
+\usepackage{xeCJK}
+\IfFontExistsTF{Source Han Serif SC}{
+  \setCJKmainfont[BoldFont={Source Han Serif SC Bold}]{Source Han Serif SC}
+}{
+  \setCJKmainfont[BoldFont={FandolHei-Bold}]{FandolHei-Regular}
+}
+
 \usepackage{fontspec}
 \usepackage[UTF8, heading=false]{ctex}
 \setCJKmainfont{Source Han Serif SC}[BoldFont=Source Han Serif SC Bold]
