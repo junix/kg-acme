@@ -13,7 +13,7 @@
   </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>kg-acme — Architecture Overview</title>
+<title>kg-acme — 架构总览</title>
 <style>
   :root {
     --bg: #f8f7f4; --surface: #ffffff; --ink: #17212b; --slate: #52606d;
@@ -89,7 +89,7 @@
   .pulse-glow { animation: pulse 2s ease-in-out infinite; }
 </style>
 
-<script type="application/json" id="doc-meta">{"id":"architecture","title":"kg-acme — Architecture Overview","status":"draft","audience":"architects","last_updated":"2026-08-26","owners":[],"revisions":[{"date":"2026-08-26","reason":"统一阅读版式、思源宋体、左目录与插图缩放"}]}</script>
+<script type="application/json" id="doc-meta">{"id":"architecture","title":"kg-acme — 架构总览","status":"draft","audience":"architects","last_updated":"2026-08-26","owners":[],"revisions":[{"date":"2026-08-26","reason":"统一阅读版式、思源宋体、左目录与插图缩放"}]}</script>
 
 <style data-code2arch-reading-chrome>
     :root {
@@ -343,9 +343,9 @@
 <!-- ============================================================ -->
 <header>
   <div class="container">
-    <div class="eyebrow">Architecture Overview</div>
+    <div class="eyebrow">架构总览</div>
     <h1>kg-acme</h1>
-    <p>A knowledge-graph capability hub that discovers, validates, and routes every KG operation through a single CLI, while keeping all algorithm logic inside independent provider binaries.</p>
+    <p>一个知识图谱能力中枢：通过单一 CLI 发现、校验并路由所有 KG 操作，同时把全部算法逻辑保留在独立的 provider 二进制中。</p>
   </div>
 </header>
 
@@ -354,13 +354,13 @@
 <!-- ============================================================ -->
 <section id="intro">
   <div class="container">
-    <h2>Product Introduction</h2>
-    <p><strong>kg-acme</strong> is a capability hub following the <em>acme family</em> pattern: the hub owns integration (discovery, protocol, catalog, policy, routing) while every KG algorithm lives in a separate <strong>provider</strong> binary. The hub never invents provider options &mdash; everything about a capability's flags, enums, and input schema comes from the provider's own <code>describe --json</code> self-description.</p>
-    <p>Three entry points share one immutable capability snapshot:</p>
+    <h2>产品介绍</h2>
+    <p><strong>kg-acme</strong> 是一个遵循 <em>acme 家族</em>模式的能力中枢：hub 负责集成（发现、协议、catalog、策略、路由），而每个 KG 算法都独立成单独的 <strong>provider</strong> 二进制。hub 从不臆造 provider 选项 —— 能力的 flags、枚举、输入模式完全来自 provider 自身的 <code>describe --json</code> 自描述。</p>
+    <p>三个入口共享同一份不可变的能力快照：</p>
     <ul>
-      <li><strong><code>kg</code></strong> &mdash; the execution surface. Accepts prefix-free dotted Semantic IDs (e.g. <code>kg analyze.pagerank</code>).</li>
-      <li><strong><code>kgctl</code></strong> &mdash; the control plane. Manages refresh, provider diagnostics, capability search, route configuration, and shell completion.</li>
-      <li><strong><code>kg-mcp</code></strong> &mdash; a stdio MCP server. Publishes every available capability as a JSON-RPC tool over newline-delimited stdin/stdout.</li>
+      <li><strong><code>kg</code></strong> —— 执行面。接受无前缀的点号式语义 ID（如 <code>kg analyze.pagerank</code>）。</li>
+      <li><strong><code>kgctl</code></strong> —— 控制面。负责刷新、provider 诊断、能力搜索、路由配置与 shell 补全。</li>
+      <li><strong><code>kg-mcp</code></strong> —— 一个 stdio MCP 服务。把每个可用能力都以 JSON-RPC 工具的形式，通过换行分隔的 stdin/stdout 发布出去。</li>
     </ul>
   </div>
 </section>
@@ -370,31 +370,31 @@
 <!-- ============================================================ -->
 <section id="features" style="background:var(--paper-deep)">
   <div class="container">
-    <h2>Features</h2>
+    <h2>特性</h2>
     <div class="card-grid">
       <div class="card">
-        <h4><span class="badge badge-ocean">Discovery</span> Provider Auto-Discovery</h4>
-        <p>Scans <code>~/sync</code> bins and <code>PATH</code> for protocol-native and legacy provider binaries. Probes each via <code>describe --json</code> and <code>available --json</code>.</p>
+        <h4><span class="badge badge-ocean">发现</span> Provider 自动发现</h4>
+        <p>扫描 <code>~/sync</code> 下的二进制与 <code>PATH</code>，识别协议原生与遗留的 provider 二进制。通过 <code>describe --json</code> 与 <code>available --json</code> 探测每一个。</p>
       </div>
       <div class="card">
-        <h4><span class="badge badge-teal">Protocol</span> Self-Describing Providers</h4>
-        <p>Providers declare capabilities, input schemas, CLI specs, and side effects through <code>kg.provider/v1</code>. The hub negotiates versions and validates manifests against embedded JSON Schemas.</p>
+        <h4><span class="badge badge-teal">协议</span> Provider 自描述</h4>
+        <p>Provider 通过 <code>kg.provider/v1</code> 声明能力、输入模式、CLI 规约与副作用。hub 协商版本，并按内嵌的 JSON Schema 校验清单。</p>
       </div>
       <div class="card">
-        <h4><span class="badge badge-coral">Policy</span> Side-Effect Gates</h4>
-        <p>All gates (network, data egress, model download, DB write) are closed by default. Each must be opened explicitly with <code>--allow-*</code> flags. <code>--dry-run</code> plans with zero side effects.</p>
+        <h4><span class="badge badge-coral">策略</span> 副作用门</h4>
+        <p>所有副作用门（网络、数据外发、模型下载、写库）默认关闭。必须用 <code>--allow-*</code> 显式开启。<code>--dry-run</code> 产出零副作用的执行计划。</p>
       </div>
       <div class="card">
-        <h4><span class="badge badge-indigo">Pipeline</span> Declarative DAG Execution</h4>
-        <p>Multi-stage pipelines (<code>kg.pipeline/v1</code>) with typed artifact edges, topological ordering, checksum-verified artifacts, and work-dir-based resume.</p>
+        <h4><span class="badge badge-indigo">流水线</span> 声明式 DAG 执行</h4>
+        <p>多阶段流水线（<code>kg.pipeline/v1</code>），具备类型化产物边、拓扑排序、产物校验和与基于工作目录的断点续跑。</p>
       </div>
       <div class="card">
-        <h4><span class="badge badge-moss">MCP</span> AI-Agent Integration</h4>
-        <p><code>kg-mcp</code> serves every capability as a JSON-RPC tool over stdio, exposing <code>dry_run</code> and <code>allow_*</code> parameters. Compatible with Claude Code, Codex, and other MCP hosts.</p>
+        <h4><span class="badge badge-moss">MCP</span> AI Agent 集成</h4>
+        <p><code>kg-mcp</code> 把每个能力都以 JSON-RPC 工具的形式暴露在 stdio 上，提供 <code>dry_run</code> 与 <code>allow_*</code> 参数。兼容 Claude Code、Codex 等 MCP host。</p>
       </div>
       <div class="card">
-        <h4><span class="badge badge-ocean">Snapshot</span> Immutable Capability Catalog</h4>
-        <p><code>kgctl refresh</code> generates a fingerprinted snapshot. All help, list, describe, completion, and MCP operations read only this snapshot &mdash; no provider processes start.</p>
+        <h4><span class="badge badge-ocean">快照</span> 不可变能力目录</h4>
+        <p><code>kgctl refresh</code> 生成带指纹的快照。所有 help、list、describe、补全与 MCP 操作只读这份快照 —— 不会启动 provider 进程。</p>
       </div>
     </div>
   </div>
@@ -405,20 +405,20 @@
 <!-- ============================================================ -->
 <section id="context">
   <div class="container">
-    <h2>System Context</h2>
-    <p>The kg-acme hub sits between operators (human or AI agent) and a fleet of independent KG provider binaries. It enforces a strict boundary: the hub handles protocol negotiation, catalog routing, schema validation, and policy enforcement. All computation (entity extraction, community detection, graph storage, etc.) happens inside provider processes.</p>
+    <h2>系统上下文</h2>
+    <p>kg-acme hub 位于操作者（人或 AI agent）与一组独立的 KG provider 二进制之间。它划出了一条严格边界：hub 负责协议协商、catalog 路由、schema 校验与策略执行。所有计算（实体抽取、社区检测、图存储等）都在 provider 进程内部完成。</p>
 
     <div class="diagram-wrap" id="diag-context">
       <svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
         <!-- External actors -->
         <g class="actor" data-anim="1">
           <rect x="20" y="40" width="140" height="56" rx="28" fill="var(--indigo)" stroke="var(--indigo)" stroke-width="1.5"/>
-          <text x="90" y="74" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">Human Operator</text>
+          <text x="90" y="74" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">人类操作者</text>
         </g>
         <g class="actor" data-anim="2">
           <rect x="20" y="310" width="140" height="56" rx="28" fill="var(--indigo)" stroke="var(--indigo)" stroke-width="1.5"/>
           <text x="90" y="340" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">AI Agent</text>
-          <text x="90" y="355" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="10">(MCP Host)</text>
+          <text x="90" y="355" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="10">（MCP Host）</text>
         </g>
 
         <!-- Hub -->
@@ -427,19 +427,19 @@
           <text x="410" y="115" text-anchor="middle" fill="var(--ocean)" font-size="16" font-weight="700">kg-acme Hub</text>
           <!-- Sub-modules -->
           <rect x="280" y="130" width="120" height="40" rx="6" fill="var(--ocean)" opacity=".12" stroke="var(--ocean)" stroke-width="1"/>
-          <text x="340" y="155" text-anchor="middle" fill="var(--ocean)" font-size="11" font-weight="600">Catalog</text>
+          <text x="340" y="155" text-anchor="middle" fill="var(--ocean)" font-size="11" font-weight="600">目录</text>
           <rect x="420" y="130" width="120" height="40" rx="6" fill="var(--teal)" opacity=".12" stroke="var(--teal)" stroke-width="1"/>
-          <text x="480" y="155" text-anchor="middle" fill="var(--teal)" font-size="11" font-weight="600">Discover</text>
+          <text x="480" y="155" text-anchor="middle" fill="var(--teal)" font-size="11" font-weight="600">发现</text>
           <rect x="280" y="185" width="120" height="40" rx="6" fill="var(--coral)" opacity=".12" stroke="var(--coral)" stroke-width="1"/>
-          <text x="340" y="210" text-anchor="middle" fill="var(--coral)" font-size="11" font-weight="600">Policy</text>
+          <text x="340" y="210" text-anchor="middle" fill="var(--coral)" font-size="11" font-weight="600">策略</text>
           <rect x="420" y="185" width="120" height="40" rx="6" fill="var(--indigo)" opacity=".12" stroke="var(--indigo)" stroke-width="1"/>
-          <text x="480" y="210" text-anchor="middle" fill="var(--indigo)" font-size="11" font-weight="600">Router</text>
+          <text x="480" y="210" text-anchor="middle" fill="var(--indigo)" font-size="11" font-weight="600">路由</text>
           <rect x="280" y="240" width="120" height="40" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1"/>
-          <text x="340" y="265" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">Pipeline</text>
+          <text x="340" y="265" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">流水线</text>
           <rect x="420" y="240" width="120" height="40" rx="6" fill="var(--sky)" opacity=".12" stroke="var(--sky)" stroke-width="1"/>
           <text x="480" y="265" text-anchor="middle" fill="var(--sky)" font-size="11" font-weight="600">Schema</text>
           <rect x="340" y="295" width="140" height="30" rx="6" fill="var(--gold)" opacity=".15" stroke="var(--gold)" stroke-width="1"/>
-          <text x="410" y="314" text-anchor="middle" fill="#8a6d00" font-size="10" font-weight="600">Snapshot (immutable)</text>
+          <text x="410" y="314" text-anchor="middle" fill="#8a6d00" font-size="10" font-weight="600">快照（不可变）</text>
         </g>
 
         <!-- Providers -->
@@ -447,16 +447,16 @@
           <rect x="650" y="30" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
           <text x="725" y="57" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-extract</text>
           <rect x="650" y="90" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
-          <text x="725" y="117" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-mm (multimodal)</text>
+          <text x="725" y="117" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-mm（多模态）</text>
           <rect x="650" y="150" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
-          <text x="725" y="177" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">ygr (GraphRAG)</text>
+          <text x="725" y="177" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">ygr（GraphRAG）</text>
           <rect x="650" y="210" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
           <text x="725" y="237" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-layout</text>
           <rect x="650" y="270" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
-          <text x="725" y="297" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">graph-kg (analyze)</text>
+          <text x="725" y="297" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">graph-kg（分析）</text>
           <rect x="650" y="330" width="150" height="44" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
           <text x="725" y="357" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">kg-algorithms</text>
-          <text x="725" y="395" text-anchor="middle" fill="var(--slate)" font-size="10">kg-provider-* (PATH scan)</text>
+          <text x="725" y="395" text-anchor="middle" fill="var(--slate)" font-size="10">kg-provider-*（PATH 扫描）</text>
         </g>
 
         <!-- Edges: actors → hub -->
@@ -477,14 +477,14 @@
 
         <!-- Legend -->
         <g transform="translate(20,390)">
-          <text x="0" y="0" fill="var(--slate)" font-size="9">Legend:</text>
+          <text x="0" y="0" fill="var(--slate)" font-size="9">图例：</text>
           <line x1="55" y1="-3" x2="90" y2="-3" stroke="var(--ocean)" stroke-width="1.5" class="flow-line"/>
           <text x="96" y="0" fill="var(--slate)" font-size="9">describe/invoke</text>
           <line x1="190" y1="-3" x2="225" y2="-3" stroke="var(--indigo)" stroke-width="1.5" class="flow-line"/>
-          <text x="231" y="0" fill="var(--slate)" font-size="9">CLI/MCP input</text>
+          <text x="231" y="0" fill="var(--slate)" font-size="9">CLI/MCP 输入</text>
         </g>
       </svg>
-      <div class="diagram-caption">Figure 1 &mdash; System context: operators and AI agents interact through the hub; all KG computation is delegated to provider binaries.</div>
+      <div class="diagram-caption">图 1 &mdash; 系统上下文：操作者与 AI agent 通过 hub 交互；所有 KG 计算都委托给 provider 二进制。</div>
     </div>
   </div>
 </section>
@@ -494,36 +494,36 @@
 <!-- ============================================================ -->
 <section id="execution-flow" style="background:var(--paper-deep)">
   <div class="container">
-    <h2>Execution Flow</h2>
-    <p>When a user runs <code>kg extract.entities-relations --file doc.pdf --json</code>, the request passes through the following stages. Metadata commands (<code>--help</code>, <code>--describe</code>, <code>list</code>) read only the snapshot and never start a provider.</p>
+    <h2>执行流程</h2>
+    <p>当用户运行 <code>kg extract.entities-relations --file doc.pdf --json</code> 时，请求依次经过如下阶段。元数据命令（<code>--help</code>、<code>--describe</code>、<code>list</code>）只读快照，永远不会启动 provider。</p>
 
     <div class="diagram-wrap" id="diag-flow">
       <svg viewBox="0 0 840 320" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
         <!-- Stage boxes -->
         <g data-anim="1">
           <rect x="10" y="40" width="120" height="56" rx="8" fill="var(--indigo)" opacity=".15" stroke="var(--indigo)" stroke-width="1.5"/>
-          <text x="70" y="63" text-anchor="middle" fill="var(--indigo)" font-size="12" font-weight="700">1. Parse</text>
-          <text x="70" y="80" text-anchor="middle" fill="var(--indigo)" font-size="9">argv + global flags</text>
+          <text x="70" y="63" text-anchor="middle" fill="var(--indigo)" font-size="12" font-weight="700">1. 解析</text>
+          <text x="70" y="80" text-anchor="middle" fill="var(--indigo)" font-size="9">argv + 全局 flags</text>
         </g>
         <g data-anim="2">
           <rect x="170" y="40" width="120" height="56" rx="8" fill="var(--ocean)" opacity=".15" stroke="var(--ocean)" stroke-width="1.5"/>
-          <text x="230" y="63" text-anchor="middle" fill="var(--ocean)" font-size="12" font-weight="700">2. Snapshot</text>
-          <text x="230" y="80" text-anchor="middle" fill="var(--ocean)" font-size="9">load immutable</text>
+          <text x="230" y="63" text-anchor="middle" fill="var(--ocean)" font-size="12" font-weight="700">2. 快照</text>
+          <text x="230" y="80" text-anchor="middle" fill="var(--ocean)" font-size="9">加载不可变快照</text>
         </g>
         <g data-anim="3">
           <rect x="330" y="40" width="120" height="56" rx="8" fill="var(--teal)" opacity=".15" stroke="var(--teal)" stroke-width="1.5"/>
-          <text x="390" y="63" text-anchor="middle" fill="var(--teal)" font-size="12" font-weight="700">3. Resolve</text>
-          <text x="390" y="80" text-anchor="middle" fill="var(--teal)" font-size="9">capability &rarr; provider</text>
+          <text x="390" y="63" text-anchor="middle" fill="var(--teal)" font-size="12" font-weight="700">3. 解析（能力→provider）</text>
+          <text x="390" y="80" text-anchor="middle" fill="var(--teal)" font-size="9">能力 &rarr; provider</text>
         </g>
         <g data-anim="4">
           <rect x="490" y="40" width="120" height="56" rx="8" fill="var(--sky)" opacity=".15" stroke="var(--sky)" stroke-width="1.5"/>
-          <text x="550" y="63" text-anchor="middle" fill="var(--sky)" font-size="12" font-weight="700">4. Validate</text>
-          <text x="550" y="80" text-anchor="middle" fill="var(--sky)" font-size="9">schema + policy gates</text>
+          <text x="550" y="63" text-anchor="middle" fill="var(--sky)" font-size="12" font-weight="700">4. 校验</text>
+          <text x="550" y="80" text-anchor="middle" fill="var(--sky)" font-size="9">schema + 策略门</text>
         </g>
         <g data-anim="5">
           <rect x="650" y="40" width="120" height="56" rx="8" fill="var(--coral)" opacity=".15" stroke="var(--coral)" stroke-width="1.5"/>
-          <text x="710" y="63" text-anchor="middle" fill="var(--coral)" font-size="12" font-weight="700">5. Execute</text>
-          <text x="710" y="80" text-anchor="middle" fill="var(--coral)" font-size="9">invoke or dry-run</text>
+          <text x="710" y="63" text-anchor="middle" fill="var(--coral)" font-size="12" font-weight="700">5. 执行</text>
+          <text x="710" y="80" text-anchor="middle" fill="var(--coral)" font-size="9">调用或 dry-run</text>
         </g>
 
         <!-- Arrows between stages -->
@@ -542,37 +542,37 @@
         <!-- Detail panel -->
         <g data-anim="6">
           <rect x="10" y="120" width="820" height="185" rx="10" fill="var(--surface)" stroke="var(--fog)" stroke-width="1"/>
-          <text x="30" y="148" fill="var(--ocean)" font-size="13" font-weight="700">Invocation Path (non-dry-run)</text>
+          <text x="30" y="148" fill="var(--ocean)" font-size="13" font-weight="700">调用路径（非 dry-run）</text>
 
           <!-- Substeps -->
           <g transform="translate(30,165)">
             <rect x="0" y="0" width="240" height="115" rx="6" fill="var(--indigo)" opacity=".06" stroke="var(--fog)" stroke-width=".8"/>
-            <text x="12" y="20" fill="var(--indigo)" font-size="10" font-weight="700">Snapshot Phase (no provider start)</text>
-            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; Find capability in snapshot</text>
-            <text x="12" y="53" fill="var(--slate)" font-size="9.5">&bull; Select candidate provider</text>
-            <text x="12" y="68" fill="var(--slate)" font-size="9.5">&bull; Parse argv via cli_spec</text>
-            <text x="12" y="83" fill="var(--slate)" font-size="9.5">&bull; Validate input_schema</text>
-            <text x="12" y="98" fill="var(--slate)" font-size="9.5">&bull; Check policy gates</text>
+            <text x="12" y="20" fill="var(--indigo)" font-size="10" font-weight="700">快照阶段（不启动 provider）</text>
+            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; 在快照中查找能力</text>
+            <text x="12" y="53" fill="var(--slate)" font-size="9.5">&bull; 选取候选 provider</text>
+            <text x="12" y="68" fill="var(--slate)" font-size="9.5">&bull; 按 cli_spec 解析 argv</text>
+            <text x="12" y="83" fill="var(--slate)" font-size="9.5">&bull; 校验 input_schema</text>
+            <text x="12" y="98" fill="var(--slate)" font-size="9.5">&bull; 检查策略门</text>
           </g>
           <g transform="translate(290,165)">
             <rect x="0" y="0" width="240" height="115" rx="6" fill="var(--coral)" opacity=".06" stroke="var(--fog)" stroke-width=".8"/>
-            <text x="12" y="20" fill="var(--coral)" font-size="10" font-weight="700">Live Revalidation</text>
-            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; Re-probe selected provider</text>
-            <text x="12" y="53" fill="var(--slate)" font-size="9.5">&bull; Re-resolve capability</text>
-            <text x="12" y="68" fill="var(--slate)" font-size="9.5">&bull; Detect contract drift</text>
+            <text x="12" y="20" fill="var(--coral)" font-size="10" font-weight="700">运行时再校验</text>
+            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; 重新探测选中的 provider</text>
+            <text x="12" y="53" fill="var(--slate)" font-size="9.5">&bull; 重新解析能力</text>
+            <text x="12" y="68" fill="var(--slate)" font-size="9.5">&bull; 检测契约漂移</text>
           </g>
           <g transform="translate(550,165)">
             <rect x="0" y="0" width="250" height="115" rx="6" fill="var(--moss)" opacity=".06" stroke="var(--fog)" stroke-width=".8"/>
-            <text x="12" y="20" fill="var(--moss)" font-size="10" font-weight="700">Dispatch</text>
-            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; Probed: kg.execution/v1 invoke</text>
-            <text x="12" y="53" fill="var(--slate)" font-size="9.5">  (stdin JSON, stdout envelope)</text>
-            <text x="12" y="73" fill="var(--slate)" font-size="9.5">&bull; Fallback: argv bridge</text>
-            <text x="12" y="88" fill="var(--slate)" font-size="9.5">  (render argv from cli_spec)</text>
-            <text x="12" y="103" fill="var(--slate)" font-size="9.5">&bull; Wrap output in Envelope</text>
+            <text x="12" y="20" fill="var(--moss)" font-size="10" font-weight="700">派发</text>
+            <text x="12" y="38" fill="var(--slate)" font-size="9.5">&bull; 已探测：kg.execution/v1 invoke</text>
+            <text x="12" y="53" fill="var(--slate)" font-size="9.5">  （stdin JSON，stdout envelope）</text>
+            <text x="12" y="73" fill="var(--slate)" font-size="9.5">&bull; 兜底：argv bridge</text>
+            <text x="12" y="88" fill="var(--slate)" font-size="9.5">  （从 cli_spec 渲染 argv）</text>
+            <text x="12" y="103" fill="var(--slate)" font-size="9.5">&bull; 用 Envelope 包装输出</text>
           </g>
         </g>
       </svg>
-      <div class="diagram-caption">Figure 2 &mdash; Invocation flow from CLI argument parsing through snapshot resolution, live revalidation, and provider dispatch.</div>
+      <div class="diagram-caption">图 2 &mdash; 从 CLI 参数解析，经快照解析、运行时再校验到 provider 派发的完整调用流程。</div>
     </div>
   </div>
 </section>
@@ -582,8 +582,8 @@
 <!-- ============================================================ -->
 <section id="modules">
   <div class="container">
-    <h2>Module Architecture</h2>
-    <p>kg-acme is organized as a flat Go module (<code>kg-acme</code>) with all business logic under <code>internal/</code>. Each package has a single responsibility and depends only downward.</p>
+    <h2>模块架构</h2>
+    <p>kg-acme 组织为一个扁平的 Go 模块（<code>kg-acme</code>），所有业务逻辑放在 <code>internal/</code> 下。每个包职责单一，只向下依赖。</p>
 
     <div class="diagram-wrap" id="diag-modules">
       <svg viewBox="0 0 720 480" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
@@ -594,10 +594,10 @@
         </defs>
 
         <!-- Layer labels -->
-        <text x="16" y="30" fill="var(--slate)" font-size="10" font-weight="700" text-transform="uppercase" letter-spacing=".06em">Entry Points</text>
+        <text x="16" y="30" fill="var(--slate)" font-size="10" font-weight="700" text-transform="uppercase" letter-spacing=".06em">入口点</text>
         <text x="16" y="120" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">CLI / Surface</text>
-        <text x="16" y="210" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">Core Logic</text>
-        <text x="16" y="340" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">Infrastructure</text>
+        <text x="16" y="210" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">核心逻辑</text>
+        <text x="16" y="340" fill="var(--slate)" font-size="10" font-weight="700" letter-spacing=".06em">基础设施</text>
 
         <!-- Entry points -->
         <g data-anim="1">
@@ -646,11 +646,11 @@
         <!-- External -->
         <g data-anim="5">
           <rect x="580" y="390" width="130" height="38" rx="6" fill="var(--moss)" opacity=".12" stroke="var(--moss)" stroke-width="1.2"/>
-          <text x="645" y="414" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">Provider Binaries</text>
+          <text x="645" y="414" text-anchor="middle" fill="var(--moss)" font-size="11" font-weight="600">Provider 二进制</text>
         </g>
         <g>
           <rect x="120" y="390" width="130" height="38" rx="6" fill="var(--fog)" stroke="var(--fog)" stroke-width="1"/>
-          <text x="185" y="414" text-anchor="middle" fill="var(--slate)" font-size="10" font-weight="600">acme-core (shared)</text>
+          <text x="185" y="414" text-anchor="middle" fill="var(--slate)" font-size="10" font-weight="600">acme-core（共享）</text>
         </g>
 
         <!-- Dependency arrows -->
@@ -684,7 +684,7 @@
           <line x1="300" y1="338" x2="185" y2="388" stroke="var(--fog)" stroke-width="1" marker-end="url(#arr)"/>
         </g>
       </svg>
-      <div class="diagram-caption">Figure 3 &mdash; Module dependency graph. Each package has one responsibility; dependencies flow downward. External dependencies (acme-core, jsonschema) sit at the infrastructure layer.</div>
+      <div class="diagram-caption">图 3 &mdash; 模块依赖图。每个包职责单一，依赖自上而下流动。外部依赖（acme-core、jsonschema）位于基础设施层。</div>
     </div>
   </div>
 </section>
@@ -694,8 +694,8 @@
 <!-- ============================================================ -->
 <section id="pipeline" style="background:var(--paper-deep)">
   <div class="container">
-    <h2>Pipeline Architecture</h2>
-    <p>A pipeline is a declarative <code>kg.pipeline/v1</code> JSON file. Each stage references a capability ID; stages are wired through typed artifact edges (<code>input_from</code>). The runner compiles the DAG, validates typed edges, and executes in topological order.</p>
+    <h2>流水线架构</h2>
+    <p>流水线是一个声明式的 <code>kg.pipeline/v1</code> JSON 文件。每个阶段引用一个能力 ID；阶段之间通过类型化的产物边（<code>input_from</code>）连接。运行器编译 DAG，校验边的类型，并按拓扑序执行。</p>
 
     <div class="diagram-wrap" id="diag-pipeline">
       <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans Pro',system-ui,sans-serif">
@@ -742,16 +742,16 @@
         </g>
 
         <!-- Title -->
-        <text x="380" y="35" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">End-to-End KG Pipeline</text>
+        <text x="380" y="35" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">端到端 KG 流水线</text>
         <text x="380" y="52" text-anchor="middle" fill="var(--slate)" font-size="10">extract &rarr; resolve.coref &rarr; detect.communities &rarr; store.triples</text>
 
         <!-- Work dir -->
         <g data-anim="5">
           <rect x="200" y="165" width="360" height="40" rx="6" fill="var(--gold)" opacity=".12" stroke="var(--gold)" stroke-width="1"/>
-          <text x="380" y="190" text-anchor="middle" fill="#8a6d00" font-size="10" font-weight="600">Work Dir: stage-*.envelope.json + collected artifacts (checksum-verified, resume-capable)</text>
+          <text x="380" y="190" text-anchor="middle" fill="#8a6d00" font-size="10" font-weight="600">工作目录：stage-*.envelope.json 与收集到的产物（校验和验证，可断点续跑）</text>
         </g>
       </svg>
-      <div class="diagram-caption">Figure 4 &mdash; A representative pipeline DAG. Artifacts flow between stages through typed edges; each stage writes its envelope to the work directory for resumability.</div>
+      <div class="diagram-caption">图 4 &mdash; 一个代表性的流水线 DAG。产物通过类型化边在各阶段间流动；每个阶段把自身 envelope 写入工作目录以支持续跑。</div>
     </div>
   </div>
 </section>
@@ -761,28 +761,28 @@
 <!-- ============================================================ -->
 <section id="capabilities">
   <div class="container">
-    <h2>Registered Capabilities</h2>
-    <p>The catalog declares 17 stable commands across 11 capability groups. Each maps to a provider-published capability ID in the dotted namespace.</p>
+    <h2>已注册能力</h2>
+    <p>目录在 11 个能力组下声明了 17 条稳定命令。每条命令都映射到点号命名空间内的一个 provider 发布的能力 ID。</p>
     <table>
-      <thead><tr><th>Group</th><th>Capability</th><th>Description</th></tr></thead>
+      <thead><tr><th>分组</th><th>能力</th><th>描述</th></tr></thead>
       <tbody>
-        <tr><td>extract</td><td><code>extract.entities-relations</code></td><td>Extract entities and relations from documents</td></tr>
-        <tr><td>resolve</td><td><code>resolve.coref</code></td><td>Resolve coreference and merge duplicates</td></tr>
-        <tr><td>detect</td><td><code>detect.communities</code></td><td>Detect flat communities</td></tr>
-        <tr><td>detect</td><td><code>detect.communities-hierarchy</code></td><td>Detect hierarchical communities</td></tr>
-        <tr><td>detect</td><td><code>detect.communities-semantic</code></td><td>Detect semantic communities</td></tr>
-        <tr><td>summarize</td><td><code>summarize.communities</code></td><td>Generate GraphRAG-style community summaries</td></tr>
-        <tr><td>store</td><td><code>store.triples</code></td><td>Load a KG into a graph database backend</td></tr>
-        <tr><td>retrieve</td><td><code>retrieve.ask</code></td><td>Answer questions from a GraphRAG dataset</td></tr>
-        <tr><td>parse</td><td><code>parse.multimodal</code></td><td>Parse multimodal documents into graph-ready chunks</td></tr>
-        <tr><td>layout</td><td><code>layout.compute</code></td><td>Compute graph layout positions</td></tr>
-        <tr><td>analyze</td><td><code>analyze.centrality</code></td><td>Compute node centrality scores</td></tr>
-        <tr><td>analyze</td><td><code>analyze.pagerank</code></td><td>Compute PageRank scores</td></tr>
-        <tr><td>analyze</td><td><code>analyze.shortest-paths</code></td><td>Compute single-source shortest paths</td></tr>
-        <tr><td>analyze</td><td><code>analyze.components</code></td><td>Compute connected components</td></tr>
-        <tr><td>analyze</td><td><code>analyze.triangles</code></td><td>Count graph triangles</td></tr>
-        <tr><td>analyze</td><td><code>analyze.topology</code></td><td>Analyze bridges and articulation points</td></tr>
-        <tr><td>embed</td><td><code>embed.nodes</code></td><td>Compute Node2Vec embeddings</td></tr>
+        <tr><td>extract</td><td><code>extract.entities-relations</code></td><td>从文档中抽取实体与关系</td></tr>
+        <tr><td>resolve</td><td><code>resolve.coref</code></td><td>解决指代并合并重复项</td></tr>
+        <tr><td>detect</td><td><code>detect.communities</code></td><td>检测扁平社区</td></tr>
+        <tr><td>detect</td><td><code>detect.communities-hierarchy</code></td><td>检测层次化社区</td></tr>
+        <tr><td>detect</td><td><code>detect.communities-semantic</code></td><td>检测语义社区</td></tr>
+        <tr><td>summarize</td><td><code>summarize.communities</code></td><td>生成 GraphRAG 风格的社区摘要</td></tr>
+        <tr><td>store</td><td><code>store.triples</code></td><td>把 KG 装载到图数据库后端</td></tr>
+        <tr><td>retrieve</td><td><code>retrieve.ask</code></td><td>基于 GraphRAG 数据集回答问题</td></tr>
+        <tr><td>parse</td><td><code>parse.multimodal</code></td><td>把多模态文档解析成图就绪的块</td></tr>
+        <tr><td>layout</td><td><code>layout.compute</code></td><td>计算图的布局坐标</td></tr>
+        <tr><td>analyze</td><td><code>analyze.centrality</code></td><td>计算节点中心性得分</td></tr>
+        <tr><td>analyze</td><td><code>analyze.pagerank</code></td><td>计算 PageRank 得分</td></tr>
+        <tr><td>analyze</td><td><code>analyze.shortest-paths</code></td><td>计算单源最短路径</td></tr>
+        <tr><td>analyze</td><td><code>analyze.components</code></td><td>计算连通分量</td></tr>
+        <tr><td>analyze</td><td><code>analyze.triangles</code></td><td>统计图中三角形数量</td></tr>
+        <tr><td>analyze</td><td><code>analyze.topology</code></td><td>分析桥边与关节点</td></tr>
+        <tr><td>embed</td><td><code>embed.nodes</code></td><td>计算 Node2Vec 嵌入</td></tr>
       </tbody>
     </table>
   </div>
@@ -793,77 +793,77 @@
 <!-- ============================================================ -->
 <section id="walkthrough" style="background:var(--paper-deep)">
   <div class="container">
-    <h2>Architecture Walkthrough</h2>
+    <h2>架构走读</h2>
 
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-body">
-        <h4>Provider Discovery (<code>discover</code>)</h4>
-        <p>On <code>kgctl refresh</code>, the hub scans for provider binaries in four locations: explicit <code>--provider-bin</code> overrides, <code>~/sync/&lt;os&gt;-&lt;arch&gt;-bin/</code>, <code>~/sync/bin/</code>, and <code>PATH</code>. Additionally, it scans <code>PATH</code> for any <code>kg-provider-*</code> executables. Each binary is probed with <code>describe --json</code> and <code>available --json</code> (15-second timeout per probe).</p>
+        <h4>Provider 发现 (<code>discover</code>)</h4>
+        <p>运行 <code>kgctl refresh</code> 时，hub 在四个位置扫描 provider 二进制：显式的 <code>--provider-bin</code> 覆盖、<code>~/sync/&lt;os&gt;-&lt;arch&gt;-bin/</code>、<code>~/sync/bin/</code> 与 <code>PATH</code>。此外，还会扫描 <code>PATH</code> 中所有 <code>kg-provider-*</code> 可执行文件。每个二进制都会通过 <code>describe --json</code> 和 <code>available --json</code> 进行探测（每次探测 15 秒超时）。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-body">
-        <h4>Protocol Negotiation (<code>protocol</code>)</h4>
-        <p>The manifest's <code>protocol_versions</code> are intersected with the hub's <code>SupportedVersions</code> ([1]). The highest common version wins. A version mismatch produces a <code>VersionError</code> diagnostic, not a hard failure &mdash; the provider remains usable via the fallback bridge.</p>
+        <h4>协议协商 (<code>protocol</code>)</h4>
+        <p>清单的 <code>protocol_versions</code> 与 hub 的 <code>SupportedVersions</code> 取交集（[1]）。最高的共有版本胜出。版本不匹配只会产生 <code>VersionError</code> 诊断，不会硬失败 —— 该 provider 仍可通过兜底 bridge 使用。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-body">
-        <h4>Schema Validation (<code>schema</code>)</h4>
-        <p>Provider manifests are validated against the embedded <code>provider-v1.schema.json</code>. A description-quality floor (from <code>acme-core</code>) rejects manifests with low-information descriptions. Input objects are validated against each capability's declared <code>input_schema</code> before execution.</p>
+        <h4>Schema 校验 (<code>schema</code>)</h4>
+        <p>Provider 清单按内嵌的 <code>provider-v1.schema.json</code> 进行校验。来自 <code>acme-core</code> 的描述质量门槛会拒掉那些描述信息量过低的清单。输入对象在执行前会按各能力声明的 <code>input_schema</code> 进行校验。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">4</div>
       <div class="step-body">
-        <h4>Surface Building (<code>surface</code>)</h4>
-        <p>The snapshot merges all provider capabilities into a flat public inventory. Each capability gets a <code>kg.</code>-prefixed Semantic ID (e.g. <code>kg.extract.entities-relations</code>). Candidates are ranked: probed providers beat fallback bridges; ties break on weight (desc), then provider ID. The snapshot is fingerprinted with SHA-256 and written atomically.</p>
+        <h4>Surface 构建 (<code>surface</code>)</h4>
+        <p>快照把所有 provider 能力合并成扁平化的公共清单。每个能力获得一个带 <code>kg.</code> 前缀的语义 ID（如 <code>kg.extract.entities-relations</code>）。候选者按以下规则排序：已探测 provider 优先于兜底 bridge；并列时按权重（降序），再按 provider ID。快照以 SHA-256 指纹并原子写入。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">5</div>
       <div class="step-body">
-        <h4>Routing &amp; Resolution (<code>router</code>)</h4>
-        <p>At invocation time, the snapshot's candidate list selects a provider. The hub first validates input against the snapshot (no provider process needed). Only then does it <strong>re-probe</strong> the selected provider to catch contract drift between snapshot creation and invocation.</p>
+        <h4>路由与解析 (<code>router</code>)</h4>
+        <p>在调用时，快照中的候选列表选出一个 provider。hub 先针对快照校验输入（无需启动 provider 进程）。然后才 <strong>重新探测</strong> 选中的 provider，以捕获快照创建和调用之间的契约漂移。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">6</div>
       <div class="step-body">
-        <h4>Policy Enforcement (<code>policy</code>)</h4>
-        <p>Four side-effect gates (network, data_egress, downloads_models, writes_db) are all closed by default. Each capability declares its side effects; the hub checks all are explicitly allowed before execution. Unknown side effects fail closed. <code>--dry-run</code> bypasses all gates and renders the execution plan instead.</p>
+        <h4>策略执行 (<code>policy</code>)</h4>
+        <p>四个副作用门（network、data_egress、downloads_models、writes_db）默认全部关闭。每个能力声明其副作用；hub 在执行前检查所有副作用都已被显式允许。未知副作用一律 fail-closed。<code>--dry-run</code> 绕过所有门，仅渲染执行计划。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">7</div>
       <div class="step-body">
-        <h4>Provider Dispatch (<code>router.Execute</code>)</h4>
-        <p>Probed providers are invoked via <code>kg.execution/v1</code>: the hub writes a JSON request to stdin and reads one Envelope from stdout. Legacy providers are invoked through the <code>bridge</code>: the hub renders an argv vector from the <code>cli_spec</code> and wraps stdout into an Envelope. Both paths produce the same output contract.</p>
+        <h4>Provider 派发 (<code>router.Execute</code>)</h4>
+        <p>已探测的 provider 通过 <code>kg.execution/v1</code> 调用：hub 把 JSON 请求写到 stdin 并从 stdout 读取一个 Envelope。遗留 provider 通过 <code>bridge</code> 调用：hub 从 <code>cli_spec</code> 渲染 argv 数组，并把 stdout 包装为 Envelope。两条路径产出相同的输出契约。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">8</div>
       <div class="step-body">
-        <h4>Pipeline Execution (<code>pipeline</code>)</h4>
-        <p>Pipelines declare stages with typed artifact edges. The runner compiles the DAG via Kahn's algorithm, validates edge types (only artifact-mode outputs can feed downstream), checks the union of all side-effect gates upfront, then executes stages in topological order. Each stage's envelope is written to <code>&lt;work-dir&gt;/stage-&lt;id&gt;.envelope.json</code>, enabling resume with checksum-verified artifact reuse.</p>
+        <h4>流水线执行 (<code>pipeline</code>)</h4>
+        <p>流水线用类型化产物边声明阶段。运行器通过 Kahn 算法编译 DAG，校验边的类型（只有 artifact 模式输出可向下游传递），前置检查所有副作用门的并集，然后按拓扑序执行阶段。每个阶段的 envelope 写入 <code>&lt;work-dir&gt;/stage-&lt;id&gt;.envelope.json</code>，以支持基于校验和验证的产物复用续跑。</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">9</div>
       <div class="step-body">
-        <h4>MCP Integration (<code>kg-mcp</code>)</h4>
-        <p>The MCP server reads the snapshot at startup and exposes each available capability as a JSON-RPC tool named <code>kg_&lt;capability&gt;</code> (dots and dashes replaced with underscores). Tool calls are dispatched to <code>cli.Runner</code> with the appropriate flags, including <code>dry_run</code> and <code>allow_*</code> parameters injected into every tool's input schema.</p>
+        <h4>MCP 集成 (<code>kg-mcp</code>)</h4>
+        <p>MCP 服务在启动时读取快照，把每个可用能力暴露为名为 <code>kg_&lt;capability&gt;</code> 的 JSON-RPC 工具（点和短横线被替换成下划线）。工具调用被派发到 <code>cli.Runner</code> 并带上相应 flags，包括注入到每个工具输入模式中的 <code>dry_run</code> 与 <code>allow_*</code> 参数。</p>
       </div>
     </div>
   </div>
@@ -874,23 +874,23 @@
 <!-- ============================================================ -->
 <section id="decisions">
   <div class="container">
-    <h2>Key Design Decisions</h2>
+    <h2>关键设计决策</h2>
     <div class="card-grid">
       <div class="card">
-        <h4>Hub Never Implements Algorithms</h4>
-        <p>All KG computation lives in provider binaries. The hub only does integration: discovery, protocol, catalog, policy, routing, and pipeline orchestration. This keeps the hub small and the algorithm surface independently testable.</p>
+        <h4>Hub 永不实现算法</h4>
+        <p>所有 KG 计算都放在 provider 二进制中。hub 只做集成：发现、协议、catalog、策略、路由与流水线编排。这让 hub 保持小巧，也让算法面可以独立测试。</p>
       </div>
       <div class="card">
-        <h4>Provider Self-Description Is Authoritative</h4>
-        <p>When a provider's <code>describe --json</code> conflicts with the hub's fallback bridge table, the provider wins. A diagnostic is emitted, but no hub-side hardcoding overrides the provider contract.</p>
+        <h4>Provider 自描述是权威</h4>
+        <p>当 provider 的 <code>describe --json</code> 与 hub 兜底 bridge 表冲突时，以 provider 为准。会发射一条诊断，但 hub 端没有任何硬编码会覆盖 provider 契约。</p>
       </div>
       <div class="card">
-        <h4>Snapshot Isolation</h4>
-        <p>Metadata operations (help, list, describe, completion, MCP tools/list) never start provider processes. They read only the immutable snapshot generated at <code>kgctl refresh</code> time.</p>
+        <h4>快照隔离</h4>
+        <p>元数据操作（help、list、describe、补全、MCP tools/list）永不启动 provider 进程。它们只读取 <code>kgctl refresh</code> 时生成的不可变快照。</p>
       </div>
       <div class="card">
-        <h4>Fail-Closed Policy</h4>
-        <p>All side-effect gates default to denied. Unknown side effects are denied. Pipeline pre-check computes the union of all stage side effects before any provider starts. This prevents accidental network egress or database writes.</p>
+        <h4>Fail-Closed 策略</h4>
+        <p>所有副作用门默认拒绝。未知副作用一律拒绝。流水线预检查会在任何 provider 启动前计算所有阶段副作用的并集。这能避免意外的网络外发或写库。</p>
       </div>
     </div>
   </div>
@@ -901,7 +901,7 @@
 <!-- ============================================================ -->
 <footer>
   <div class="container">
-    kg-acme architecture documentation &bull; Generated from source analysis &bull; Go 1.23 &bull; acme-core protocol
+    kg-acme 架构文档 &bull; 由源码分析自动生成 &bull; Go 1.23 &bull; acme-core 协议
   </div>
 </footer>
 
