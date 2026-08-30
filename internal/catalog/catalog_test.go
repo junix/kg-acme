@@ -87,23 +87,32 @@ func TestParseValidationRules(t *testing.T) {
 		name    string
 		doc     string
 		wantErr string
+		bug     string // non-empty: known production defect, scenario recorded but skipped
 	}{
-		{"semantic_id mirror", mutate(t, `"semantic_id":"extract.things"`, `"semantic_id":"extract.other"`), "must mirror command_path"},
-		{"illegal segment", mutate(t, `"command_path":["extract","things"]`, `"command_path":["Extract","things"]`), "illegal segment"},
-		{"title punctuation", mutate(t, `"title":"Extract things"`, `"title":"Extract things."`), "must not end with punctuation"},
-		{"empty title", mutate(t, `"title":"Extract things"`, `"title":""`), "empty title"},
-		{"description not sentence", mutate(t, `"description":"Extracts things."`, `"description":"Extracts things"`), "single sentence ending"},
-		{"capability command without id", mutate(t, `"capability_id":"extract.entities_relations"`, `"builtin":false`), "must declare capability_id"},
-		{"builtin with capability id", `{"version":1,"commands":[{"command_path":["pipeline"],"semantic_id":"pipeline","title":"Pipe","description":"Pipes.","builtin":true,"capability_id":"kg.pipe"}]}`, "builtin command must not declare"},
+		{"semantic_id mirror", mutate(t, `"semantic_id":"extract.things"`, `"semantic_id":"extract.other"`), "must mirror command_path", ""},
+		{"illegal segment", mutate(t, `"command_path":["extract","things"]`, `"command_path":["Extract","things"]`), "illegal segment", ""},
+		{"title punctuation", mutate(t, `"title":"Extract things"`, `"title":"Extract things."`), "must not end with punctuation", ""},
+		{"title ends with bang", mutate(t, `"title":"Extract things"`, `"title":"Extract things!"`), "must not end with punctuation", ""},
+		{"title ends with full-width stop", mutate(t, `"title":"Extract things"`, `"title":"Extract things。"`), "must not end with punctuation",
+			"Parse slices the title's last byte, so the multi-byte 。 is never matched against the punctuation set"},
+		{"empty title", mutate(t, `"title":"Extract things"`, `"title":""`), "empty title", ""},
+		{"description not sentence", mutate(t, `"description":"Extracts things."`, `"description":"Extracts things"`), "single sentence ending", ""},
+		{"description with newline", mutate(t, `"description":"Extracts things."`, `"description":"Extracts\nthings."`), "single sentence ending", ""},
+		{"empty description", mutate(t, `"description":"Extracts things."`, `"description":""`), "single sentence ending", ""},
+		{"capability command without id", mutate(t, `"capability_id":"extract.entities_relations"`, `"builtin":false`), "must declare capability_id", ""},
+		{"builtin with capability id", `{"version":1,"commands":[{"command_path":["pipeline"],"semantic_id":"pipeline","title":"Pipe","description":"Pipes.","builtin":true,"capability_id":"kg.pipe"}]}`, "builtin command must not declare", ""},
 		{"duplicate id", `{"version":1,"commands":[
 		  {"command_path":["a"],"semantic_id":"a","title":"A","description":"A.","capability_id":"kg.a"},
-		  {"command_path":["a"],"semantic_id":"a","title":"A","description":"A.","capability_id":"kg.a"}]}`, "duplicate semantic_id"},
-		{"bad json", `{`, "invalid JSON"},
-		{"no commands", `{"version":1,"commands":[]}`, "no commands"},
-		{"empty command path", `{"version":1,"commands":[{"command_path":[],"semantic_id":"","title":"X","description":"X.","capability_id":"kg.x"}]}`, "empty command_path"},
+		  {"command_path":["a"],"semantic_id":"a","title":"A","description":"A.","capability_id":"kg.a"}]}`, "duplicate semantic_id", ""},
+		{"bad json", `{`, "invalid JSON", ""},
+		{"no commands", `{"version":1,"commands":[]}`, "no commands", ""},
+		{"empty command path", `{"version":1,"commands":[{"command_path":[],"semantic_id":"","title":"X","description":"X.","capability_id":"kg.x"}]}`, "empty command_path", ""},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
+			if tc.bug != "" {
+				t.Skipf("BUG: %s", tc.bug)
+			}
 			_, err := Parse([]byte(tc.doc))
 			if err == nil {
 				t.Fatalf("expected error containing %q, got nil", tc.wantErr)
@@ -144,5 +153,13 @@ func TestFindPath(t *testing.T) {
 	}
 	if cmd, _ = c.FindPath([]string{"nope"}); cmd != nil {
 		t.Errorf("unknown command should not match, got %v", cmd)
+	}
+	// Boundary: empty args, and a first-segment group that is no command's
+	// full path, both consume nothing.
+	if cmd, n = c.FindPath(nil); cmd != nil || n != 0 {
+		t.Errorf("empty args must match nothing, got %v consumed %d", cmd, n)
+	}
+	if cmd, n = c.FindPath([]string{"detect"}); cmd != nil || n != 0 {
+		t.Errorf("group prefix alone must match no command, got %v consumed %d", cmd, n)
 	}
 }

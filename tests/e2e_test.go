@@ -147,7 +147,259 @@ func TestMCPToolsListUsesSnapshotOnly(t *testing.T) {
 	}
 }
 
+// mcp runs kg-mcp against the given request lines and returns the response
+// lines, in order. Notifications and unparseable lines must produce none.
+func mcp(t *testing.T, home, requests string) []string {
+	t.Helper()
+	command := exec.Command(filepath.Join(binaries, "kg-mcp"))
+	command.Env = environment(home)
+	command.Stdin = strings.NewReader(requests)
+	output, err := command.CombinedOutput()
+	if err != nil {
+		t.Fatalf("kg-mcp: %v: %s", err, output)
+	}
+	var responses []string
+	for _, line := range strings.Split(strings.TrimSpace(string(output)), "\n") {
+		if line != "" {
+			responses = append(responses, line)
+		}
+	}
+	return responses
+}
+
+// mcpTools runs tools/list and returns the published tools by name.
+func mcpTools(t *testing.T, home string) map[string]map[string]any {
+	t.Helper()
+	responses := mcp(t, home, `{"jsonrpc":"2.0","id":1,"method":"tools/list"}`+"\n")
+	if len(responses) != 1 {
+		t.Fatalf("tools/list must answer exactly once, got %d: %v", len(responses), responses)
+	}
+	var envelope struct {
+		Result struct {
+			Tools []map[string]any `json:"tools"`
+		} `json:"result"`
+	}
+	if err := json.Unmarshal([]byte(responses[0]), &envelope); err != nil {
+		t.Fatalf("tools/list response is not JSON: %v: %s", err, responses[0])
+	}
+	tools := map[string]map[string]any{}
+	for _, tool := range envelope.Result.Tools {
+		tools[tool["name"].(string)] = tool
+	}
+	return tools
+}
+
+// The dispatch contract: initialize/ping answer, notifications and invalid
+// lines stay silent, and every error path returns the documented JSON-RPC
+// code and message.
+func TestMCPDispatchContract(t *testing.T) {
+	home, provider, _ := fixture(t)
+	run(t, home, "kgctl", "refresh", "--provider-bin", "fake="+provider)
+	responses := mcp(t, home, strings.Join([]string{
+		`{"jsonrpc":"2.0","id":1,"method":"initialize"}`,
+		`{"jsonrpc":"2.0","id":2,"method":"ping"}`,
+		`{"jsonrpc":"2.0","id":3,"method":"notifications/initialized"}`,
+		`not json`,
+		``,
+		`{"jsonrpc":"2.0","id":4,"method":"tools/call","params":42}`,
+		`{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"no_such_tool"}}`,
+		`{"jsonrpc":"2.0","id":6,"method":"resources/list"}`,
+	}, "\n")+"\n")
+	if len(responses) != 5 {
+		t.Fatalf("notifications, empty and invalid lines must produce no response, got %d:\n%s",
+			len(responses), strings.Join(responses, "\n"))
+	}
+	var decoded []struct {
+		JSONRPC string          `json:"jsonrpc"`
+		ID      float64         `json:"id"`
+		Result  json.RawMessage `json:"result"`
+		Error   *struct {
+			Code    int    `json:"code"`
+			Message string `json:"message"`
+		} `json:"error"`
+	}
+	for _, line := range responses {
+		var r struct {
+			JSONRPC string          `json:"jsonrpc"`
+			ID      float64         `json:"id"`
+			Result  json.RawMessage `json:"result"`
+			Error   *struct {
+				Code    int    `json:"code"`
+				Message string `json:"message"`
+			} `json:"error"`
+		}
+		if err := json.Unmarshal([]byte(line), &r); err != nil {
+			t.Fatalf("response is not JSON-RPC: %v: %s", err, line)
+		}
+		decoded = append(decoded, r)
+	}
+	wantIDs := []float64{1, 2, 4, 5, 6} // id 3 is the silent notification
+	for i, r := range decoded {
+		if r.JSONRPC != "2.0" {
+			t.Errorf("response %d: jsonrpc = %q, want 2.0", i+1, r.JSONRPC)
+		}
+		if r.ID != wantIDs[i] {
+			t.Errorf("response %d: id = %v, want %v (responses must stay in request order)", i+1, r.ID, wantIDs[i])
+		}
+	}
+
+	// initialize
+	var init struct {
+		ProtocolVersion string `json:"protocolVersion"`
+		Capabilities    struct {
+			Tools struct {
+				ListChanged bool `json:"listChanged"`
+			} `json:"tools"`
+		} `json:"capabilities"`
+		ServerInfo struct {
+			Name string `json:"name"`
+		} `json:"serverInfo"`
+	}
+	if decoded[0].Error != nil {
+		t.Fatalf("initialize errored: %+v", decoded[0].Error)
+	}
+	if err := json.Unmarshal(decoded[0].Result, &init); err != nil {
+		t.Fatalf("initialize result: %v", err)
+	}
+	if init.ProtocolVersion != "2025-06-18" || init.ServerInfo.Name != "kg-mcp" {
+		t.Errorf("initialize: protocol=%q server=%q", init.ProtocolVersion, init.ServerInfo.Name)
+	}
+	if init.Capabilities.Tools.ListChanged {
+		t.Error("initialize must advertise tools.listChanged=false")
+	}
+
+	// ping answers an empty result object
+	var ping map[string]any
+	if decoded[1].Error != nil {
+		t.Fatalf("ping errored: %+v", decoded[1].Error)
+	}
+	if err := json.Unmarshal(decoded[1].Result, &ping); err != nil || len(ping) != 0 {
+		t.Errorf("ping result must be an empty object: %v %s", err, decoded[1].Result)
+	}
+
+	for _, tc := range []struct {
+		resp     int
+		wantCode int
+		wantMsg  string
+	}{
+		{2, -32602, "invalid tool arguments"},
+		{3, -32602, "unknown tool: no_such_tool"},
+		{4, -32601, "method not found: resources/list"},
+	} {
+		if decoded[tc.resp].Error == nil || decoded[tc.resp].Error.Code != tc.wantCode ||
+			decoded[tc.resp].Error.Message != tc.wantMsg {
+			got := decoded[tc.resp].Error
+			t.Errorf("response %d: want code %d %q, got %+v", tc.resp+1, tc.wantCode, tc.wantMsg, got)
+		}
+	}
+}
+
+// tools/list publishes available capabilities with the hub's gate flags
+// injected into every input schema; an unavailable provider's tools are
+// withheld while hub capabilities stay.
+func TestMCPToolsListSchemaAndAvailability(t *testing.T) {
+	home, provider, _ := fixture(t)
+	run(t, home, "kgctl", "refresh", "--provider-bin", "fake="+provider)
+	tool, ok := mcpTools(t, home)["kg_test_echo"]
+	if !ok {
+		t.Fatal("kg_test_echo must be published as a tool")
+	}
+	if tool["title"] != "Echo a value" {
+		t.Errorf("tool title: %v", tool["title"])
+	}
+	schema, ok := tool["inputSchema"].(map[string]any)
+	if !ok {
+		t.Fatalf("tool inputSchema must be an object: %#v", tool["inputSchema"])
+	}
+	properties, ok := schema["properties"].(map[string]any)
+	if !ok {
+		t.Fatalf("inputSchema.properties must be an object: %#v", schema["properties"])
+	}
+	if _, ok := properties["value"]; !ok {
+		t.Error("provider-declared property must survive schema expansion")
+	}
+	for _, gate := range []string{"dry_run", "allow_network", "allow_data_egress", "allow_model_download", "allow_db_write"} {
+		if _, ok := properties[gate]; !ok {
+			t.Errorf("expanded schema must inject %q: %v", gate, properties)
+		}
+	}
+
+	// A provider reporting available:false is withheld from tools/list.
+	home2, provider2, _ := fixtureWithAvailable(t, `printf '%s\n' '{"available":false,"ready":[],"missing":[]}'`)
+	run(t, home2, "kgctl", "refresh", "--provider-bin", "fake="+provider2)
+	tools := mcpTools(t, home2)
+	if _, ok := tools["kg_test_echo"]; ok {
+		t.Error("unavailable provider's tool must not be listed")
+	}
+	if _, ok := tools["kg_pipeline_run"]; !ok {
+		t.Errorf("hub capability must stay listed, got %v", tools)
+	}
+}
+
+// tools/call routes through the kg CLI: dry_run maps to --dry-run, the gate
+// keys never leak into the provider params, and the provider never starts.
+func TestMCPCallDryRunNeverStartsProvider(t *testing.T) {
+	home, provider, log := fixture(t)
+	run(t, home, "kgctl", "refresh", "--provider-bin", "fake="+provider)
+	before := readLog(t, log)
+	responses := mcp(t, home,
+		`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kg_test_echo","arguments":{"value":"hello","dry_run":true}}}`+"\n")
+	if len(responses) != 1 {
+		t.Fatalf("tools/call must answer exactly once, got %d: %v", len(responses), responses)
+	}
+	var envelope struct {
+		Result struct {
+			IsError           bool           `json:"isError"`
+			StructuredContent map[string]any `json:"structuredContent"`
+		} `json:"result"`
+		Error *struct {
+			Code    int    `json:"code"`
+			Message string `json:"message"`
+		} `json:"error"`
+	}
+	if err := json.Unmarshal([]byte(responses[0]), &envelope); err != nil {
+		t.Fatalf("tools/call response is not JSON: %v: %s", err, responses[0])
+	}
+	if envelope.Error != nil {
+		t.Fatalf("tools/call dry-run errored: %+v", envelope.Error)
+	}
+	if envelope.Result.IsError {
+		t.Error("dry-run call must not be an error result")
+	}
+	if envelope.Result.StructuredContent["status"] != "ok" {
+		t.Errorf("structuredContent.status = %v, want ok: %v",
+			envelope.Result.StructuredContent["status"], envelope.Result.StructuredContent)
+	}
+	if envelope.Result.StructuredContent["capability_id"] != "test.echo" {
+		t.Errorf("structuredContent.capability_id = %v, want test.echo",
+			envelope.Result.StructuredContent["capability_id"])
+	}
+	plan, ok := envelope.Result.StructuredContent["result"].(map[string]any)
+	if !ok {
+		t.Fatalf("structuredContent.result must carry the dry-run plan: %#v",
+			envelope.Result.StructuredContent["result"])
+	}
+	// test.echo declares no side effects, so no gate denies it: the plan says
+	// it would execute — yet the provider log proves it never did.
+	if plan["would_execute"] != true {
+		t.Errorf("no side effects denied → would_execute=true, got %v (plan=%v)", plan["would_execute"], plan)
+	}
+	if denied, ok := plan["denied"].([]any); ok && len(denied) != 0 {
+		t.Errorf("no effects should be denied, got %v", denied)
+	}
+	if after := readLog(t, log); after != before {
+		t.Fatalf("MCP dry-run call started provider:\nbefore=%q\nafter=%q", before, after)
+	}
+}
+
 func fixture(t *testing.T) (home, provider, log string) {
+	t.Helper()
+	return fixtureWithAvailable(t, `printf '%s\n' '{"available":true,"ready":[],"missing":[]}'`)
+}
+
+// fixtureWithAvailable is fixture with a custom shell snippet for the
+// available action, so tests can publish an unavailable provider.
+func fixtureWithAvailable(t *testing.T, available string) (home, provider, log string) {
 	t.Helper()
 	home = t.TempDir()
 	log = filepath.Join(home, "provider.log")
@@ -157,7 +409,7 @@ printf '%s\n' "$*" >> "` + log + `"
 case "$1" in
   describe)
     printf '%s\n' '{"protocol":"kg.provider/v1","protocol_versions":[1],"provider":{"id":"fake","version":"1.0.0","description":"Fake provider"},"source":{"local_code_path":"/tmp/fake-provider-source"},"capabilities":[{"capability_id":"test.echo","title":"Echo a value","description":"Return the supplied value without changing it.","side_effects":[],"input_schema":{"type":"object","properties":{"value":{"type":"string"}},"required":["value"],"additionalProperties":false},"output":{"mode":"result-json","kind":"json"},"cli_spec":{"subcommand":[],"always":[],"positionals":[],"flags":[]}}]}' ;;
-  available) printf '%s\n' '{"available":true,"ready":[],"missing":[]}' ;;
+  available) ` + available + ` ;;
   invoke) printf '%s\n' '{"protocol":"kg.execution/v1","capability_id":"test.echo","provider":"fake","status":"ok","result":{"value":"hello"}}' ;;
 esac
 `
