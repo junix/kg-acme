@@ -85,6 +85,11 @@ func TestFindExecutableOrder(t *testing.T) {
 	if got := FindExecutable("missing", nil, env); got != "" {
 		t.Errorf("missing binary should resolve to empty, got %q", got)
 	}
+	// Empty Home skips the sync directories entirely; PATH still resolves.
+	got = FindExecutable("path-only", nil, Env{Home: "", Path: env.Path})
+	if want := filepath.Join(env.Path, "path-only"); got != want {
+		t.Errorf("empty home must fall through to PATH: got %q want %q", got, want)
+	}
 }
 
 func TestFindExecutableOverrideWins(t *testing.T) {
@@ -108,6 +113,12 @@ func TestFindExecutableOverrideWins(t *testing.T) {
 	want := filepath.Join(env.Home, "sync", runtime.GOOS+"-"+runtime.GOARCH+"-bin", "tool")
 	if got != want {
 		t.Errorf("non-executable override should fall through: got %q want %q", got, want)
+	}
+
+	// An override naming a missing file also falls through to discovery.
+	got = FindExecutable("tool", Overrides{"tool": filepath.Join(overrideDir, "absent")}, env)
+	if got != want {
+		t.Errorf("missing override should fall through: got %q want %q", got, want)
 	}
 }
 
@@ -141,6 +152,23 @@ func TestScanProviders(t *testing.T) {
 		if _, ok := found[name]; !ok {
 			t.Errorf("expected %s to be found", name)
 		}
+	}
+}
+
+// When the same kg-provider-* name exists in two PATH directories, the
+// earlier directory wins and later duplicates are ignored.
+func TestScanProvidersFirstPathDirWins(t *testing.T) {
+	dirA, dirB := t.TempDir(), t.TempDir()
+	for _, dir := range []string{dirA, dirB} {
+		if err := os.WriteFile(filepath.Join(dir, "kg-provider-x"), []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	env := Env{Path: strings.Join([]string{dirA, dirB}, string(os.PathListSeparator))}
+	found := ScanProviders(env)
+	want := filepath.Join(dirA, "kg-provider-x")
+	if len(found) != 1 || found["kg-provider-x"] != want {
+		t.Errorf("first PATH dir must win: got %v, want %q", found, want)
 	}
 }
 
@@ -286,6 +314,9 @@ func TestProbeFailureModes(t *testing.T) {
 		{"manifest violates schema", describe(probeManifest(clean, "[1]", `["teleport"]`)), availableOK,
 			false, protocol.ErrMalformedManifest, "", true},
 		{"available failure never downgrades", describe(probeManifest(clean, "[1]", "[]")), "exit 1",
+			true, "", "", false},
+		{"available report violates schema", describe(probeManifest(clean, "[1]", "[]")),
+			`printf '%s\n' '{"available":"yes","ready":[],"missing":[]}'`,
 			true, "", "", false},
 	}
 	for _, tc := range cases {

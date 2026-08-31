@@ -129,11 +129,41 @@ func TestFind(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c.Find("extract") == nil {
-		t.Error("extract group should be found")
+	// Find returns the FIRST command whose first segment matches: for a
+	// group with several subcommands that pins the catalog's first entry.
+	if cmd := c.Find("extract"); cmd == nil || cmd.Path() != "extract.entities-relations" {
+		t.Errorf("extract group: got %v, want extract.entities-relations", cmd)
+	}
+	if cmd := c.Find("detect"); cmd == nil || cmd.Path() != "detect.communities" {
+		t.Errorf("detect group: got %v, want detect.communities", cmd)
 	}
 	if c.Find("nonexistent") != nil {
 		t.Error("nonexistent should not be found")
+	}
+}
+
+// A builtin command (hub-implemented, builtin:true) carries no
+// capability_id: Parse must accept it and CapabilityCommands must exclude
+// it — the embedded catalog has no builtins, so this pins the branch with a
+// synthetic doc.
+func TestParseBuiltinCommand(t *testing.T) {
+	doc := `{"version":1,"commands":[
+	  {"command_path":["pipeline"],"semantic_id":"pipeline","title":"Pipeline","description":"Runs pipelines.","builtin":true},
+	  {"command_path":["extract","things"],"semantic_id":"extract.things","title":"Extract things","description":"Extracts things.","capability_id":"extract.entities_relations"}]}`
+	c, err := Parse([]byte(doc))
+	if err != nil {
+		t.Fatalf("valid doc with a builtin command must parse: %v", err)
+	}
+	if c.Version != 1 || len(c.Commands) != 2 {
+		t.Fatalf("parsed catalog shape: version %d, %d commands", c.Version, len(c.Commands))
+	}
+	builtin := c.Commands[0]
+	if !builtin.Builtin || builtin.CapabilityID != "" || builtin.Path() != "pipeline" {
+		t.Errorf("builtin command must round-trip: %+v", builtin)
+	}
+	caps := c.CapabilityCommands()
+	if len(caps) != 1 || caps[0].Path() != "extract.things" || caps[0].CapabilityID != "extract.entities_relations" {
+		t.Errorf("CapabilityCommands must keep only the capability command: %+v", caps)
 	}
 }
 

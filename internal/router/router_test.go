@@ -2,8 +2,13 @@ package router
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -294,6 +299,89 @@ func TestResolveFallbackNewIDs(t *testing.T) {
 	}
 }
 
+// probedProviderWithWeight builds a probed provider with the given id and
+// weight offering the shared extract capability with an open input schema.
+func probedProviderWithWeight(id string, weight float64) Provider {
+	return Provider{
+		Status: discover.ProviderStatus{
+			ID: id, Path: "/bin/" + id, Probed: true, Version: 1, Weight: weight,
+			Manifest: &protocol.Manifest{
+				Protocol:         protocol.ProviderProtocol,
+				ProtocolVersions: []int{1},
+				Provider:         protocol.ProviderInfo{ID: id, Version: "1.0", Description: "fake"},
+				Capabilities: []protocol.Capability{{
+					CapabilityID: "extract.entities_relations",
+					Title:        "Extract",
+					Description:  "Extracts.",
+					InputSchema:  json.RawMessage(`{"type":"object","additionalProperties":true}`),
+					Output:       protocol.OutputSpec{Mode: "result-json", Kind: "kg-document"},
+				}},
+			},
+		},
+	}
+}
+
+// Resolve's documented ranking: probed beats fallback, then higher weight
+// wins, then the lexicographically smaller provider id. The ranking must be
+// independent of provider-list order.
+func TestResolveTiebreaks(t *testing.T) {
+	heavy := probedProviderWithWeight("kg-heavy", 2.0)
+	light := probedProviderWithWeight("kg-light", 1.0)
+	for _, providers := range [][]Provider{{light, heavy}, {heavy, light}} {
+		res, err := Resolve(providers, "extract.entities_relations")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if res.Provider.ID() != "kg-heavy" {
+			t.Errorf("higher weight must win regardless of list order: got %q", res.Provider.ID())
+		}
+	}
+
+	zzz := probedProviderWithWeight("zzz-provider", 1.0)
+	aaa := probedProviderWithWeight("aaa-provider", 1.0)
+	for _, providers := range [][]Provider{{zzz, aaa}, {aaa, zzz}} {
+		res, err := Resolve(providers, "extract.entities_relations")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if res.Provider.ID() != "aaa-provider" {
+			t.Errorf("equal weights must break on the smaller id: got %q", res.Provider.ID())
+		}
+	}
+}
+
+// ValidateInvocation is the CLI's pre-flight check: schema first, then the
+// policy gates — which a dry-run never needs.
+func TestValidateInvocation(t *testing.T) {
+	res, err := Resolve([]Provider{fallbackProvider()}, "extract.entities_relations")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Run("schema violation reported", func(t *testing.T) {
+		err := ValidateInvocation(res, map[string]any{"bogus": 1}, policy.Gates{}, false)
+		if err == nil {
+			t.Fatal("schema-violating input must be rejected")
+		}
+		if strings.Contains(err.Error(), "side effects denied by policy") {
+			t.Errorf("schema error must not be reported as a policy error: %v", err)
+		}
+	})
+
+	t.Run("closed gates block a real run", func(t *testing.T) {
+		err := ValidateInvocation(res, map[string]any{"file": "doc.md"}, policy.Gates{}, false)
+		if err == nil || !strings.Contains(err.Error(), "side effects denied by policy") {
+			t.Fatalf("closed gates must block a real run, got %v", err)
+		}
+	})
+
+	t.Run("dry-run needs no allowances", func(t *testing.T) {
+		if err := ValidateInvocation(res, map[string]any{"file": "doc.md"}, policy.Gates{}, true); err != nil {
+			t.Fatalf("dry-run must skip the gate check: %v", err)
+		}
+	})
+}
+
 func TestCLISpecOverrideDiagnostic(t *testing.T) {
 	// Probed cli_spec differs from the fallback table → diagnostic.
 	diffSpec := protocol.CLISpec{Subcommand: []string{"extract"}}
@@ -524,6 +612,104 @@ func TestExecuteFallbackProviderError(t *testing.T) {
 			t.Errorf("error %q should contain %q", env.Error.Message, want)
 		}
 	}
+}
+
+// artifactFallback builds an unprobed provider whose capability is declared
+// artifact-mode. When stdoutFlag is set the --out flag is the stdout flag
+// naming the output artifact path.
+func artifactFallback(stdoutFlag bool) Provider {
+	return Provider{
+		Status: discover.ProviderStatus{ID: "kg-artifact", Path: "/bin/kg-artifact", Weight: 1.0},
+		Fallback: &bridge.FallbackProvider{
+			ID:  "kg-artifact",
+			Bin: "kg-artifact",
+			Capabilities: []bridge.FallbackCapability{{
+				CapabilityID: "render.doc",
+				Output:       protocol.OutputSpec{Mode: "artifact", Kind: "kg-document"},
+				InputSchema: json.RawMessage(`{"type":"object","properties":{"out":{"type":"string"}},"required":["out"],"additionalProperties":false}`),
+				CLISpec: protocol.CLISpec{Flags: []protocol.FlagSpec{
+					{Name: "out", Flag: "--out", Kind: protocol.FlagString, Stdout: stdoutFlag, Order: 1},
+				}},
+			}},
+		},
+	}
+}
+
+// invokeFallback's artifact mode: the stdout-marked flag names the output
+// file, which the hub reads back and attaches with a sha256 checksum; an
+// unreadable artifact is an invocation failure; without a stdout flag the
+// trimmed stdout becomes the result.
+func TestExecuteFallbackArtifactMode(t *testing.T) {
+	resolve := func(t *testing.T, p Provider) *Resolved {
+		t.Helper()
+		res, err := Resolve([]Provider{p}, "render.doc")
+		if err != nil {
+			t.Fatal(err)
+		}
+		return res
+	}
+
+	t.Run("artifact read back with checksum", func(t *testing.T) {
+		artifact := filepath.Join(t.TempDir(), "out.json")
+		content := []byte(`{"kind":"kg-document"}`)
+		if err := os.WriteFile(artifact, content, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		env, err := Execute(context.Background(), resolve(t, artifactFallback(true)),
+			map[string]any{"out": artifact}, policy.Gates{}, false, &fakeRunner{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if env.Status != "ok" {
+			t.Fatalf("expected ok, got %+v", env.Error)
+		}
+		sum := sha256.Sum256(content)
+		want := []protocol.Artifact{{
+			Path: artifact, Kind: "kg-document", Checksum: "sha256:" + hex.EncodeToString(sum[:]),
+		}}
+		if !reflect.DeepEqual(env.Artifacts, want) {
+			t.Errorf("artifacts: got %+v want %+v", env.Artifacts, want)
+		}
+		if env.Result != nil {
+			t.Errorf("artifact mode carries the file, not a result: %#v", env.Result)
+		}
+	})
+
+	t.Run("unreadable artifact fails the invocation", func(t *testing.T) {
+		missing := filepath.Join(t.TempDir(), "never-written.json")
+		env, err := Execute(context.Background(), resolve(t, artifactFallback(true)),
+			map[string]any{"out": missing}, policy.Gates{}, false, &fakeRunner{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if env.Status != "error" || env.Error.Code != protocol.ErrInvocationFailed {
+			t.Fatalf("expected invocation_failed, got %+v", env.Error)
+		}
+		if !strings.Contains(env.Error.Message, "reading artifact") {
+			t.Errorf("error should mention reading the artifact: %q", env.Error.Message)
+		}
+		if len(env.Artifacts) != 0 {
+			t.Errorf("failed artifact read must attach nothing: %+v", env.Artifacts)
+		}
+	})
+
+	t.Run("no stdout flag falls back to stdout result", func(t *testing.T) {
+		runner := &fakeRunner{stdout: []byte("  plain text \n")}
+		env, err := Execute(context.Background(), resolve(t, artifactFallback(false)),
+			map[string]any{"out": "ignored.json"}, policy.Gates{}, false, runner)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if env.Status != "ok" {
+			t.Fatalf("expected ok, got %+v", env.Error)
+		}
+		if want := map[string]any{"stdout": "plain text"}; !reflect.DeepEqual(env.Result, want) {
+			t.Errorf("result: got %#v want %#v", env.Result, want)
+		}
+		if len(env.Artifacts) != 0 {
+			t.Errorf("no artifact may attach without a stdout flag: %+v", env.Artifacts)
+		}
+	})
 }
 
 // When a probed provider's invoke subprocess fails AND prints nothing on

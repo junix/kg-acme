@@ -20,6 +20,43 @@ func TestNegotiateIntersection(t *testing.T) {
 	}
 }
 
+// Negotiate must return the HIGHEST common version, not the first match in
+// either list. The hub currently supports only [1], which gives the
+// selection no real choice, so this test widens the supported set
+// temporarily (restored on exit).
+func TestNegotiatePicksHighestCommon(t *testing.T) {
+	orig := SupportedVersions
+	defer func() { SupportedVersions = orig }()
+	SupportedVersions = []int{1, 2, 3}
+
+	cases := []struct {
+		versions []int
+		want     int
+		wantErr  bool
+	}{
+		{[]int{2, 3}, 3, false},    // several common versions → highest
+		{[]int{3, 2, 9}, 3, false}, // provider order must not matter; unsupported 9 ignored
+		{[]int{1}, 1, false},       // lowest common still negotiates
+		{[]int{0, 4}, 0, true},     // nothing in common despite the wider hub set
+	}
+	for _, tc := range cases {
+		v, err := Negotiate(tc.versions)
+		if tc.wantErr {
+			if err == nil {
+				t.Errorf("versions %v: expected error, got %d", tc.versions, v)
+			}
+			continue
+		}
+		if err != nil {
+			t.Errorf("versions %v: unexpected error: %v", tc.versions, err)
+			continue
+		}
+		if v != tc.want {
+			t.Errorf("versions %v: negotiated %d, want %d (highest common)", tc.versions, v, tc.want)
+		}
+	}
+}
+
 func TestNegotiateNoIntersection(t *testing.T) {
 	for _, versions := range [][]int{{2, 3}, {}, nil} {
 		_, err := Negotiate(versions)
