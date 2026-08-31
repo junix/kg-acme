@@ -142,6 +142,68 @@ func TestFindExecutableMacOSAlias(t *testing.T) {
 	}
 }
 
+// The full sync-directory ladder: <goos>-<goarch>-bin beats the macos-*
+// alias (darwin only), which beats ~/sync/bin, which beats PATH.
+func TestFindExecutableSyncDirPreferenceOrder(t *testing.T) {
+	env := setupEnv(t, []string{"tool"}, []string{"tool"}, []string{"tool"})
+	aliasDir := filepath.Join(env.Home, "sync", "macos-"+runtime.GOARCH+"-bin")
+	if err := os.MkdirAll(aliasDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	aliasTool := filepath.Join(aliasDir, "tool")
+	if err := os.WriteFile(aliasTool, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	archTool := filepath.Join(env.Home, "sync", runtime.GOOS+"-"+runtime.GOARCH+"-bin", "tool")
+	if got := FindExecutable("tool", nil, env); got != archTool {
+		t.Errorf("arch bin must win over alias, sync/bin and PATH: got %q want %q", got, archTool)
+	}
+	if runtime.GOOS == "darwin" {
+		// Drop the arch-dir copy: the alias must take over, still ahead of
+		// ~/sync/bin and PATH (both also hold the binary).
+		if err := os.Remove(archTool); err != nil {
+			t.Fatal(err)
+		}
+		if got := FindExecutable("tool", nil, env); got != aliasTool {
+			t.Errorf("macos alias must beat sync/bin and PATH: got %q want %q", got, aliasTool)
+		}
+	}
+}
+
+// Explicit Env.GOOS/GOARCH override the runtime platform when naming the
+// sync directory; goos/goarch only fall back to runtime when empty.
+func TestFindExecutablePlatformEnvOverride(t *testing.T) {
+	env := setupEnv(t, nil, nil, nil)
+	linuxBin := filepath.Join(env.Home, "sync", "linux-arm64-bin")
+	if err := os.MkdirAll(linuxBin, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	p := filepath.Join(linuxBin, "tool")
+	if err := os.WriteFile(p, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	got := FindExecutable("tool", nil, Env{Home: env.Home, Path: env.Path, GOOS: "linux", GOARCH: "arm64"})
+	if got != p {
+		t.Errorf("env platform override must select sync/linux-arm64-bin: got %q want %q", got, p)
+	}
+}
+
+// Empty PATH entries (leading, trailing or doubled separators) are skipped
+// rather than resolved against the working directory.
+func TestFindExecutableSkipsEmptyPathEntries(t *testing.T) {
+	env := setupEnv(t, nil, nil, []string{"tool"})
+	want := filepath.Join(env.Path, "tool")
+	sep := string(os.PathListSeparator)
+	for _, path := range []string{sep + env.Path, env.Path + sep, sep + env.Path + sep} {
+		if got := FindExecutable("tool", nil, Env{Home: "", Path: path}); got != want {
+			t.Errorf("PATH %q: empty entries must be skipped, got %q want %q", path, got, want)
+		}
+	}
+	if got := FindExecutable("missing", nil, Env{Home: "", Path: env.Path + sep}); got != "" {
+		t.Errorf("missing binary with trailing separator must resolve empty, got %q", got)
+	}
+}
+
 func TestScanProviders(t *testing.T) {
 	env := setupEnv(t, nil, nil, []string{"kg-provider-a", "kg-provider-b", "other", "kg-provider-c:noexec"})
 	found := ScanProviders(env)
@@ -169,6 +231,22 @@ func TestScanProvidersFirstPathDirWins(t *testing.T) {
 	want := filepath.Join(dirA, "kg-provider-x")
 	if len(found) != 1 || found["kg-provider-x"] != want {
 		t.Errorf("first PATH dir must win: got %v, want %q", found, want)
+	}
+}
+
+// A PATH entry naming a directory that cannot be read (e.g. no longer
+// existing) is skipped without failing the whole scan.
+func TestScanProvidersSkipsUnreadablePathDirs(t *testing.T) {
+	dirA := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dirA, "kg-provider-x"), []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	missing := filepath.Join(t.TempDir(), "gone")
+	env := Env{Path: strings.Join([]string{missing, dirA}, string(os.PathListSeparator))}
+	found := ScanProviders(env)
+	want := filepath.Join(dirA, "kg-provider-x")
+	if len(found) != 1 || found["kg-provider-x"] != want {
+		t.Errorf("unreadable PATH dir must be skipped: got %v, want %q", found, want)
 	}
 }
 

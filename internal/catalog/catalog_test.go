@@ -91,6 +91,7 @@ func TestParseValidationRules(t *testing.T) {
 	}{
 		{"semantic_id mirror", mutate(t, `"semantic_id":"extract.things"`, `"semantic_id":"extract.other"`), "must mirror command_path", ""},
 		{"illegal segment", mutate(t, `"command_path":["extract","things"]`, `"command_path":["Extract","things"]`), "illegal segment", ""},
+		{"digit-leading segment", mutate(t, `"command_path":["extract","things"]`, `"command_path":["extract","1things"]`), "illegal segment", ""},
 		{"title punctuation", mutate(t, `"title":"Extract things"`, `"title":"Extract things."`), "must not end with punctuation", ""},
 		{"title ends with bang", mutate(t, `"title":"Extract things"`, `"title":"Extract things!"`), "must not end with punctuation", ""},
 		{"title ends with full-width stop", mutate(t, `"title":"Extract things"`, `"title":"Extract things。"`), "must not end with punctuation",
