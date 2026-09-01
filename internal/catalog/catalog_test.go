@@ -141,6 +141,18 @@ func TestFind(t *testing.T) {
 	if c.Find("nonexistent") != nil {
 		t.Error("nonexistent should not be found")
 	}
+	// An entry with an empty command_path (impossible via Parse, so built
+	// directly) is skipped, never matched as a zero-segment prefix.
+	synthetic := &Catalog{Commands: []Command{
+		{SemanticID: "broken"},
+		{CommandPath: []string{"extract"}, SemanticID: "extract", CapabilityID: "x"},
+	}}
+	if cmd := synthetic.Find("extract"); cmd == nil || cmd.Path() != "extract" {
+		t.Errorf("empty-path entries must be skipped: got %v", cmd)
+	}
+	if synthetic.Find("broken") != nil {
+		t.Error("an entry with no command_path must match no group")
+	}
 }
 
 // A builtin command (hub-implemented, builtin:true) carries no
@@ -192,5 +204,15 @@ func TestFindPath(t *testing.T) {
 	}
 	if cmd, n = c.FindPath([]string{"detect"}); cmd != nil || n != 0 {
 		t.Errorf("group prefix alone must match no command, got %v consumed %d", cmd, n)
+	}
+	// Boundary: args exactly as long as the path (no extras) match fully.
+	cmd, n = c.FindPath([]string{"store", "triples"})
+	if cmd == nil || n != 2 || cmd.CapabilityID != "store.triples" {
+		t.Errorf("store.triples exact args: got %v consumed %d", cmd, n)
+	}
+	// A segment that only partially matches (typo) must match nothing,
+	// even though a longer command shares its first segment.
+	if cmd, n = c.FindPath([]string{"detect", "communities-hierarch", "x"}); cmd != nil || n != 0 {
+		t.Errorf("partial segment match must hit no command, got %v consumed %d", cmd, n)
 	}
 }

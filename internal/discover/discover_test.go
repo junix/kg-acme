@@ -120,6 +120,12 @@ func TestFindExecutableOverrideWins(t *testing.T) {
 	if got != want {
 		t.Errorf("missing override should fall through: got %q want %q", got, want)
 	}
+
+	// An override registered under a different binary name never applies.
+	got = FindExecutable("tool", Overrides{"other": overridePath}, env)
+	if got != want {
+		t.Errorf("override for another binary must fall through: got %q want %q", got, want)
+	}
 }
 
 func TestFindExecutableMacOSAlias(t *testing.T) {
@@ -250,6 +256,21 @@ func TestScanProvidersSkipsUnreadablePathDirs(t *testing.T) {
 	}
 }
 
+// Empty PATH entries (leading, trailing or doubled separators) are skipped
+// by the provider scan, not treated as a scan of the working directory.
+func TestScanProvidersSkipsEmptyEntries(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "kg-provider-x"), []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	sep := string(os.PathListSeparator)
+	found := ScanProviders(Env{Path: sep + dir + sep + sep})
+	want := filepath.Join(dir, "kg-provider-x")
+	if len(found) != 1 || found["kg-provider-x"] != want {
+		t.Errorf("empty PATH entries must be skipped: got %v, want %q", found, want)
+	}
+}
+
 func TestIsExecutable(t *testing.T) {
 	dir := t.TempDir()
 	execFile := filepath.Join(dir, "x")
@@ -348,6 +369,9 @@ func TestProbeSuccessStatus(t *testing.T) {
 	}
 	if st.Version != 1 {
 		t.Errorf("negotiated version = %d, want 1", st.Version)
+	}
+	if st.Weight != 1.0 {
+		t.Errorf("probe default weight = %v, want 1.0", st.Weight)
 	}
 	if st.ID != "fake" {
 		t.Errorf("provider id must come from the manifest, not the discovery id: got %q", st.ID)

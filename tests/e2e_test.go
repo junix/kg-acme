@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 	"testing"
@@ -390,6 +391,106 @@ func TestMCPCallDryRunNeverStartsProvider(t *testing.T) {
 	if after := readLog(t, log); after != before {
 		t.Fatalf("MCP dry-run call started provider:\nbefore=%q\nafter=%q", before, after)
 	}
+}
+
+// runFail runs a hub binary expecting a non-zero exit and returns its
+// combined output and exit code.
+func runFail(t *testing.T, home, name string, args ...string) (string, int) {
+	t.Helper()
+	command := exec.Command(filepath.Join(binaries, name), args...)
+	command.Env = environment(home)
+	output, err := command.CombinedOutput()
+	if err == nil {
+		t.Fatalf("%s %v: expected non-zero exit, got 0:\n%s", name, args, output)
+	}
+	exitErr, ok := err.(*exec.ExitError)
+	if !ok {
+		t.Fatalf("%s %v: %v\n%s", name, args, err, output)
+	}
+	return string(output), exitErr.ExitCode()
+}
+
+// The kg execution CLI's failure contract: every documented rejection exits
+// 1 with a "kg: <message>" line on stderr — never a panic or partial stdout.
+// Each row pins one guard in parseGlobal / argumentsObject / decodeParams.
+func TestCLIFailureContract(t *testing.T) {
+	home, provider, _ := fixture(t)
+	run(t, home, "kgctl", "refresh", "--provider-bin", "fake="+provider)
+	paramsFile := filepath.Join(home, "params.json")
+
+	cases := []struct {
+		name    string
+		args    []string
+		wantMsg string
+	}{
+		{"unknown capability", []string{"kg", "no.such-capability"},
+			"kg: capability not found: no.such-capability; run kg list"},
+		{"provider-bin belongs to kgctl", []string{"kg", "list", "--provider-bin", "fake=" + provider},
+			"kg: provider and inventory options belong to kgctl"},
+		{"--all belongs to kgctl", []string{"kg", "list", "--all"},
+			"kg: provider and inventory options belong to kgctl"},
+		{"describe with execution options", []string{"kg", "test.echo", "--describe", "--params", `{"value":"x"}`},
+			"kg: --describe cannot be combined with execution arguments or options"},
+		{"params plus positional argument", []string{"kg", "test.echo", "--params", `{"value":"x"}`, "extra"},
+			"kg: --params cannot be combined with positional capability arguments"},
+		{"dry-run cannot read params file", []string{"kg", "test.echo", "--dry-run", "--params", "@" + paramsFile},
+			"kg: dry-run does not read files; pass --params as inline JSON"},
+		{"invalid params JSON", []string{"kg", "test.echo", "--params", "nope"},
+			"kg: invalid --params JSON"},
+		{"params null is not an object", []string{"kg", "test.echo", "--params", "null"},
+			"kg: --params must contain a JSON object"},
+		{"params trailing second document", []string{"kg", "test.echo", "--params", `{"value":"x"} {}`},
+			"kg: --params must contain exactly one JSON object"},
+		{"params missing value", []string{"kg", "test.echo", "--params"},
+			"kg: --params requires a value"},
+		{"provider-bin malformed", []string{"kg", "list", "--provider-bin", "nope"},
+			"kg: --provider-bin expects ID=PATH"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			output, code := runFail(t, home, tc.args[0], tc.args[1:]...)
+			if code != 1 {
+				t.Errorf("exit code = %d, want 1", code)
+			}
+			if !strings.Contains(output, tc.wantMsg) {
+				t.Errorf("output should contain %q:\n%s", tc.wantMsg, output)
+			}
+		})
+	}
+
+	t.Run("unknown capability --json emits exactly one error envelope", func(t *testing.T) {
+		output, code := runFail(t, home, "kg", "no.such-capability", "--json")
+		if code != 1 {
+			t.Errorf("exit code = %d, want 1", code)
+		}
+		var envelope struct {
+			SchemaVersion string `json:"schema_version"`
+			OK            bool   `json:"ok"`
+			Error         struct {
+				Code    string `json:"code"`
+				Message string `json:"message"`
+			} `json:"error"`
+		}
+		if err := json.Unmarshal([]byte(strings.TrimSpace(output)), &envelope); err != nil {
+			t.Fatalf("--json stdout must be exactly one envelope: %v\n%s", err, output)
+		}
+		if envelope.SchemaVersion != "kg.error/v1" || envelope.OK {
+			t.Errorf("error envelope: %s", output)
+		}
+		if envelope.Error.Code != "error" {
+			t.Errorf("error.code = %q, want \"error\"", envelope.Error.Code)
+		}
+		if !strings.Contains(envelope.Error.Message, "capability not found: no.such-capability") {
+			t.Errorf("error.message should name the capability: %q", envelope.Error.Message)
+		}
+	})
+
+	t.Run("version prints a semantic version", func(t *testing.T) {
+		output := run(t, home, "kg", "version")
+		if !regexp.MustCompile(`^\d+\.\d+\.\d+\n$`).MatchString(output) {
+			t.Errorf("kg version should print a bare semver, got %q", output)
+		}
+	})
 }
 
 func fixture(t *testing.T) (home, provider, log string) {
