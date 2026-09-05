@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img">
+<title>策略门：默认全拒与零副作用干跑</title>
+<desc>四类副作用四把旗标；未知副作用无门可开；干跑渲染计划</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="640" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="639" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">行为门禁</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">副作用四门默认全拒，开门必须点名</text>
+<rect x="40" y="112" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="112" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="139" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">network</text>
+<text x="250" y="139" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">联网（调用模型、拉远端服务）</text>
+<rect x="443.2" y="125" width="108.7" height="23" rx="9" fill="#E3EEFA"/>
+<text x="497.6" y="140" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-network</text>
+<rect x="40" y="168" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="168" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="195" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">data_egress</text>
+<text x="250" y="195" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">本地数据离开本机</text>
+<rect x="419.1" y="181" width="132.9" height="23" rx="9" fill="#E3EEFA"/>
+<text x="485.5" y="196" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-data-egress</text>
+<rect x="40" y="224" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="224" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="251" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">downloads_models</text>
+<text x="250" y="251" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">下载模型权重</text>
+<rect x="400.9" y="237" width="151.1" height="23" rx="9" fill="#E3EEFA"/>
+<text x="476.5" y="252" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-model-download</text>
+<rect x="40" y="280" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="280" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="307" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">writes_db</text>
+<text x="250" y="307" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">写图数据库</text>
+<rect x="437.2" y="293" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="494.6" y="308" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-db-write</text>
+<text x="62" y="352" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">被拒时错误文案直接点名所需旗标（实测冻结）：</text>
+<rect x="62" y="364" width="516" height="66" rx="8" fill="#E8EEF5"/>
+<text x="76" y="384" font-size="10.5" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">side effects denied by policy: network</text>
+<text x="76" y="400" font-size="10.5" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">, data_egress (allow explicitly with -</text>
+<text x="76" y="416" font-size="10.5" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">-allow-network --allow-data-egress)</text>
+<text x="62" y="458" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">fail-closed：provider 声明中枢还不认识的副作用时，没有任何旗标能放行——</text>
+<text x="62" y="480" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">清单层枚举封闭直接拒收，策略层未知默认拒。</text>
+<rect x="640" y="112" width="440" height="372" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="641.5" y="112.5" width="437" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="656" y="144" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">干跑：零副作用的执行计划（实测冻结）</text>
+<text x="664" y="170" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力</text>
+<text x="828" y="170" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">test.net</text>
+<text x="664" y="204" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">提供者</text>
+<text x="828" y="204" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">fake</text>
+<text x="664" y="238" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">声明副作用</text>
+<text x="828" y="238" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">network, data_egress</text>
+<text x="664" y="272" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">当前被拒</text>
+<text x="828" y="272" font-size="12.5" fill="#e34948" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">network, data_egress</text>
+<rect x="824" y="256" width="145.5" height="22" rx="4" fill="none" stroke="#e34948" stroke-width="1"/>
+<text x="664" y="306" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">真跑会执行</text>
+<text x="828" y="306" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">否</text>
+<text x="664" y="344" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">开两把门后重跑干跑：</text>
+<rect x="664" y="356" width="220.1" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="774.1" y="370.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-network --allow-data-egress</text>
+<text x="664" y="404" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">被拒清单清空 · 真跑会执行 = 是</text>
+<text x="664" y="432" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">干跑本身永远成功退出：只读操作，不启动 provider、不写文件、不联网。</text>
+<rect x="900" y="570" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="915.7" y="584.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C14</text>
+<rect x="937.3" y="570" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="953" y="584.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C15</text>
+<rect x="974.7" y="570" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="990.3" y="584.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C16</text>
+</g>
+</svg>

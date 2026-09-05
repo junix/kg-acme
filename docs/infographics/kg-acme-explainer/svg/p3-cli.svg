@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="660" viewBox="0 0 1120 660" role="img">
+<title>三条命令面：动词、旗标与稳定目录</title>
+<desc>执行面旗标、管理面动词、发布面方法与目录命令表</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="660" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="659" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">命令面</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">三个入口各管一段，目录是唯一稳定契约</text>
+<rect x="40" y="108" width="344" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="108.5" width="341" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">执行面 · 全局旗标（实测帮助）</text>
+<rect x="60" y="148" width="60.2" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="90.1" y="162.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--params</text>
+<rect x="222" y="148" width="66" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="255" y="162.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--dry-run</text>
+<rect x="60" y="180" width="100.6" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="110.3" y="194.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-network</text>
+<rect x="222" y="180" width="123.7" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="283.9" y="194.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-data-egress</text>
+<rect x="60" y="212" width="141.1" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="130.5" y="226.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-model-download</text>
+<rect x="222" y="212" width="106.4" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="275.2" y="226.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-db-write</text>
+<rect x="60" y="244" width="48.6" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="84.3" y="258.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--json</text>
+<text x="60" y="296" font-size="11.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">参数一次成对象传入；四把布尔门 + 干跑；</text>
+<text x="60" y="318" font-size="11.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">标准输出恰好一个版本化信封。</text>
+<text x="60" y="352" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">盘点类选项属于管理面：执行面拒绝越权（实测退出码 1）。</text>
+<rect x="408" y="108" width="344" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="409.5" y="108.5" width="341" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="424" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">管理面 · 动词（实测）</text>
+<rect x="428" y="148" width="60.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="458.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">refresh</text>
+<rect x="590" y="148" width="72.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="626.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">providers</text>
+<rect x="428" y="182" width="90.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="473.3" y="197" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">capabilities</text>
+<rect x="590" y="182" width="48.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="614.1" y="197" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">route</text>
+<rect x="428" y="216" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="467.2" y="231" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">completion</text>
+<text x="428" y="252" font-size="11.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">刷新产出快照；提供者诊断列出每个 provider；</text>
+<text x="428" y="272" font-size="11.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力检索列目录；路由面解释/固定/清除；补全两 shell。</text>
+<text x="428" y="308" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">同一 CLI 语义，管理面独占盘点与发现旗标。</text>
+<rect x="776" y="108" width="304" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="777.5" y="108.5" width="301" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="792" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">发布面 · 方法（实测会话）</text>
+<rect x="796" y="148" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="835.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">initialize</text>
+<rect x="796" y="182" width="42.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="817.1" y="197" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">ping</text>
+<rect x="796" y="216" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="835.2" y="231" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">tools/list</text>
+<rect x="796" y="250" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="835.2" y="265" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">tools/call</text>
+<text x="796" y="296" font-size="11.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">换行分帧；未知方法与坏帧有固定错误码；</text>
+<text x="796" y="318" font-size="11.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">通知帧一律容忍不回。</text>
+<rect x="40" y="404" width="1040" height="200" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="404.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="436" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">稳定目录（内置命令表，实测镜像校验全过）</text>
+<text x="64" y="456" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">17 条能力命令 · 10 个发布命名空间 · 语义标识逐条镜像命令路径（点分 ↔ 空格分段）</text>
+<rect x="64" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="101" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">analyze</text>
+<text x="101" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">6 条</text>
+<rect x="148" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="185" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">detect</text>
+<text x="185" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">3 条</text>
+<rect x="232" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="269" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">embed</text>
+<text x="269" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="316" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="353" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">extract</text>
+<text x="353" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="400" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="437" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">layout</text>
+<text x="437" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="484" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="521" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">parse</text>
+<text x="521" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="568" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="605" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">resolve</text>
+<text x="605" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="652" y="462" width="78.8" height="54" rx="8" fill="#E3EEFA"/>
+<text x="691.4" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">retrieve</text>
+<text x="691.4" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="740.8" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="777.8" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">store</text>
+<text x="777.8" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="824.8" y="462" width="85.4" height="54" rx="8" fill="#E3EEFA"/>
+<text x="867.5" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">summarize</text>
+<text x="867.5" y="504" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<text x="64" y="548" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">命令面是长期契约：provider 可以来去，命令表不动；新能力经 provider 侧发布即可见于列表。</text>
+<text x="64" y="574" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">目录加载期强校验：标识镜像、分段小写连字符、标题无结尾标点、描述单句收句号——非法即拒绝启动。</text>
+<rect x="900" y="424" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="915.7" y="438.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C01</text>
+<rect x="937.3" y="424" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="953" y="438.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C07</text>
+<rect x="974.7" y="424" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="990.3" y="438.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C08</text>
+<rect x="1012" y="424" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="1027.6" y="438.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C09</text>
+</g>
+</svg>

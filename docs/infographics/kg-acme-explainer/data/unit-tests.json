@@ -1,0 +1,57 @@
+{
+  "command": "go test ./... -v -count=1",
+  "where": "IG_WORK /tmp copy of frozen HEAD (engine repo read-only)",
+  "offline": "GOPROXY=off GOFLAGS=-mod=mod",
+  "layer": "one-time frozen (timing evidence; never re-measured)",
+  "packages": [
+    {
+      "package": "kg-acme/internal/bridge",
+      "status": "ok",
+      "seconds": "0.548"
+    },
+    {
+      "package": "kg-acme/internal/catalog",
+      "status": "ok",
+      "seconds": "0.246"
+    },
+    {
+      "package": "kg-acme/internal/discover",
+      "status": "ok",
+      "seconds": "5.043"
+    },
+    {
+      "package": "kg-acme/internal/pipeline",
+      "status": "ok",
+      "seconds": "1.424"
+    },
+    {
+      "package": "kg-acme/internal/policy",
+      "status": "ok",
+      "seconds": "0.973"
+    },
+    {
+      "package": "kg-acme/internal/protocol",
+      "status": "ok",
+      "seconds": "1.177"
+    },
+    {
+      "package": "kg-acme/internal/router",
+      "status": "ok",
+      "seconds": "1.658"
+    },
+    {
+      "package": "kg-acme/internal/schema",
+      "status": "ok",
+      "seconds": "1.870"
+    },
+    {
+      "package": "kg-acme/tests",
+      "status": "ok",
+      "seconds": "87.186"
+    }
+  ],
+  "total_passed": 172,
+  "total_failed": 0,
+  "wall_seconds": 88.7,
+  "rc": 0
+}

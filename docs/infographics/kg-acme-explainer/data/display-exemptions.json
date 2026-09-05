@@ -1,0 +1,219 @@
+{
+  "note": "display-layer exemption registry for ban④; ban sets themselves are rebuilt live from the engine repo by build.py on every run",
+  "whitelist_categories": {
+    "cli_flags": [
+      "all",
+      "allow",
+      "bin",
+      "data",
+      "db",
+      "dir",
+      "download",
+      "dry",
+      "dry_run",
+      "egress",
+      "json",
+      "level",
+      "model",
+      "network",
+      "params",
+      "prefix",
+      "provider",
+      "resume",
+      "run",
+      "work",
+      "write"
+    ],
+    "cli_verbs": [
+      "call",
+      "capabilities",
+      "completion",
+      "describe",
+      "explain",
+      "help",
+      "initialize",
+      "kg",
+      "kg-mcp",
+      "kgctl",
+      "list",
+      "ping",
+      "providers",
+      "refresh",
+      "route",
+      "run",
+      "tree",
+      "validate",
+      "version"
+    ],
+    "contract_keys": [
+      "argv",
+      "artifacts",
+      "capability",
+      "checksum",
+      "code",
+      "denied",
+      "effects",
+      "envelope",
+      "error",
+      "execute",
+      "id",
+      "input",
+      "message",
+      "ok",
+      "out",
+      "output",
+      "pipeline",
+      "probed",
+      "provider",
+      "result",
+      "schema",
+      "side",
+      "stage",
+      "stages",
+      "status",
+      "tools",
+      "value",
+      "version",
+      "would"
+    ],
+    "ecosystem": [
+      "CLI",
+      "Go",
+      "JSON",
+      "MCP",
+      "artifact",
+      "bad",
+      "capabilities",
+      "capability",
+      "catalog",
+      "dry",
+      "echo",
+      "fake",
+      "git",
+      "hub",
+      "jsonrpc",
+      "net",
+      "pipeline",
+      "provider",
+      "providers",
+      "run",
+      "semantic",
+      "shell",
+      "snapshot",
+      "stdio",
+      "test",
+      "time",
+      "ugly",
+      "ver"
+    ],
+    "error_codes": [
+      "capability_not_found",
+      "error",
+      "incompatible_stage_edge",
+      "invalid_input",
+      "invalid_pipeline",
+      "invocation_failed",
+      "malformed_manifest",
+      "policy_denied",
+      "provider_not_found",
+      "unsupported_schema_version"
+    ],
+    "frozen_cli_lines": [
+      "allow_data_egress",
+      "allow_db_write",
+      "allow_model_download",
+      "allow_network",
+      "dry_run",
+      "json",
+      "params"
+    ],
+    "protocol_verbs": [
+      "available",
+      "describe",
+      "invoke",
+      "request"
+    ],
+    "published_namespaces": [
+      "analyze",
+      "detect",
+      "embed",
+      "extract",
+      "layout",
+      "parse",
+      "resolve",
+      "retrieve",
+      "store",
+      "summarize"
+    ],
+    "schema_ids": [
+      "error",
+      "execution",
+      "kg",
+      "pipeline",
+      "provider",
+      "snapshot",
+      "v1"
+    ],
+    "side_effects": [
+      "data_egress",
+      "downloads_models",
+      "network",
+      "writes_db"
+    ]
+  },
+  "frozen_data_token_count": 608,
+  "verbatim_exempt": [],
+  "positive_controls": [
+    {
+      "expect": "ban1",
+      "text": "看看 architecture.html 这个文件",
+      "caught": [
+        "ban1"
+      ],
+      "pass": true
+    },
+    {
+      "expect": "ban2",
+      "text": "实现在 main.go:42 附近",
+      "caught": [
+        "ban1",
+        "ban2"
+      ],
+      "pass": true
+    },
+    {
+      "expect": "ban3",
+      "text": "kg-acme 是 acme 家族（audio-acme / image-acme / video-acme / office-acme）",
+      "caught": [
+        "ban3"
+      ],
+      "pass": true
+    },
+    {
+      "expect": "ban4",
+      "text": "函数 WritesDB 负责路由",
+      "caught": [
+        "ban4"
+      ],
+      "pass": true
+    },
+    {
+      "expect": "ban5",
+      "text": "路径 internal/cli/control.go",
+      "caught": [
+        "ban1",
+        "ban5"
+      ],
+      "pass": true
+    },
+    {
+      "expect": "ban6",
+      "text": "重建命令 python3 render.py",
+      "caught": [
+        "ban6"
+      ],
+      "pass": true
+    }
+  ],
+  "gate_result_at_write": "pending-final-check"
+}

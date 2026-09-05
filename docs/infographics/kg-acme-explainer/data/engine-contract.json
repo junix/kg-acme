@@ -1,0 +1,611 @@
+{
+  "note": "every field below is a live observation of the real binaries built from the frozen HEAD, driven against shell fake providers (zero network / zero model)",
+  "refresh": {
+    "rc": 0,
+    "stdout_lines": [
+      "refreshed 5 capabilities (5 available)",
+      "/tmp/kgacme-ig-run/home/Library/Caches/kg-acme/capability-snapshot.json"
+    ],
+    "snapshot_path_suffix": "Library/Caches/kg-acme/capability-snapshot.json",
+    "provider_calls_during_refresh": 6,
+    "provider_call_sequence": [
+      "describe --json",
+      "available --json",
+      "describe --json",
+      "available --json",
+      "describe --json",
+      "available --json"
+    ]
+  },
+  "snapshot": {
+    "schema_version": "kg.snapshot/v3",
+    "fingerprint": "dba74f5700c70737eacade54f97560d4de29248e90add598be7504c467dfcaa2",
+    "fingerprint_note": "content sha256 over providers+groups+capabilities; recomputed identically on every rebuild",
+    "semantic_ids": [
+      "kg.pipeline.run",
+      "kg.pipeline.validate",
+      "kg.test.artifact",
+      "kg.test.echo",
+      "kg.test.net"
+    ],
+    "group_ids": [
+      "pipeline",
+      "test"
+    ],
+    "providers": [
+      {
+        "id": "bad",
+        "probed": false,
+        "probe_error_code": "malformed_manifest"
+      },
+      {
+        "id": "fake",
+        "probed": true,
+        "probe_error_code": null
+      },
+      {
+        "id": "ugly",
+        "probed": false,
+        "probe_error_code": "malformed_manifest"
+      },
+      {
+        "id": "ver",
+        "probed": false,
+        "probe_error_code": "unsupported_schema_version"
+      }
+    ]
+  },
+  "readonly_surface": {
+    "runs": [
+      {
+        "binary": "kg",
+        "argv": "--help",
+        "rc": 0
+      },
+      {
+        "binary": "kg",
+        "argv": "list",
+        "rc": 0
+      },
+      {
+        "binary": "kg",
+        "argv": "list",
+        "rc": 0
+      },
+      {
+        "binary": "kg",
+        "argv": "list",
+        "rc": 0
+      },
+      {
+        "binary": "kg",
+        "argv": "test.echo",
+        "rc": 0
+      },
+      {
+        "binary": "kg",
+        "argv": "test",
+        "rc": 0
+      },
+      {
+        "binary": "kg",
+        "argv": "test.echo",
+        "rc": 0
+      },
+      {
+        "binary": "kgctl",
+        "argv": "capabilities",
+        "rc": 0
+      },
+      {
+        "binary": "kgctl",
+        "argv": "route",
+        "rc": 0
+      },
+      {
+        "binary": "kgctl",
+        "argv": "completion",
+        "rc": 0
+      }
+    ],
+    "provider_starts": 0,
+    "measured_by": "fake provider appends one log line per invocation"
+  },
+  "help_contract": {
+    "has_capability_table": true,
+    "lists_test_echo": true,
+    "no_kg_dotted_prefix": true,
+    "points_to_control_plane": true,
+    "global_flag_lines": [
+      "--params <JSON|@FILE>        Read one complete argument object.",
+      "--dry-run                    Validate and plan without provider/model/file/network activity.",
+      "--allow-network              Allow declared network access.",
+      "--allow-data-egress          Allow declared data egress.",
+      "--allow-model-download       Allow the selected capability to download missing weights.",
+      "--allow-db-write             Allow declared graph-database writes.",
+      "--json                       Emit one versioned JSON result."
+    ]
+  },
+  "tree_text": [
+    "Knowledge-graph capabilities under test",
+    "test — Discover operations related to write an artifact.",
+    "├── artifact — Write the requested artifact file.",
+    "├── echo — Return the supplied value without changing it.",
+    "└── net — Pretend to call a remote service."
+  ],
+  "list_json": {
+    "items": [
+      {
+        "capability_id": "pipeline.run",
+        "available": true
+      },
+      {
+        "capability_id": "pipeline.validate",
+        "available": true
+      },
+      {
+        "capability_id": "test.artifact",
+        "available": true
+      },
+      {
+        "capability_id": "test.echo",
+        "available": true
+      },
+      {
+        "capability_id": "test.net",
+        "available": true
+      }
+    ]
+  },
+  "describe_atomic": {
+    "capability_id": "test.echo",
+    "description": "Return the supplied value without changing it.",
+    "error_contract": {
+      "exit_codes": [
+        {
+          "exit_code": 0,
+          "name": "ok"
+        },
+        {
+          "exit_code": 1,
+          "name": "error"
+        }
+      ],
+      "schema_version": "kg.error/v1"
+    },
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "value"
+      ]
+    },
+    "output": {
+      "mode": "result-json",
+      "kind": "json"
+    },
+    "output_schema": {
+      "type": "object",
+      "description": "Structured JSON result returned by the selected capability."
+    },
+    "schema_version": "kg.capability-description/v3",
+    "side_effects": null,
+    "source": {
+      "integration_path": "/private/tmp/kgacme-ig-run/src",
+      "implementation_paths": null
+    },
+    "title": "Echo a value"
+  },
+  "describe_atomic_keys": [
+    "capability_id",
+    "description",
+    "error_contract",
+    "input_schema",
+    "output",
+    "output_schema",
+    "schema_version",
+    "side_effects",
+    "source",
+    "title"
+  ],
+  "describe_group": {
+    "length": 3,
+    "capability_ids": [
+      "test.artifact",
+      "test.echo",
+      "test.net"
+    ]
+  },
+  "dry_run_echo": {
+    "protocol": "kg.execution/v1",
+    "capability_id": "test.echo",
+    "provider": "fake",
+    "status": "ok",
+    "result": {
+      "argv": [
+        "/tmp/kgacme-ig-run/fix/fake-provider"
+      ],
+      "capability_id": "test.echo",
+      "denied": null,
+      "dry_run": true,
+      "probed": true,
+      "provider": "fake",
+      "provider_path": "/tmp/kgacme-ig-run/fix/fake-provider",
+      "side_effects": [],
+      "would_execute": true
+    }
+  },
+  "dry_run_net_no_flags": {
+    "protocol": "kg.execution/v1",
+    "capability_id": "test.net",
+    "provider": "fake",
+    "status": "ok",
+    "result": {
+      "argv": [
+        "/tmp/kgacme-ig-run/fix/fake-provider"
+      ],
+      "capability_id": "test.net",
+      "denied": [
+        "network",
+        "data_egress"
+      ],
+      "dry_run": true,
+      "probed": true,
+      "provider": "fake",
+      "provider_path": "/tmp/kgacme-ig-run/fix/fake-provider",
+      "side_effects": [
+        "network",
+        "data_egress"
+      ],
+      "would_execute": false
+    }
+  },
+  "policy_denied": {
+    "rc": 1,
+    "envelope": {
+      "error": {
+        "code": "error",
+        "message": "side effects denied by policy: network, data_egress (allow explicitly with --allow-network --allow-data-egress)"
+      },
+      "ok": false,
+      "schema_version": "kg.error/v1"
+    },
+    "first_stderr_line": ""
+  },
+  "policy_allowed": {
+    "protocol": "kg.execution/v1",
+    "capability_id": "test.net",
+    "provider": "fake",
+    "status": "ok",
+    "result": {
+      "contacted": true
+    }
+  },
+  "execution_revalidation": {
+    "provider_calls": 3,
+    "sequence": [
+      "describe --json",
+      "available --json",
+      "invoke test.net --request -"
+    ]
+  },
+  "error_envelope": {
+    "rc": 1,
+    "envelope": {
+      "error": {
+        "code": "error",
+        "message": "capability not found: no.such-capability; run kg list"
+      },
+      "ok": false,
+      "schema_version": "kg.error/v1"
+    }
+  },
+  "cli_failure_contract": [
+    {
+      "argv": [
+        "test.echo",
+        "--describe"
+      ],
+      "rc": 1,
+      "first_stderr_line": "kg: --describe cannot be combined with execution arguments or options"
+    },
+    {
+      "argv": [
+        "test.echo",
+        "--params"
+      ],
+      "rc": 1,
+      "first_stderr_line": "kg: invalid --params JSON: invalid character 'o' in literal null (expecting 'u')"
+    },
+    {
+      "argv": [
+        "test.echo",
+        "--params"
+      ],
+      "rc": 1,
+      "first_stderr_line": "kg: --params must contain a JSON object"
+    },
+    {
+      "argv": [
+        "list",
+        "--all"
+      ],
+      "rc": 1,
+      "first_stderr_line": "kg: provider and inventory options belong to kgctl"
+    },
+    {
+      "argv": [
+        "list",
+        "--provider-bin"
+      ],
+      "rc": 1,
+      "first_stderr_line": "kg: --provider-bin expects ID=PATH"
+    }
+  ],
+  "kg_version": "0.2.0",
+  "probe_taxonomy": {
+    "bad": {
+      "probed": false,
+      "probe_error_code": "malformed_manifest",
+      "diagnostic_severity": [
+        "warning"
+      ],
+      "diagnostic_snippet": "manifest is not valid JSON: invalid character 'h' in literal true (expecting 'r')"
+    },
+    "fake": {
+      "probed": true,
+      "probe_error_code": null,
+      "diagnostic_severity": [],
+      "diagnostic_snippet": ""
+    },
+    "ugly": {
+      "probed": false,
+      "probe_error_code": "malformed_manifest",
+      "diagnostic_severity": [
+        "warning"
+      ],
+      "diagnostic_snippet": "manifest violates provider-v1 schema: jsonschema validation failed with 'file:///private/tmp/kgacme-ig-run/cwd/provider-v1.schema.json#'\n- at '/capabilities/0/s"
+    },
+    "ver": {
+      "probed": false,
+      "probe_error_code": "unsupported_schema_version",
+      "diagnostic_severity": [
+        "warning"
+      ],
+      "diagnostic_snippet": "no common kg.provider/v1 version: provider offers [99], hub supports [1]"
+    }
+  },
+  "route_explain_keys": [
+    "capability",
+    "route",
+    "schema_version"
+  ],
+  "route_explain_capability_keys": [
+    "capability_id",
+    "description",
+    "error_contract",
+    "input_schema",
+    "output",
+    "output_schema",
+    "schema_version",
+    "side_effects",
+    "source",
+    "title"
+  ],
+  "mcp": {
+    "requests_sent": 8,
+    "responses_returned": 6,
+    "silent_frames": [
+      "notifications/initialized",
+      "not json"
+    ],
+    "initialize_result": {
+      "capabilities": {
+        "tools": {
+          "listChanged": false
+        }
+      },
+      "protocolVersion": "2025-06-18",
+      "serverInfo": {
+        "name": "kg-mcp",
+        "version": "0.2.0"
+      }
+    },
+    "ping_result": {},
+    "unknown_method_error": {
+      "code": -32601,
+      "message": "method not found: resources/list"
+    },
+    "tool_names": [
+      "kg_pipeline_run",
+      "kg_pipeline_validate",
+      "kg_test_artifact",
+      "kg_test_echo",
+      "kg_test_net"
+    ],
+    "tool_count": 5,
+    "capability_tool_schema_props": {
+      "test_artifact": [
+        "allow_data_egress",
+        "allow_db_write",
+        "allow_model_download",
+        "allow_network",
+        "dry_run",
+        "out"
+      ],
+      "test_echo": [
+        "allow_data_egress",
+        "allow_db_write",
+        "allow_model_download",
+        "allow_network",
+        "dry_run",
+        "value"
+      ],
+      "test_net": [
+        "allow_data_egress",
+        "allow_db_write",
+        "allow_model_download",
+        "allow_network",
+        "dry_run"
+      ]
+    },
+    "dry_run_call": {
+      "is_error": false,
+      "structured_status": "ok",
+      "structured_capability": "test.echo",
+      "would_execute": true
+    },
+    "policy_denied_call": {
+      "is_error": true,
+      "structured_content": {
+        "error": {
+          "code": "error",
+          "message": "side effects denied by policy: network, data_egress (allow explicitly with --allow-network --allow-data-egress)"
+        },
+        "ok": false,
+        "schema_version": "kg.error/v1"
+      }
+    },
+    "provider_starts": 0
+  },
+  "pipeline_validate_plan": {
+    "protocol": "kg.pipeline.execution/v1",
+    "pipeline": "artifact-chain",
+    "status": "ok",
+    "dry_run": true,
+    "stages": [
+      {
+        "id": "write",
+        "capability": "test.artifact",
+        "provider": "fake",
+        "status": "planned",
+        "input": {
+          "out": "/tmp/kgacme-ig-run/cwd/provider-out.json"
+        }
+      },
+      {
+        "id": "shout",
+        "capability": "test.echo",
+        "provider": "fake",
+        "status": "planned",
+        "input": {
+          "value": "kg-pipeline://write/kg-document"
+        }
+      }
+    ]
+  },
+  "pipeline_bad_edge": {
+    "rc": 1,
+    "envelope": {
+      "error": {
+        "code": "error",
+        "message": "stage \"b\": upstream stage \"a\" (test.echo) has output mode \"result-json\" — no artifact to wire; only artifact-mode capabilities can feed input_from"
+      },
+      "ok": false,
+      "schema_version": "kg.error/v1"
+    }
+  },
+  "pipeline_dry_run_gates": {
+    "rc": 0,
+    "envelope": {
+      "protocol": "kg.pipeline.execution/v1",
+      "pipeline": "needs-net",
+      "status": "ok",
+      "dry_run": true,
+      "stages": [
+        {
+          "id": "n",
+          "capability": "test.net",
+          "provider": "fake",
+          "status": "planned",
+          "side_effects": [
+            "network",
+            "data_egress"
+          ]
+        }
+      ],
+      "diagnostics": [
+        {
+          "severity": "warning",
+          "message": "side effects denied by policy: data_egress, network (allow explicitly with --allow-data-egress --allow-network)"
+        }
+      ]
+    },
+    "provider_starts": 0
+  },
+  "pipeline_run": {
+    "rc": 0,
+    "envelope": {
+      "protocol": "kg.pipeline.execution/v1",
+      "pipeline": "artifact-chain",
+      "status": "ok",
+      "work_dir": "wd",
+      "stages": [
+        {
+          "id": "write",
+          "capability": "test.artifact",
+          "provider": "fake",
+          "status": "ok",
+          "input": {
+            "out": "/tmp/kgacme-ig-run/cwd/provider-out.json"
+          },
+          "artifacts": [
+            {
+              "path": "wd/stage-write-provider-out.json",
+              "kind": "kg-document",
+              "checksum": "sha256:43cf98add67e78ad33e0ec65d288c679a8a319ebd3ce13b0feebe106757e5eb8"
+            }
+          ]
+        },
+        {
+          "id": "shout",
+          "capability": "test.echo",
+          "provider": "fake",
+          "status": "ok",
+          "input": {
+            "value": "wd/stage-write-provider-out.json"
+          },
+          "result": {
+            "value": "hello"
+          }
+        }
+      ]
+    },
+    "provider_call_sequence": [
+      "describe --json",
+      "available --json",
+      "invoke test.artifact --request -",
+      "invoke test.echo --request -"
+    ],
+    "work_dir_files": [
+      "pipeline.envelope.json",
+      "stage-shout.envelope.json",
+      "stage-write-provider-out.json",
+      "stage-write.envelope.json"
+    ],
+    "injected_downstream_input": "wd/stage-write-provider-out.json"
+  },
+  "pipeline_resume": {
+    "rc": 0,
+    "stage_statuses": [
+      [
+        "write",
+        "ok"
+      ],
+      [
+        "shout",
+        "ok"
+      ]
+    ],
+    "provider_call_sequence": [
+      "describe --json",
+      "available --json"
+    ],
+    "invoke_calls": 0
+  }
+}

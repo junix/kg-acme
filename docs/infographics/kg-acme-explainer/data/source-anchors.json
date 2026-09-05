@@ -1,0 +1,543 @@
+{
+  "note": "file:line anchors frozen against the engine HEAD; audit layer only — never rendered on the page",
+  "head": "9cea0c72ec89e67a8347e11ad60f08fb2b16f602",
+  "anchors": [
+    {
+      "claim": "C01",
+      "file": "README.md",
+      "line": 7,
+      "pattern": "kg`：执行面",
+      "excerpt": "- `kg`：执行面，只接受 prefix-free 的 dotted Semantic ID。",
+      "extra_hits": []
+    },
+    {
+      "claim": "C01",
+      "file": "README.md",
+      "line": 8,
+      "pattern": "kgctl`：管理面",
+      "excerpt": "- `kgctl`：管理面，负责 refresh、provider 诊断、能力检索、路由和 completion。",
+      "extra_hits": []
+    },
+    {
+      "claim": "C01",
+      "file": "README.md",
+      "line": 9,
+      "pattern": "kg-mcp`：从同一份不可变快照发布 MCP tools",
+      "excerpt": "- `kg-mcp`：从同一份不可变快照发布 MCP tools。",
+      "extra_hits": []
+    },
+    {
+      "claim": "C01",
+      "file": "CLAUDE.md",
+      "line": 6,
+      "pattern": "入口 `cmd/kg`",
+      "excerpt": "provider，provider 提供真实能力。入口 `cmd/kg`，逻辑全在 `internal/`。",
+      "extra_hits": []
+    },
+    {
+      "claim": "C02",
+      "file": "spec/00-overview.md",
+      "line": 12,
+      "pattern": "hub 只做集成，绝不自实现 KG 算法",
+      "excerpt": "1. **hub 只做集成，绝不自实现 KG 算法。** hub 的职责恰好是五件事：",
+      "extra_hits": []
+    },
+    {
+      "claim": "C02",
+      "file": "internal/discover/discover.go",
+      "line": 94,
+      "pattern": "func FindExecutable",
+      "excerpt": "func FindExecutable(name string, overrides Overrides, env Env) string {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C03",
+      "file": "spec/00-overview.md",
+      "line": 16,
+      "pattern": "hub 不写死 provider 的选项/枚举",
+      "excerpt": "2. **hub 不写死 provider 的选项/枚举。** provider 通过",
+      "extra_hits": []
+    },
+    {
+      "claim": "C03",
+      "file": "internal/bridge/bridge.go",
+      "line": 46,
+      "pattern": "cli_spec differs from hub data",
+      "excerpt": "const CLISpecDiffDiagnostic = \"cli_spec differs from hub data table (provider authoritative; hub data table is fallback)",
+      "extra_hits": []
+    },
+    {
+      "claim": "C04",
+      "file": "README.md",
+      "line": 11,
+      "pattern": "capability-snapshot.json",
+      "excerpt": "安装时 `kgctl refresh` 生成 `~/Library/Caches/kg-acme/capability-snapshot.json`。`kg --help`、`list`、`--describe`、completion、MC",
+      "extra_hits": []
+    },
+    {
+      "claim": "C04",
+      "file": "internal/surface/surface.go",
+      "line": 64,
+      "pattern": "func Build",
+      "excerpt": "func Build(providers []router.Provider) Snapshot {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C05",
+      "file": "tests/e2e_test.go",
+      "line": 34,
+      "pattern": "TestSnapshotMetadataAndDryRunNeverStartProvider",
+      "excerpt": "func TestSnapshotMetadataAndDryRunNeverStartProvider(t *testing.T) {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C05",
+      "file": "tests/e2e_test.go",
+      "line": 58,
+      "pattern": "metadata/dry-run started provider",
+      "excerpt": "t.Fatalf(\"metadata/dry-run started provider:\\nbefore=%q\\nafter=%q\", before, after)",
+      "extra_hits": []
+    },
+    {
+      "claim": "C06",
+      "file": "tests/e2e_test.go",
+      "line": 62,
+      "pattern": "TestActualInvocationRevalidatesOnlySelectedProvider",
+      "excerpt": "func TestActualInvocationRevalidatesOnlySelectedProvider(t *testing.T) {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C06",
+      "file": "tests/e2e_test.go",
+      "line": 77,
+      "pattern": "describe, available, then invoke exactly once",
+      "excerpt": "t.Fatalf(\"actual call should describe, available, then invoke exactly once; delta=%d log=%q\", after-before, afterLog)",
+      "extra_hits": []
+    },
+    {
+      "claim": "C07",
+      "file": "spec/02-catalog-and-routing.md",
+      "line": 3,
+      "pattern": "稳定命令面",
+      "excerpt": "## Catalog：稳定命令面",
+      "extra_hits": []
+    },
+    {
+      "claim": "C07",
+      "file": "internal/catalog/catalog.go",
+      "line": 21,
+      "pattern": "go:embed",
+      "excerpt": "//go:embed catalog.json",
+      "extra_hits": []
+    },
+    {
+      "claim": "C08",
+      "file": "CLAUDE.md",
+      "line": 29,
+      "pattern": "semantic_id 镜像 command_path",
+      "excerpt": "`Load()` 校验（semantic_id 镜像 command_path、title 无结尾标点、",
+      "extra_hits": []
+    },
+    {
+      "claim": "C08",
+      "file": "internal/catalog/catalog.go",
+      "line": 47,
+      "pattern": "func Load",
+      "excerpt": "func Load() (*Catalog, error) { return Parse(embedded) }",
+      "extra_hits": []
+    },
+    {
+      "claim": "C09",
+      "file": "internal/surface/surface.go",
+      "line": 176,
+      "pattern": "func PublicID",
+      "excerpt": "func PublicID(capability Capability) string { return strings.TrimPrefix(capability.SemanticID, \"kg.\") }",
+      "extra_hits": []
+    },
+    {
+      "claim": "C09",
+      "file": "internal/surface/surface.go",
+      "line": 209,
+      "pattern": "func normalizeID",
+      "excerpt": "func normalizeID(id string) string {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C09",
+      "file": "internal/surface/surface.go",
+      "line": 236,
+      "pattern": "curated := map[string]string",
+      "excerpt": "curated := map[string]string{",
+      "extra_hits": []
+    },
+    {
+      "claim": "C10",
+      "file": "spec/02-catalog-and-routing.md",
+      "line": 63,
+      "pattern": "Discovery：provider 发现顺序",
+      "excerpt": "## Discovery：provider 发现顺序",
+      "extra_hits": []
+    },
+    {
+      "claim": "C10",
+      "file": "internal/discover/discover.go",
+      "line": 9,
+      "pattern": "kg-provider-",
+      "excerpt": "//  5. PATH scan for kg-provider-* executables.",
+      "extra_hits": [
+        120,
+        134
+      ]
+    },
+    {
+      "claim": "C11",
+      "file": "CLAUDE.md",
+      "line": 32,
+      "pattern": "malformed_manifest",
+      "excerpt": "清楚是否已有合适码（尤其 `malformed_manifest` vs",
+      "extra_hits": []
+    },
+    {
+      "claim": "C11",
+      "file": "internal/protocol/negotiate.go",
+      "line": 5,
+      "pattern": "VersionError",
+      "excerpt": "// VersionError reports a failed version negotiation. It is distinct from a",
+      "extra_hits": [
+        8,
+        13,
+        30
+      ]
+    },
+    {
+      "claim": "C11",
+      "file": "spec/01-provider-protocol.md",
+      "line": 71,
+      "pattern": "不降级",
+      "excerpt": "**不降级**（fail-safe）——available 未知不等于不可用。",
+      "extra_hits": []
+    },
+    {
+      "claim": "C12",
+      "file": "internal/surface/surface.go",
+      "line": 125,
+      "pattern": "left.Probed != right.Probed",
+      "excerpt": "if left.Probed != right.Probed {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C12",
+      "file": "spec/02-catalog-and-routing.md",
+      "line": 93,
+      "pattern": "probed 优先于 fallback",
+      "excerpt": "2. 排序：**probed 优先于 fallback**，然后 weight 降序，然后 id 字典序；",
+      "extra_hits": []
+    },
+    {
+      "claim": "C13",
+      "file": "spec/01-provider-protocol.md",
+      "line": 51,
+      "pattern": "argv 发射序",
+      "excerpt": "- `cli_spec` 的 argv 发射序：**Always ++ Subcommand ++ Positionals ++",
+      "extra_hits": []
+    },
+    {
+      "claim": "C13",
+      "file": "internal/bridge/bridge.go",
+      "line": 240,
+      "pattern": "Always ++ Subcommand ++ Positionals ++ Flags",
+      "excerpt": "// Emission order: Always ++ Subcommand ++ Positionals ++ Flags. Flags are",
+      "extra_hits": []
+    },
+    {
+      "claim": "C13",
+      "file": "internal/bridge/bridge.go",
+      "line": 245,
+      "pattern": "func RenderArgv",
+      "excerpt": "func RenderArgv(spec protocol.CLISpec, input map[string]any) ([]string, error) {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C14",
+      "file": "spec/03-policy-gates.md",
+      "line": 6,
+      "pattern": "默认全拒",
+      "excerpt": "**默认全拒**：每一个声明的副作用都必须由操作者显式开启对应的",
+      "extra_hits": []
+    },
+    {
+      "claim": "C14",
+      "file": "internal/policy/policy.go",
+      "line": 31,
+      "pattern": "func AllowFlag",
+      "excerpt": "func AllowFlag(effect string) string {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C15",
+      "file": "internal/schema/provider-v1.schema.json",
+      "line": 43,
+      "pattern": "\"enum\": [\"network\", \"data_egress\", \"downloads_models\", \"writes_db\"]",
+      "excerpt": "\"items\": {\"enum\": [\"network\", \"data_egress\", \"downloads_models\", \"writes_db\"]},",
+      "extra_hits": []
+    },
+    {
+      "claim": "C15",
+      "file": "internal/policy/policy.go",
+      "line": 57,
+      "pattern": "fail-closed",
+      "excerpt": "// Unknown side effects are denied by default (fail-closed).",
+      "extra_hits": []
+    },
+    {
+      "claim": "C16",
+      "file": "spec/03-policy-gates.md",
+      "line": 37,
+      "pattern": "would_execute",
+      "excerpt": "\"would_execute\": false",
+      "extra_hits": [
+        42
+      ]
+    },
+    {
+      "claim": "C16",
+      "file": "internal/router/router.go",
+      "line": 384,
+      "pattern": "dryRun is true it renders the",
+      "excerpt": "// Execute runs the resolved capability. When dryRun is true it renders the",
+      "extra_hits": []
+    },
+    {
+      "claim": "C17",
+      "file": "internal/protocol/types.go",
+      "line": 164,
+      "pattern": "ErrUnsupportedSchemaVersion",
+      "excerpt": "ErrUnsupportedSchemaVersion = \"unsupported_schema_version\"",
+      "extra_hits": []
+    },
+    {
+      "claim": "C17",
+      "file": "internal/protocol/types.go",
+      "line": 174,
+      "pattern": "ErrIncompatibleStageEdge",
+      "excerpt": "ErrIncompatibleStageEdge = \"incompatible_stage_edge\"",
+      "extra_hits": []
+    },
+    {
+      "claim": "C18",
+      "file": "CLAUDE.md",
+      "line": 34,
+      "pattern": "恰好一个",
+      "excerpt": "- `--json` 时 stdout **恰好一个** envelope；日志/诊断永远 stderr。",
+      "extra_hits": []
+    },
+    {
+      "claim": "C18",
+      "file": "internal/cli/cli.go",
+      "line": 89,
+      "pattern": "cannot be combined",
+      "excerpt": "return r.fail(fmt.Errorf(\"--describe cannot be combined with execution arguments or options\"), opts.JSON)",
+      "extra_hits": [
+        247
+      ]
+    },
+    {
+      "claim": "C19",
+      "file": "spec/05-pipeline.md",
+      "line": 4,
+      "pattern": "hub 仍然只做编排",
+      "excerpt": "hub 仍然只做编排：每个 stage 是一次 Phase 1 的路由调用",
+      "extra_hits": []
+    },
+    {
+      "claim": "C19",
+      "file": "internal/pipeline/run.go",
+      "line": 113,
+      "pattern": "stage by stage in topological order",
+      "excerpt": "// Execute runs the plan stage by stage in topological order. Gate denial",
+      "extra_hits": []
+    },
+    {
+      "claim": "C20",
+      "file": "spec/05-pipeline.md",
+      "line": 50,
+      "pattern": "可接线",
+      "excerpt": "1. **可接线**：上游 capability 必须是 `output.mode == \"artifact\"`——",
+      "extra_hits": []
+    },
+    {
+      "claim": "C20",
+      "file": "internal/pipeline/pipeline.go",
+      "line": 338,
+      "pattern": "no artifact to wire",
+      "excerpt": "\"stage %q: upstream stage %q (%s) has output mode %q — no artifact to wire; \"+",
+      "extra_hits": []
+    },
+    {
+      "claim": "C21",
+      "file": "spec/05-pipeline.md",
+      "line": 70,
+      "pattern": "Kahn 拓扑排序",
+      "excerpt": "- **DAG 拓扑序**：stage 按 `input_from` 建图，Kahn 拓扑排序（平手按",
+      "extra_hits": []
+    },
+    {
+      "claim": "C21",
+      "file": "internal/pipeline/pipeline.go",
+      "line": 292,
+      "pattern": "cycle",
+      "excerpt": "return nil, &Error{protocol.ErrInvalidPipeline, \"pipeline stages form a cycle\"}",
+      "extra_hits": []
+    },
+    {
+      "claim": "C22",
+      "file": "spec/05-pipeline.md",
+      "line": 76,
+      "pattern": "策略门预检",
+      "excerpt": "- **策略门预检**：计划期收集全部 stage 的 `side_effects` 并集，执行前",
+      "extra_hits": []
+    },
+    {
+      "claim": "C22",
+      "file": "internal/pipeline/pipeline.go",
+      "line": 241,
+      "pattern": "Resolved.SideEffects",
+      "excerpt": "for _, e := range ps.Resolved.SideEffects {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C23",
+      "file": "spec/05-pipeline.md",
+      "line": 79,
+      "pattern": "artifact 落 work-dir",
+      "excerpt": "- **artifact 落 work-dir**：每 stage 成功后，hub 校验 envelope 里",
+      "extra_hits": []
+    },
+    {
+      "claim": "C23",
+      "file": "internal/pipeline/run.go",
+      "line": 5,
+      "pattern": "sha256",
+      "excerpt": "\"crypto/sha256\"",
+      "extra_hits": [
+        283,
+        284,
+        348
+      ]
+    },
+    {
+      "claim": "C24",
+      "file": "spec/05-pipeline.md",
+      "line": 92,
+      "pattern": "断点重跑",
+      "excerpt": "## 5. 断点重跑：`--resume <work-dir>`",
+      "extra_hits": []
+    },
+    {
+      "claim": "C24",
+      "file": "internal/pipeline/run.go",
+      "line": 159,
+      "pattern": "reused",
+      "excerpt": "Message:  fmt.Sprintf(\"stage %q: reused from %s (checksum verified)\", ps.Stage.ID, stageEnvelopePath(workDir, ps.Stage.I",
+      "extra_hits": []
+    },
+    {
+      "claim": "C25",
+      "file": "spec/06-mcp.md",
+      "line": 31,
+      "pattern": "运行时派生",
+      "excerpt": "tool 面由 **catalog 运行时派生**，不另维护清单：",
+      "extra_hits": []
+    },
+    {
+      "claim": "C25",
+      "file": "cmd/kg-mcp/main.go",
+      "line": 65,
+      "pattern": "tools/list",
+      "excerpt": "case \"tools/list\":",
+      "extra_hits": []
+    },
+    {
+      "claim": "C26",
+      "file": "spec/06-mcp.md",
+      "line": 78,
+      "pattern": "OR 合并",
+      "excerpt": "- 两者 **OR 合并**；env 里出现未知 token → 启动即报错退出 2",
+      "extra_hits": []
+    },
+    {
+      "claim": "C26",
+      "file": "internal/policy/policy.go",
+      "line": 77,
+      "pattern": "func ParseGates",
+      "excerpt": "func ParseGates(spec string) (Gates, error) {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C26",
+      "file": "internal/policy/policy.go",
+      "line": 95,
+      "pattern": "unknown side effect",
+      "excerpt": "return Gates{}, fmt.Errorf(\"unknown side effect %q in allow list (want network|data_egress|downloads_models|writes_db|*)",
+      "extra_hits": []
+    },
+    {
+      "claim": "C27",
+      "file": "spec/06-mcp.md",
+      "line": 81,
+      "pattern": "结构化错误",
+      "excerpt": "门未开时 `tools/call` 返回 **结构化错误**：CallToolResult",
+      "extra_hits": []
+    },
+    {
+      "claim": "C27",
+      "file": "cmd/kg-mcp/main.go",
+      "line": 89,
+      "pattern": "-32601",
+      "excerpt": "return bad(req.ID, -32601, \"method not found: \"+req.Method)",
+      "extra_hits": []
+    },
+    {
+      "claim": "C28",
+      "file": "tests/e2e_test.go",
+      "line": 385,
+      "pattern": "would_execute",
+      "excerpt": "if plan[\"would_execute\"] != true {",
+      "extra_hits": [
+        386
+      ]
+    },
+    {
+      "claim": "C28",
+      "file": "tests/e2e_test.go",
+      "line": 477,
+      "pattern": "kg.error/v1",
+      "excerpt": "if envelope.SchemaVersion != \"kg.error/v1\" || envelope.OK {",
+      "extra_hits": []
+    },
+    {
+      "claim": "C29",
+      "file": "(computed)",
+      "pattern": "git ls-files + line counts (repo-metrics.json)",
+      "kind": "computed-or-live"
+    },
+    {
+      "claim": "C30",
+      "file": "CLAUDE.md",
+      "line": 23,
+      "pattern": "测试分两层",
+      "excerpt": "- 测试分两层：`internal/*` 单测 + `tests/` 端到端（go build 真二进制 +",
+      "extra_hits": []
+    },
+    {
+      "claim": "C30",
+      "file": "tests/e2e_test.go",
+      "line": 507,
+      "pattern": "fake-provider",
+      "excerpt": "provider = filepath.Join(home, \"fake-provider\")",
+      "extra_hits": [
+        512
+      ]
+    }
+  ]
+}
