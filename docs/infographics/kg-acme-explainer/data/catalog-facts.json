@@ -1,0 +1,124 @@
+{
+  "version": 2,
+  "command_count": 17,
+  "builtin_count": 0,
+  "capability_command_count": 17,
+  "published_namespaces": [
+    "analyze",
+    "detect",
+    "embed",
+    "extract",
+    "layout",
+    "parse",
+    "resolve",
+    "retrieve",
+    "store",
+    "summarize"
+  ],
+  "namespace_count": 10,
+  "semantic_id_mirrors_command_path": true,
+  "commands": [
+    {
+      "command": "extract entities-relations",
+      "semantic_id": "extract.entities-relations",
+      "capability_id": "extract.entities_relations",
+      "builtin": false
+    },
+    {
+      "command": "resolve coref",
+      "semantic_id": "resolve.coref",
+      "capability_id": "resolve.coref",
+      "builtin": false
+    },
+    {
+      "command": "detect communities",
+      "semantic_id": "detect.communities",
+      "capability_id": "detect.communities",
+      "builtin": false
+    },
+    {
+      "command": "detect communities-hierarchy",
+      "semantic_id": "detect.communities-hierarchy",
+      "capability_id": "detect.communities_hierarchy",
+      "builtin": false
+    },
+    {
+      "command": "summarize communities",
+      "semantic_id": "summarize.communities",
+      "capability_id": "summarize.communities",
+      "builtin": false
+    },
+    {
+      "command": "detect communities-semantic",
+      "semantic_id": "detect.communities-semantic",
+      "capability_id": "detect.communities_semantic",
+      "builtin": false
+    },
+    {
+      "command": "store triples",
+      "semantic_id": "store.triples",
+      "capability_id": "store.triples",
+      "builtin": false
+    },
+    {
+      "command": "retrieve ask",
+      "semantic_id": "retrieve.ask",
+      "capability_id": "retrieve.ask",
+      "builtin": false
+    },
+    {
+      "command": "parse multimodal",
+      "semantic_id": "parse.multimodal",
+      "capability_id": "parse.multimodal",
+      "builtin": false
+    },
+    {
+      "command": "layout compute",
+      "semantic_id": "layout.compute",
+      "capability_id": "layout.compute",
+      "builtin": false
+    },
+    {
+      "command": "analyze centrality",
+      "semantic_id": "analyze.centrality",
+      "capability_id": "analyze.centrality",
+      "builtin": false
+    },
+    {
+      "command": "analyze pagerank",
+      "semantic_id": "analyze.pagerank",
+      "capability_id": "analyze.pagerank",
+      "builtin": false
+    },
+    {
+      "command": "analyze shortest-paths",
+      "semantic_id": "analyze.shortest-paths",
+      "capability_id": "analyze.shortest_paths",
+      "builtin": false
+    },
+    {
+      "command": "analyze components",
+      "semantic_id": "analyze.components",
+      "capability_id": "analyze.components",
+      "builtin": false
+    },
+    {
+      "command": "analyze triangles",
+      "semantic_id": "analyze.triangles",
+      "capability_id": "analyze.triangles",
+      "builtin": false
+    },
+    {
+      "command": "analyze topology",
+      "semantic_id": "analyze.topology",
+      "capability_id": "analyze.topology",
+      "builtin": false
+    },
+    {
+      "command": "embed nodes",
+      "semantic_id": "embed.nodes",
+      "capability_id": "embed.nodes",
+      "builtin": false
+    }
+  ]
+}

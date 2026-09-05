@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="660" viewBox="0 0 1120 660" role="img">
+<title>工程事实：规模、职责与测试网</title>
+<desc>文件构成、实现与测试行数、按职责规模与两层测试</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="660" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="659" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">事实</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">规模先枚举后求和，测试两层全覆盖</text>
+<rect x="40" y="108" width="500" height="240" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="108.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实现与测试行数</text>
+<text x="60" y="166" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实现</text>
+<text x="60" y="186" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">19 个文件</text>
+<rect x="150" y="152" width="300" height="22" rx="4" fill="#2a78d6"/>
+<text x="458" y="169" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">4,223</text>
+<text x="60" y="226" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">测试</text>
+<text x="60" y="246" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">9 个文件 · 97 个测试函数</text>
+<rect x="150" y="212" width="241.1" height="22" rx="4" fill="#4a3aa7"/>
+<text x="399.1" y="229" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">3,394</text>
+<text x="60" y="280" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">测试 : 实现 ≈ 0.8 : 1 · 冻结运行 172 通过 / 0 失败（88.7 秒）</text>
+<text x="60" y="304" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">两层测试网：内部单测覆盖每个职责包；端到端层构建真二进制，</text>
+<text x="60" y="326" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">用 shell 假提供者对打完整协议（零真实网络、零模型）。</text>
+<rect x="580" y="108" width="500" height="240" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="581.5" y="108.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="596" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">按职责的实现规模（行）</text>
+<text x="600" y="161" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">命令界面（三入口共享）</text>
+<rect x="748" y="150" width="220" height="13" rx="3" fill="#2a78d6"/>
+<text x="976" y="160.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">1,178</text>
+<text x="600" y="179" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">流水线编排</text>
+<rect x="748" y="168" width="143.1" height="13" rx="3" fill="#2a78d6"/>
+<text x="899.1" y="178.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">766</text>
+<text x="600" y="197" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">路由与执行</text>
+<rect x="748" y="186" width="96.7" height="13" rx="3" fill="#2a78d6"/>
+<text x="852.7" y="196.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">518</text>
+<text x="600" y="215" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">兼容桥（fallback 表）</text>
+<rect x="748" y="204" width="70" height="13" rx="3" fill="#2a78d6"/>
+<text x="826" y="214.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">375</text>
+<text x="600" y="233" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力快照构建</text>
+<rect x="748" y="222" width="59.4" height="13" rx="3" fill="#2a78d6"/>
+<text x="815.4" y="232.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">318</text>
+<text x="600" y="251" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">提供者发现</text>
+<rect x="748" y="240" width="51.5" height="13" rx="3" fill="#2a78d6"/>
+<text x="807.5" y="250.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">276</text>
+<text x="600" y="269" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">协议契约类型</text>
+<rect x="748" y="258" width="42" height="13" rx="3" fill="#2a78d6"/>
+<text x="798" y="268.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">225</text>
+<text x="600" y="287" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">二进制入口</text>
+<rect x="748" y="276" width="29.5" height="13" rx="3" fill="#2a78d6"/>
+<text x="785.5" y="286.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">158</text>
+<text x="600" y="305" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力目录</text>
+<rect x="748" y="294" width="27.3" height="13" rx="3" fill="#2a78d6"/>
+<text x="783.3" y="304.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">146</text>
+<text x="600" y="323" font-size="10.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">策略门</text>
+<rect x="748" y="312" width="24.3" height="13" rx="3" fill="#2a78d6"/>
+<text x="780.3" y="322.5" font-size="10" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">130</text>
+<text x="600" y="338" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">合计 4,223 行实现 · 7,617 行 Go 源码（含测试）</text>
+<rect x="40" y="376" width="1040" height="158" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="376.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="408" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">全仓构成（git 跟踪文件，逐类枚举后合计）</text>
+<text x="64" y="446" font-size="26" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">50</text>
+<text x="124" y="446" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个跟踪文件 =</text>
+<rect x="232" y="428" width="79.4" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="271.7" y="443.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">28 Go 源码</text>
+<rect x="376" y="428" width="89.3" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="420.6" y="443.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">9 规格与文档</text>
+<rect x="536" y="428" width="148.9" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="610.4" y="443.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">13 其他（清单/契约等）</text>
+<text x="64" y="486" font-size="11.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">枚举明细（扩展名 → 个数）：(no-ext) 1 · gitignore 1 · go 28 · html 1 · json 3 · md 9 · mod 1 · pdf 1 · png 1 · sty 1 · sum 1 · svg 1 · tex 1</text>
+<text x="64" y="512" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">逐类相加 50 = 跟踪总数 50，与冻结快照一致。</text>
+<rect x="900" y="396" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="915.7" y="410.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C29</text>
+<rect x="937.3" y="396" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="953" y="410.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C30</text>
+</g>
+</svg>

@@ -1,0 +1,247 @@
+{
+  "head": "9cea0c72ec89e67a8347e11ad60f08fb2b16f602",
+  "tracked_total": 50,
+  "by_ext": {
+    "(no-ext)": 1,
+    "gitignore": 1,
+    "go": 28,
+    "html": 1,
+    "json": 3,
+    "md": 9,
+    "mod": 1,
+    "pdf": 1,
+    "png": 1,
+    "sty": 1,
+    "sum": 1,
+    "svg": 1,
+    "tex": 1
+  },
+  "ext_sum_check": 50,
+  "go_impl_files": 19,
+  "go_test_files": 9,
+  "spec_files": 9,
+  "spec_loc": 839,
+  "impl_loc": 4223,
+  "test_loc": 3394,
+  "go_total_loc": 7617,
+  "test_fn_count": 97,
+  "role_loc": [
+    {
+      "role": "命令界面（三入口共享）",
+      "files": 3,
+      "loc": 1178
+    },
+    {
+      "role": "流水线编排",
+      "files": 2,
+      "loc": 766
+    },
+    {
+      "role": "路由与执行",
+      "files": 1,
+      "loc": 518
+    },
+    {
+      "role": "兼容桥（fallback 表）",
+      "files": 1,
+      "loc": 375
+    },
+    {
+      "role": "能力快照构建",
+      "files": 1,
+      "loc": 318
+    },
+    {
+      "role": "提供者发现",
+      "files": 2,
+      "loc": 276
+    },
+    {
+      "role": "协议契约类型",
+      "files": 2,
+      "loc": 225
+    },
+    {
+      "role": "二进制入口",
+      "files": 3,
+      "loc": 158
+    },
+    {
+      "role": "能力目录",
+      "files": 1,
+      "loc": 146
+    },
+    {
+      "role": "策略门",
+      "files": 1,
+      "loc": 130
+    },
+    {
+      "role": "模式校验",
+      "files": 1,
+      "loc": 89
+    },
+    {
+      "role": "快照存取",
+      "files": 1,
+      "loc": 44
+    }
+  ],
+  "largest_impl_files": [
+    {
+      "file": "internal/router/router.go",
+      "loc": 518
+    },
+    {
+      "file": "internal/cli/cli.go",
+      "loc": 440
+    },
+    {
+      "file": "internal/pipeline/pipeline.go",
+      "loc": 416
+    },
+    {
+      "file": "internal/cli/navigation.go",
+      "loc": 408
+    },
+    {
+      "file": "internal/bridge/bridge.go",
+      "loc": 375
+    }
+  ],
+  "source_constants": {
+    "snapshot_schema": "kg.snapshot/v3",
+    "curated_group_namespaces": [
+      "analyze",
+      "detect",
+      "embed",
+      "extract",
+      "layout",
+      "parse",
+      "pipeline",
+      "resolve",
+      "retrieve",
+      "store",
+      "summarize"
+    ],
+    "protocol_native_bins": [
+      "kg-layout",
+      "graph-kg",
+      "kg-algorithms"
+    ],
+    "fallback_bridge_ids": [
+      "kg-extract",
+      "kg-mm",
+      "ygr"
+    ],
+    "supported_versions": [
+      1
+    ]
+  },
+  "source_constant_provenance": [
+    {
+      "name": "snapshot_schema",
+      "file": "internal/surface/surface.go",
+      "pattern": "SnapshotSchema = \"([^\"]+)\"",
+      "value": "kg.snapshot/v3"
+    },
+    {
+      "name": "curated_group_namespaces",
+      "file": "internal/surface/surface.go",
+      "pattern": "curated := map\\[string\\]string\\{(.*?)\\}",
+      "value": [
+        "analyze",
+        "detect",
+        "embed",
+        "extract",
+        "layout",
+        "parse",
+        "pipeline",
+        "resolve",
+        "retrieve",
+        "store",
+        "summarize"
+      ]
+    },
+    {
+      "name": "protocol_native_bins",
+      "file": "internal/router/router.go",
+      "pattern": "ProtocolNativeBins = \\[\\]string\\{(.*?)\\}",
+      "value": [
+        "kg-layout",
+        "graph-kg",
+        "kg-algorithms"
+      ]
+    },
+    {
+      "name": "fallback_bridge_ids",
+      "file": "internal/bridge/bridge.go",
+      "pattern": "\"(kg-extract|kg-mm|ygr)\"",
+      "value": [
+        "kg-extract",
+        "kg-mm",
+        "ygr"
+      ]
+    },
+    {
+      "name": "supported_versions",
+      "file": "internal/protocol/types.go",
+      "pattern": "SupportedVersions = \\[\\]int\\{(.*?)\\}",
+      "value": [
+        1
+      ]
+    }
+  ],
+  "file_snapshot": [
+    ".gitignore",
+    "CLAUDE.md",
+    "README.md",
+    "cmd/kg-mcp/main.go",
+    "cmd/kg/main.go",
+    "cmd/kgctl/main.go",
+    "docs/architecture-infographic.pdf",
+    "docs/architecture-infographic.png",
+    "docs/architecture-infographic.svg",
+    "docs/architecture-infographic.tex",
+    "docs/architecture.html",
+    "docs/styles/showcase.sty",
+    "go.mod",
+    "go.sum",
+    "internal/bridge/bridge.go",
+    "internal/bridge/bridge_test.go",
+    "internal/catalog/catalog.go",
+    "internal/catalog/catalog.json",
+    "internal/catalog/catalog_test.go",
+    "internal/cli/cli.go",
+    "internal/cli/control.go",
+    "internal/cli/navigation.go",
+    "internal/discover/discover.go",
+    "internal/discover/discover_test.go",
+    "internal/discover/exec.go",
+    "internal/pipeline/pipeline.go",
+    "internal/pipeline/pipeline_test.go",
+    "internal/pipeline/run.go",
+    "internal/policy/policy.go",
+    "internal/policy/policy_test.go",
+    "internal/protocol/negotiate.go",
+    "internal/protocol/negotiate_test.go",
+    "internal/protocol/types.go",
+    "internal/router/router.go",
+    "internal/router/router_test.go",
+    "internal/schema/available-v1.schema.json",
+    "internal/schema/provider-v1.schema.json",
+    "internal/schema/schema.go",
+    "internal/schema/schema_test.go",
+    "internal/state/store.go",
+    "internal/surface/surface.go",
+    "justfile",
+    "spec/00-overview.md",
+    "spec/01-provider-protocol.md",
+    "spec/02-catalog-and-routing.md",
+    "spec/03-policy-gates.md",
+    "spec/04-roadmap.md",
+    "spec/05-pipeline.md",
+    "spec/06-mcp.md",
+    "tests/e2e_test.go"
+  ]
+}

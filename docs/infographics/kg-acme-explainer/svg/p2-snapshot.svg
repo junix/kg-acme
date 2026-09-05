@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img">
+<title>快照数据流：只读面零启动，执行面只复核选中者</title>
+<desc>管理面刷新构建不可变快照；只读面不启动 provider；执行面三次调用</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="640" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="639" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">数据流</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">一份不可变快照，两种消费纪律</text>
+<rect x="40" y="108" width="200" height="64" rx="10" fill="#E3EEFA"/>
+<text x="140" y="134" font-size="14" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">管理面刷新</text>
+<text x="140" y="156" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">显式挂接 + 环境发现</text>
+<polygon points="246,140 277,144.2 277,135.8" fill="#1D5FBF"/>
+<polygon points="286,140 277,142.6 277,137.4" fill="#1D5FBF"/>
+<rect x="296" y="108" width="240" height="64" rx="10" fill="#FFFFFF" stroke="#1D5FBF" stroke-width="1.6"/>
+<text x="416" y="134" font-size="14" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">不可变能力快照</text>
+<text x="416" y="156" font-size="10.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">探测结果 · 能力视图 · 分组 · 指纹</text>
+<polygon points="542,140 573,144.2 573,135.8" fill="#1D5FBF"/>
+<polygon points="582,140 573,142.6 573,137.4" fill="#1D5FBF"/>
+<rect x="592" y="108" width="488" height="64" rx="10" fill="#E8EEF5"/>
+<text x="836" y="134" font-size="12.5" fill="#1B2733" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">刷新实测：6 次探测调用（自描述 + 依赖探测）</text>
+<text x="836" y="156" font-size="10.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">快照指纹 = 全部提供者+分组+能力视图的内容哈希，重建即复算</text>
+<rect x="40" y="204" width="500" height="300" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="204.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="236" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">只读面：零启动（日志实测）</text>
+<text x="64" y="260" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">10 次只读操作（7 类命令）连跑，全部只看快照：</text>
+<rect x="64" y="274" width="72.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="100.2" y="289" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg --help</text>
+<rect x="304" y="274" width="60.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="334.2" y="289" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg list</text>
+<rect x="64" y="310" width="90.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="109.3" y="325" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg test.echo</text>
+<rect x="304" y="310" width="60.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="334.2" y="325" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg test</text>
+<rect x="64" y="346" width="126.9" height="23" rx="9" fill="#E3EEFA"/>
+<text x="127.4" y="361" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kgctl capabilities</text>
+<rect x="304" y="346" width="84.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="346.3" y="361" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kgctl route</text>
+<rect x="64" y="382" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="121.4" y="397" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kgctl completion</text>
+<text x="64" y="444" font-size="14" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">provider 启动次数：0 次</text>
+<text x="64" y="470" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">帮助 · 列表 · 描述 · 补全 · 工具清单 · 干跑一律不探测、不加载模型</text>
+<rect x="580" y="204" width="500" height="300" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="581.5" y="204.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="596" y="236" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">执行面：只复核最终选中的 provider（日志实测）</text>
+<text x="604" y="260" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">一次真实调用的完整 provider 日志：</text>
+<rect x="604" y="274" width="112.9" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="660.4" y="289.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">describe --json</text>
+<rect x="604" y="314" width="119.2" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="663.6" y="329.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">available --json</text>
+<rect x="604" y="354" width="188.8" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="698.4" y="369.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.net --request -</text>
+<text x="604" y="444" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">恰好 3 次调用：先校验参数与策略，再复核并启动唯一的选中者</text>
+<text x="604" y="470" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">策略被拒时连这三次也不会发生（见策略门一节实测）</text>
+<rect x="40" y="532" width="1040" height="72" rx="10" fill="#E8EEF5"/>
+<text x="64" y="566" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">快照只在安装期由管理面重算；执行期以快照为准，需要真相时只向最终选中者要。</text>
+<text x="64" y="590" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">离线帮助永不唤醒算法进程；每次真实执行的探测开销收敛到常数。</text>
+<rect x="920" y="544" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="935.7" y="558.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C04</text>
+<rect x="957.3" y="544" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="973" y="558.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C05</text>
+<rect x="994.7" y="544" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
+<text x="1010.3" y="558.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C06</text>
+</g>
+</svg>

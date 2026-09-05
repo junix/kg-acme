@@ -1,0 +1,72 @@
+{
+  "engine_root_env": "KG_ACME_ROOT",
+  "engine_head": "9cea0c72ec89e67a8347e11ad60f08fb2b16f602",
+  "frozen_head": "9cea0c72ec89e67a8347e11ad60f08fb2b16f602",
+  "engine_clean_tree": true,
+  "tracked_file_count": 50,
+  "work_copy": "git archive of frozen HEAD into IG_WORK (/tmp); engine repo never written",
+  "offline_build": "GOPROXY=off GOFLAGS=-mod=mod (module cache)",
+  "fake_providers": "4 shell fakes (fake/ver/ugly/bad): zero network, zero model, zero real API call",
+  "generated_at": "2026-09-05T02:04:07-0700",
+  "tool_versions": {
+    "go": "go version go1.27.0 darwin/arm64",
+    "python": "3.14.7"
+  },
+  "layer_registry": {
+    "one_time_frozen": [
+      {
+        "file": "unit-tests.json",
+        "why": "wall-clock + per-package timings of one real go-test run; re-measuring would produce different seconds",
+        "policy": "extract refuses to overwrite; vacuum asserts byte-unchanged"
+      },
+      {
+        "file": "provenance.json",
+        "why": "generated-at timestamp + tool versions",
+        "policy": "extract refuses to overwrite; vacuum asserts byte-unchanged"
+      }
+    ],
+    "deterministic_rebuild": [
+      {
+        "file": "engine-contract.json",
+        "why": "fixed IG_WORK paths + hermetic env + constant fake outputs make every captured byte reproducible"
+      },
+      {
+        "file": "catalog-facts.json",
+        "why": "pure function of the embedded catalog"
+      },
+      {
+        "file": "repo-metrics.json",
+        "why": "pure function of git ls-files + line counts"
+      },
+      {
+        "file": "source-anchors.json",
+        "why": "pure function of the frozen HEAD text"
+      },
+      {
+        "file": "display-exemptions.json",
+        "why": "written by build.py from the same inputs"
+      },
+      {
+        "file": "fingerprints.json",
+        "why": "written by fingerprint.py over the rebuilt tree"
+      }
+    ]
+  },
+  "commands": [
+    "kgctl refresh --provider-bin fake=… ver=… ugly=… bad=… (4 fake providers)",
+    "kg test.net --params {} [--allow-*] --json (policy deny + allow)",
+    "kgctl providers list --all --json + route explain",
+    "kg-mcp stdio session: initialize/ping/tools list/tools call (snapshot only)",
+    "kg pipeline validate/run/resume vs fakes (typed-edge + gate preflight + artifact chain)",
+    "go build ./cmd/{kg,kgctl,kg-mcp} (work copy, offline)",
+    "go test ./... -v -count=1 (work copy; one-time layer)",
+    "git ls-files + line counts + anchored regex reads (read-only)"
+  ],
+  "data_sha256": {
+    "catalog-facts.json": "1dd4deab06e95603af16df71a0641a039c77969496c27bb2060147abc01c83d4",
+    "engine-contract.json": "a50536795637e5cebd74db03b6aa20ed1221de7f0a3d999fd3c51d6380682285",
+    "repo-metrics.json": "535290abd0f90159112c7b9a5de3f3a0d0e6cc657da2b01c272a19902d39c640",
+    "source-anchors.json": "d7f21e42b8cb733f0b165cb537aa403631f56c7583f4ad02bd21edcafd7573d3",
+    "unit-tests.json": "d7a3d0d32a5afd85aa7386956c602930a78486d586bf6cb3477406176615839c"
+  }
+}

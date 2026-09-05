@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<title>kg-acme 技术长图：知识图谱能力中枢</title>
+<style>
+:root{--paper:#F4F7FB;--card:#FFFFFF;--ink:#1B2733;--sub:#46586B;
+--mut:#7C8FA3;--line:#D8E2EC;--accent:#1D5FBF;--deep:#0E3A75;
+--chip:#E3EEFA}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'PingFang SC',
+'Hiragino Sans GB','Microsoft YaHei',sans-serif}
+.wrap{width:1200px;margin:0 auto}
+header{background:linear-gradient(180deg,#0E3A75 0%,#1D5FBF 100%);
+color:#fff;padding:64px 0 44px}
+header .kicker{font-size:15px;letter-spacing:.12em;opacity:.85}
+header h1{font-size:40px;line-height:1.25;margin:14px 0 12px;font-weight:700}
+header p.sub{font-size:17px;opacity:.9;line-height:1.7;max-width:880px;
+padding:0 40px}
+.metastrip{display:flex;gap:12px;margin:26px 40px 0;flex-wrap:wrap}
+.metastrip .m{background:rgba(255,255,255,.13);border:1px solid rgba(255,
+255,255,.28);border-radius:9px;padding:7px 14px;font-size:13px}
+section{padding:34px 40px 8px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-no{font-size:14px;color:var(--accent);font-weight:700;letter-spacing:.1em}
+h2{font-size:26px;font-weight:700}
+p.lead{color:var(--sub);font-size:15px;line-height:1.8;margin:8px 0 16px;
+max-width:980px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;
+padding:38px}
+.panel img{display:block;width:1042px;height:auto;margin:0 auto}
+.disc{background:var(--card);border:1px solid var(--line);border-radius:14px;
+margin:26px 40px 0;padding:22px 28px}
+.disc h3{font-size:17px;color:var(--deep);margin-bottom:8px}
+.disc p{font-size:13.5px;color:var(--sub);line-height:1.85}
+footer{padding:40px 0;background:var(--paper)}
+.foot-card{background:var(--card);border:1px solid var(--line);border-radius:
+14px;padding:26px 30px;display:flex;gap:28px;justify-content:space-between;
+flex-wrap:wrap}
+.foot-card .col{max-width:520px}
+.foot-card h4{font-size:15px;color:var(--deep);margin-bottom:6px}
+.foot-card p{font-size:13px;color:var(--sub);line-height:1.8}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="kicker">可审计技术长图 · 全部数字锚定冻结证据</div><h1>kg-acme：知识图谱能力中枢</h1><p class="sub">中枢只做集成：发现、协议、目录、策略、路由五件事；图谱算法全部住在 provider 里。本页解释三条入口、一份不可变快照、四把策略门与一条纯编排流水线。</p><div class="metastrip"><div class="m">引擎提交 9cea0c7（冻结）</div><div class="m">冻结证据 6 份 JSON</div><div class="m">面板 11 张 · 声明 30 条</div><div class="m">测试 172 通过 / 0 失败（一次冻结运行）</div><div class="m">跟踪文件 50 个</div></div></div></header>
+<div class="wrap">
+<section style="padding-top:34px"><div class="sec-head"><span class="sec-no">导读</span></div><p class="lead">这张长图按「总览 → 架构 → 命令面 → 行为与门禁 → 错误处理 → 流水线与发布面 → 工程事实 → 契约实测」组织。每张面板右下角的编号是声明编号：30 条声明逐条登记在交付目录的验证层，每条都给出冻结证据与源锚点，任何一个数字都可以被独立复算。显示层不放任何代码细节——那是审计层的事。</p></section>
+<section id="s0"><div class="sec-head"><span class="sec-no">01</span><h2>总览</h2></div><p class="lead">两条铁律定边界：中枢只做集成，参数面永远来自 provider 自描述。三个二进制入口共享同一份不可变能力快照。</p><div class="panel"><img src="svg/p0-hero.svg" alt="总览面板" width="1120"></div></section>
+<section id="s1"><div class="sec-head"><span class="sec-no">02</span><h2>架构：五职责内核</h2></div><p class="lead">发现、协议、目录、策略、路由五个职责构成内核；provider 分协议原生与遗留命令行两侧接入，路由排序确定。</p><div class="panel"><img src="svg/p1-architecture.svg" alt="架构：五职责内核面板" width="1120"></div></section>
+<section id="s2"><div class="sec-head"><span class="sec-no">03</span><h2>数据流：一份快照两种纪律</h2></div><p class="lead">只读面永不启动 provider（日志实测为零）；执行面只对最终选中者做一次复核与调用。</p><div class="panel"><img src="svg/p2-snapshot.svg" alt="数据流：一份快照两种纪律面板" width="1120"></div></section>
+<section id="s3"><div class="sec-head"><span class="sec-no">04</span><h2>命令面：动词与稳定目录</h2></div><p class="lead">执行面、管理面、发布面各持一段动词；内置目录是唯一长期稳定契约，加载期强校验。</p><div class="panel"><img src="svg/p3-cli.svg" alt="命令面：动词与稳定目录面板" width="1120"></div></section>
+<section id="s4"><div class="sec-head"><span class="sec-no">05</span><h2>协议：三个动词</h2></div><p class="lead">自描述、依赖探测、调用三个动词承载全部 provider 通信；版本协商与清单校验把失败分成两类。</p><div class="panel"><img src="svg/p4-protocol.svg" alt="协议：三个动词面板" width="1120"></div></section>
+<section id="s5"><div class="sec-head"><span class="sec-no">06</span><h2>行为门禁：默认全拒</h2></div><p class="lead">四类副作用对应四把旗标；未知副作用无门可开；干跑渲染完整执行计划而零副作用。</p><div class="panel"><img src="svg/p5-policy.svg" alt="行为门禁：默认全拒面板" width="1120"></div></section>
+<section id="s6"><div class="sec-head"><span class="sec-no">07</span><h2>错误处理：九码与单信封</h2></div><p class="lead">机器错误码集合固定；标准输出永远恰好一个信封；失败契约逐例实测冻结。</p><div class="panel"><img src="svg/p6-errors.svg" alt="错误处理：九码与单信封面板" width="1120"></div></section>
+<section id="s7"><div class="sec-head"><span class="sec-no">08</span><h2>流水线：纯编排</h2></div><p class="lead">每一步都是一次完整路由调用；类型边在计划期校验；工作目录自包含；校验和一致即复用。</p><div class="panel"><img src="svg/p7-pipeline.svg" alt="流水线：纯编排面板" width="1120"></div></section>
+<section id="s8"><div class="sec-head"><span class="sec-no">09</span><h2>发布面：同源工具清单</h2></div><p class="lead">工具清单由同一份快照运行时派生；策略门由启动配置注入；帧级错误语义固定。</p><div class="panel"><img src="svg/p8-mcp.svg" alt="发布面：同源工具清单面板" width="1120"></div></section>
+<section id="s9"><div class="sec-head"><span class="sec-no">10</span><h2>工程事实</h2></div><p class="lead">规模先枚举后求和；两层测试网全绿冻结；全部数字锚定证据文件。</p><div class="panel"><img src="svg/p9-quality.svg" alt="工程事实面板" width="1120"></div></section>
+<section id="s10"><div class="sec-head"><span class="sec-no">11</span><h2>契约实测案例</h2></div><p class="lead">五个端到端案例全部由真二进制加假提供者跑出并冻结，可复算、可核查。</p><div class="panel"><img src="svg/p10-contract.svg" alt="契约实测案例面板" width="1120"></div></section>
+<div class="disc"><h3>本页纪律</h3><p>零脚本、零外部请求：整页仅引用同目录面板文件，无任何网络依赖。显示层执行六条禁令：不出现引擎源码文件名、代码坐标、逐字摘录、内部标识符、内部路径与任何生成器或重建命令；豁免词表（公开契约词汇与冻结数据字符串）登记在交付目录证据层。位图三件（两倍全页、灰度版、缩略图）与逐节裁片由交付目录渲染产物提供，渲染断言含全页高度等式。</p></div>
+</div>
+<footer><div class="wrap"><div class="foot-card"><div class="col"><h4>如何核查本页</h4><p>声明编号 C01–C30 逐条对应验证层登记表：每条声明给出冻结证据文件、字段路径与引擎源锚点，并附全部产物的指纹表与已知偏差披露。验证与重建的完整说明在交付目录的验证与工具文档里。</p></div><div class="col"><h4>证据分层</h4><p>一次性冻结层（计时类，绝不重测）与确定性重建层（双跑逐字节一致）在证据登记簿中预先声明；行为证据全部来自真二进制对假提供者的实测，零真实网络、零模型调用。</p></div></div></div></footer>
+</body>
+</html>
