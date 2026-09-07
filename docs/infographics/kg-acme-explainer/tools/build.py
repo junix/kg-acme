@@ -2,15 +2,24 @@
 """Page assembler + six-ban gate for the kg-acme explainer infographic.
 
 Writes index.html (1200 CSS px, zero JS, zero CDN, zero external requests,
-Chinese, blue chrome) from data/*.json + svg/*.svg, then runs the six-ban
-gate over the display layer (index.html + svg/*.svg) with ban sets built
-LIVE from the engine repo, plus six positive controls that must be caught
-6/6. Exemptions (ban④ public contract vocabulary + frozen-data strings)
-are recorded to data/display-exemptions.json.
+Chinese, blue chrome) from data/*.json + svg/*.svg, inlining each panel SVG
+byte-for-byte into the page (no <img> references), then runs the six-ban
+gate over the display layer (index.html + svg/*.svg) with ban sets rebuilt
+from the FROZEN engine commit tree (data/provenance.json frozen_head),
+excluding the delivery tree's own path, plus six positive controls that
+must be caught 6/6 and a font gate (CJK >= 12 px, >= 90% of SVG text
+>= 11 px). Exemptions (ban④ public contract vocabulary + frozen-data
+strings) are recorded to data/display-exemptions.json.
+
+Post-commit self-bite policy (audit-batteries section 7): the corpus is
+pinned to the frozen commit, so a moved engine HEAD only triggers a
+stderr NOTE (engine evolved — see the README frozen-worktree recipe);
+the gate hard-fails only if the frozen commit is no longer resolvable
+(evidence drifted). No live HEAD enters any build output.
 
 Six bans (display layer only; data/, VERIFICATION.md, README are the audit
 layer and unrestricted):
-  ① engine source file basenames (git ls-files, live)
+  ① engine source file basenames (frozen commit tree, live rebuild)
   ② file:line / line numbers / ranges
   ③ verbatim source excerpts >= 25 chars (engine .go/.md lines)
   ④ engine-declared identifiers (public contract vocabulary exempt:
@@ -124,7 +133,7 @@ p.lead{color:var(--sub);font-size:15px;line-height:1.8;margin:8px 0 16px;
 max-width:980px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;
 padding:38px}
-.panel img{display:block;width:1042px;height:auto;margin:0 auto}
+.panel svg{display:block;width:1042px;height:auto;margin:0 auto}
 .disc{background:var(--card);border:1px solid var(--line);border-radius:14px;
 margin:26px 40px 0;padding:22px 28px}
 .disc h3{font-size:17px;color:var(--deep);margin-bottom:8px}
@@ -173,15 +182,19 @@ for i, (svg_name, title, lead) in enumerate(SECTIONS):
     img = SVGD / svg_name
     if not img.exists():
         die(f"panel missing: svg/{svg_name} (run panels.py first)")
+    svg_doc = img.read_text(encoding="utf-8").strip()
+    if not svg_doc.startswith("<svg ") or not svg_doc.endswith("</svg>"):
+        die(f"svg/{svg_name}: unexpected framing (want <svg>…</svg>, "
+            "no XML decl)")
     parts.append(
         f'<section id="s{i}"><div class="sec-head">'
         f'<span class="sec-no">{i + 1:02d}</span><h2>{title}</h2></div>'
         f'<p class="lead">{lead}</p>'
-        f'<div class="panel"><img src="svg/{svg_name}" '
-        f'alt="{title}面板" width="1120"></div></section>')
+        f'<div class="panel">{svg_doc}</div></section>')
 parts.append(
     '<div class="disc"><h3>本页纪律</h3>'
-    "<p>零脚本、零外部请求：整页仅引用同目录面板文件，无任何网络依赖。"
+    "<p>零脚本、零外部请求：11 张面板图以可缩放矢量图形逐字节内联于本页，"
+    "不引用任何面板文件，无任何网络依赖。"
     "显示层执行六条禁令：不出现引擎源码文件名、代码坐标、逐字摘录、内部"
     "标识符、内部路径与任何生成器或重建命令；豁免词表（公开契约词汇与"
     "冻结数据字符串）登记在交付目录证据层。位图三件（两倍全页、灰度版、"
@@ -205,11 +218,56 @@ page.write_text("\n".join(parts) + "\n", encoding="utf-8")
 print(f"build: wrote index.html ({page.stat().st_size:,} bytes)")
 
 # ============================================================ six-ban gate
-tracked = [l.strip() for l in subprocess.run(
-    ["git", "-C", str(ROOT), "ls-files"], capture_output=True,
-    text=True).stdout.splitlines() if l.strip()]
+# Corpus discipline (post-commit self-bite fix, audit-batteries §7): ban
+# sets are rebuilt from the FROZEN engine commit tree, not from the live
+# working tree — the delivery commit adds the tree's own files to
+# `git ls-files`, which would both self-bite the ban sets and make
+# display-exemptions.json depend on HEAD. The delivery tree's own path is
+# excluded as belt-and-braces. Guard: a moved live HEAD only warns
+# (engine evolved — recipe pointer); an unresolvable frozen commit is a
+# hard fail (evidence drifted).
+FROZEN = PROV.get("frozen_head") or PROV["engine_head"]
+RECIPE = (f"git worktree add /tmp/kgacme-frozen {FROZEN} with "
+          "KG_ACME_ROOT=/tmp/kgacme-frozen — see README 提交后复现")
+
+
+def git_out(*args):
+    p = subprocess.run(["git", "-C", str(ROOT), *args],
+                       capture_output=True, text=True)
+    return p.returncode, p.stdout
+
+
+rc, live_head = git_out("rev-parse", "HEAD")
+live_head = live_head.strip()
+rc, _ = git_out("cat-file", "-e", FROZEN + "^{commit}")
+if rc != 0:
+    die(f"frozen commit {FROZEN} is not resolvable in the engine repo — "
+        "evidence drifted (history rewritten?); cannot rebuild ban sets")
+if live_head != FROZEN:
+    print(f"build: NOTE: engine HEAD {live_head[:7]} != frozen "
+          f"{FROZEN[:7]} (engine evolved) — six-ban corpus stays pinned "
+          "to the frozen commit tree; for extract/vacuum re-runs use the "
+          f"frozen-worktree recipe ({RECIPE})", file=sys.stderr)
+rc, tracked_txt = git_out("ls-tree", "-r", "--name-only", FROZEN)
+tracked = [l.strip() for l in tracked_txt.splitlines() if l.strip()]
 if not tracked:
-    die("could not read engine file list (git ls-files)")
+    die(f"could not read engine file list at frozen commit {FROZEN[:7]}")
+# belt-and-braces: never let the delivery tree's own path into the corpus
+try:
+    rel_out = OUT.resolve().relative_to(Path(ROOT).resolve()).as_posix()
+except ValueError:
+    rel_out = None
+if rel_out:
+    tracked = [t for t in tracked
+               if not (t == rel_out or t.startswith(rel_out + "/"))]
+
+
+def frozen_text(path):
+    """File content read from the frozen commit (never the live tree)."""
+    rc, text = git_out("show", f"{FROZEN}:{path}")
+    if rc != 0:
+        die(f"git show {FROZEN[:7]}:{path} failed")
+    return text
 
 display = [(OUT / "index.html").read_text(encoding="utf-8")]
 for f in sorted(SVGD.glob("*.svg")):
@@ -226,8 +284,7 @@ path_re = re.compile(r"(?:^|[\s\"'>(])(cmd|internal|spec|tests|docs|pkg)/"
 verbatim = []
 for t in tracked:
     if t.endswith(".go") or t.endswith(".md"):
-        for line in (ROOT / t).read_text(encoding="utf-8",
-                                         errors="replace").splitlines():
+        for line in frozen_text(t).splitlines():
             norm = re.sub(r"\s+", " ", line).strip()
             if len(norm) >= 25:
                 verbatim.append(norm)
@@ -242,7 +299,7 @@ cap_re = re.compile(r"\b([A-Z][A-Za-z0-9]{3,})\b")
 for t in tracked:
     if not t.endswith(".go"):
         continue
-    text = (ROOT / t).read_text(encoding="utf-8", errors="replace")
+    text = frozen_text(t)
     declared.update(decl_re.findall(text))
     cap_words.update(cap_re.findall(text))
 ban_idents = {w for w in (declared | cap_words)
@@ -387,10 +444,10 @@ for chk in (check_1, check_2, check_3, check_4, check_5, check_6):
 # ---- positive controls: six self-made violations must be caught 6/6 -------
 spec_file = next(t for t in tracked if t.endswith("00-overview.md"))
 spec_lines = [re.sub(r"\s+", " ", l).strip() for l in
-              (ROOT / spec_file).read_text(encoding="utf-8").splitlines()]
+              frozen_text(spec_file).splitlines()]
 verbatim_control = next(l for l in spec_lines if len(l) >= 40)
 go_file = next(t for t in tracked if t.endswith(".go"))
-go_text = (ROOT / go_file).read_text(encoding="utf-8")
+go_text = frozen_text(go_file)
 ident_control = next(w for w in sorted(ban_idents, reverse=True)
                      if w not in exempt_words and re.search(
                          r"\bfunc %s\b" % re.escape(w), go_text) is None and
@@ -444,22 +501,52 @@ if re.search(r"<script", display[0], re.I):
     sc.append("index.html contains <script>")
 if re.search(r"(?:src|href)\s*=\s*[\"'](?:https?:)?//", display[0], re.I):
     sc.append("protocol-relative or absolute external URL")
-if re.search(r"(?:https?:)?//[a-z0-9.-]+\.", display[0], re.I):
+# the SVG namespace attribute is the one allowed URL string on the page
+host_scan = re.sub(r'xmlns="http://www\.w3\.org/2000/svg"', "", display[0])
+if re.search(r"(?:https?:)?//[a-z0-9.-]+\.", host_scan, re.I):
     sc.append("external host reference")
 if re.search(r"\son[a-z]+\s*=", display[0], re.I):
     sc.append("inline event handler")
 if re.search(r"<link|@import|<iframe|<object|<embed", display[0], re.I):
     sc.append("external resource element")
+if re.search(r"<img[\s>]", display[0], re.I):
+    sc.append("external <img> panel reference (panels must be inline SVG)")
 for m in re.finditer(r'(?:src|href)="([^"]+)"', display[0]):
     target = OUT / m.group(1)
     if not target.exists():
         sc.append(f"dangling reference {m.group(1)}")
 if sc:
     violations.append(("self-containment", sc))
-widths = re.findall(r"<img ", display[0])
-if len(widths) != len(SECTIONS) or "width:1042px" not in display[0]:
-    violations.append(("panel-width",
-                       [f"imgs={len(widths)} sections={len(SECTIONS)}"]))
+n_inline = len(re.findall(r"<svg[\s>]", display[0]))
+if n_inline != len(SECTIONS) or "width:1042px" not in display[0]:
+    violations.append(("panel-inline",
+                       [f"inline-svg={n_inline} sections={len(SECTIONS)}"]))
+
+# ---- font gate (CJK >= 12 px; >= 90% of SVG text >= 11 px) -----------------
+font_sizes = []
+cjk_small = []
+for f in sorted(SVGD.glob("*.svg")):
+    for m in re.finditer(
+            r'<text[^>]*font-size="([\d.]+)"[^>]*>(.*?)</text>',
+            f.read_text(encoding="utf-8"), re.S):
+        sz = float(m.group(1))
+        body = m.group(2)
+        font_sizes.append(sz)
+        if any(ord(c) > 0x2E7F for c in body) and sz < 12:
+            cjk_small.append((f.name, sz, body[:20]))
+if cjk_small:
+    violations.append(("font-cjk-min-12",
+                       [f"{len(cjk_small)} runs below 12px: "
+                        f"{cjk_small[:5]}"]))
+if font_sizes:
+    pct = 100.0 * sum(1 for s in font_sizes if s >= 11) / len(font_sizes)
+    if pct < 90.0:
+        violations.append(("font-ge-11-90pct",
+                           [f"only {pct:.1f}% of SVG text >= 11px"]))
+    print(f"build: font gate — {len(font_sizes)} text runs, "
+          f"{pct:.1f}% >= 11px, CJK < 12px: {len(cjk_small)}")
+else:
+    violations.append(("font-ge-11-90pct", ["no SVG text runs found"]))
 
 # ---- claim coverage --------------------------------------------------------
 page_claims = sorted(set(re.findall(r"\bC\d{2}\b", display_text)))
@@ -473,9 +560,11 @@ if page_claims != expected:
 # ---- record exemptions (deterministic) -------------------------------------
 (DATA / "display-exemptions.json").write_text(
     json.dumps({
-        "note": "display-layer exemption registry for ban④; ban sets "
-                "themselves are rebuilt live from the engine repo by "
-                "build.py on every run",
+        "note": "display-layer exemption registry for ban④; ban sets are "
+                "rebuilt by build.py on every run from the FROZEN engine "
+                "commit tree (provenance frozen_head), excluding the "
+                "delivery tree's own path — stable across engine HEAD "
+                "movement",
         "whitelist_categories": {
             k: sorted(v) for k, v in sorted(WHITELIST.items())},
         "frozen_data_token_count": len(data_tokens & exempt_words),
@@ -493,4 +582,5 @@ if violations:
         print(f"  {kind}: {items}", file=sys.stderr)
     sys.exit(1)
 print("build: SIX-BAN GATE PASS (0 violations, controls 6/6, "
-      "self-contained, claims C01–C30 covered)")
+      "self-contained, panels inlined, font gate ok, claims C01–C30 "
+      "covered)")

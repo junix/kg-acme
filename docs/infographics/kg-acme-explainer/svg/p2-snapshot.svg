@@ -8,17 +8,17 @@
 <text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">一份不可变快照，两种消费纪律</text>
 <rect x="40" y="108" width="200" height="64" rx="10" fill="#E3EEFA"/>
 <text x="140" y="134" font-size="14" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">管理面刷新</text>
-<text x="140" y="156" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">显式挂接 + 环境发现</text>
+<text x="140" y="156" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">显式挂接 + 环境发现</text>
 <polygon points="246,140 277,144.2 277,135.8" fill="#1D5FBF"/>
 <polygon points="286,140 277,142.6 277,137.4" fill="#1D5FBF"/>
 <rect x="296" y="108" width="240" height="64" rx="10" fill="#FFFFFF" stroke="#1D5FBF" stroke-width="1.6"/>
 <text x="416" y="134" font-size="14" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">不可变能力快照</text>
-<text x="416" y="156" font-size="10.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">探测结果 · 能力视图 · 分组 · 指纹</text>
+<text x="416" y="156" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">探测结果 · 能力视图 · 分组 · 指纹</text>
 <polygon points="542,140 573,144.2 573,135.8" fill="#1D5FBF"/>
 <polygon points="582,140 573,142.6 573,137.4" fill="#1D5FBF"/>
 <rect x="592" y="108" width="488" height="64" rx="10" fill="#E8EEF5"/>
 <text x="836" y="134" font-size="12.5" fill="#1B2733" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">刷新实测：6 次探测调用（自描述 + 依赖探测）</text>
-<text x="836" y="156" font-size="10.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">快照指纹 = 全部提供者+分组+能力视图的内容哈希，重建即复算</text>
+<text x="836" y="156" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">快照指纹 = 全部提供者+分组+能力视图的内容哈希，重建即复算</text>
 <rect x="40" y="204" width="500" height="300" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <rect x="41.5" y="204.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
 <text x="56" y="236" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">只读面：零启动（日志实测）</text>
@@ -54,11 +54,11 @@
 <rect x="40" y="532" width="1040" height="72" rx="10" fill="#E8EEF5"/>
 <text x="64" y="566" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">快照只在安装期由管理面重算；执行期以快照为准，需要真相时只向最终选中者要。</text>
 <text x="64" y="590" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">离线帮助永不唤醒算法进程；每次真实执行的探测开销收敛到常数。</text>
-<rect x="920" y="544" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="935.7" y="558.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C04</text>
-<rect x="957.3" y="544" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="973" y="558.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C05</text>
-<rect x="994.7" y="544" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1010.3" y="558.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C06</text>
+<rect x="920" y="544" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="936.1" y="559" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C04</text>
+<rect x="958.1" y="544" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="974.2" y="559" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C05</text>
+<rect x="996.3" y="544" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1012.4" y="559" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C06</text>
 </g>
 </svg>

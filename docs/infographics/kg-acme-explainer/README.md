@@ -10,14 +10,18 @@
 
 ```
 kg-acme-explainer/
-├── index.html            滚动长页（零 JS、零外部请求，SVG 分层面板嵌入）
-├── svg/                  11 张分层面板（程序化生成，1120 宽）
+├── index.html            滚动长页（零 JS、零外部请求；11 张面板 SVG 逐字节
+│                         内联。【2026-09-06 修正】交付版为 <img> 引用同目录
+│                         面板文件，原文「SVG 分层面板嵌入」后证不实，已改）
+├── svg/                  11 张分层面板（程序化生成，1120 宽；内联进页面的
+│                         同一份字节，保留作重建产物与独立审阅入口）
 ├── render/               位图三件 + 15 张分节 crops
-│   ├── full-2x.png       2 倍全页（2400 × 19772 == 1200×9886 × dpr2）
+│   ├── full-2x.png       2 倍全页（2400 × 19958 == 1200×9979 × dpr2）
 │   ├── full-gray.png     灰度核查版
 │   ├── thumb.png         360 宽缩略图
 │   └── crops/            按 header/section/disc 的裁片
 ├── data/                 冻结证据 JSON（extract 产物 + 门禁豁免登记 + 指纹表）
+├── data/audit/           提交后复核留痕（指纹豁免层，定点规则）
 ├── tools/                工具链 extract → panels → build → render
 │                         （+ fingerprint / vacuum）
 ├── README.md             本文
@@ -28,7 +32,7 @@ kg-acme-explainer/
 
 | 变量 | 必填 | 用途 |
 |---|---|---|
-| `KG_ACME_ROOT` | extract / build / vacuum 是 | 引擎仓根目录。extract 用它做只读冻结并校验冻结 HEAD；build 门禁用它**实时**重建六禁禁集（文件基名 / 逐字行集 / 标识符集）；vacuum 用它复跑全链。**缺失即 FATAL**（退出码 1，先例教训：真空段漏列引擎根会让复跑者拿到静默失败的旧门禁） |
+| `KG_ACME_ROOT` | extract / build / vacuum 是 | 引擎仓根目录。extract 用它做只读冻结并校验冻结 HEAD；build 门禁用它重建六禁禁集（语料**钉在冻结提交树** `git ls-tree`，排除本树自身路径；活的 HEAD 前进只打 NOTE——见「提交后复现」）；vacuum 用它复跑全链。**缺失即 FATAL**（退出码 1，先例教训：真空段漏列引擎根会让复跑者拿到静默失败的旧门禁） |
 | `IG_OUT` | 所有脚本 是 | 交付树根。**缺失即 FATAL**（无缺省值） |
 | `IG_WORK` | extract / vacuum 是 | 固定 /tmp 工作目录（必须是 /tmp/ 绝对路径）。确定性策略的一部分：固定路径 + 固定 cwd + 封闭 HOME/PATH，使捕获输出逐字节可复现。**缺失即 FATAL** |
 | `IG_CHROME_BIN` | render 否 | chrome-headless-shell 可执行文件；缺省按文档化规则取 `~/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-headless-shell-*/chrome-headless-shell` 下最新者；找不到即 FATAL |
@@ -131,3 +135,32 @@ cd /tmp && cp "$TREE/tools/vacuum.py" . && \
   或未逐字登记即退出码 1；
 - 六禁判例、C01–C30 声明↔锚点对照、指纹表与偏差披露：
   见 [VERIFICATION.md](VERIFICATION.md)。
+
+## 提交后复现（冻结工作树配方）
+
+交付提交落地后，引擎仓 HEAD 会继续前进，而证据与六禁语料锚定冻结提交
+`9cea0c72ec89e67a8347e11ad60f08fb2b16f602`（tracked = 50）。各工具对
+「提交后自咬」的区分：
+
+- **引擎演进**（HEAD ≠ 冻结提交，但冻结提交仍在仓内）：`build.py` 只在
+  stderr 打 NOTE 并照常用冻结提交树重建禁集（可在当前 HEAD 直接复跑）；
+  `extract.py` / `vacuum.py` 拒绝在移动过的 HEAD 上重跑（在移动的树上
+  重冻结＝证据漂移），按下面配方在冻结工作树里复现。
+- **证据漂移**（冻结提交在仓内不可解析，如历史被重写）：全部硬失败。
+
+```sh
+REPO=<引擎仓绝对路径>
+TREE=<交付树绝对路径>
+git -C "$REPO" worktree add /tmp/kgacme-frozen \
+  9cea0c72ec89e67a8347e11ad60f08fb2b16f602
+# 冻结工作树上 HEAD == 冻结提交、tracked == 50，extract 的启动断言全过
+cd /tmp && cp "$TREE/tools/vacuum.py" . && \
+  KG_ACME_ROOT=/tmp/kgacme-frozen IG_OUT="$TREE" \
+  IG_WORK=/tmp/kgacme-ig-run python3 vacuum.py   # 预期 VACUUM-OK
+git -C "$REPO" worktree remove /tmp/kgacme-frozen
+```
+
+提交后廉价门禁（六禁 + 字体、svg-linter、指纹核对、渲染断言）可在当前
+HEAD 直接复跑；留痕写进 `data/audit/post-commit.md`——该目录指纹豁免
+（定点规则：运行记录不进被指纹的文件，否则提交与复核互相迫使、没有
+定点）。首次实测记录见该文件与 VERIFICATION「双跑真空」一节。

@@ -98,7 +98,7 @@ class Svg:
             f'fill="{fill}" text-anchor="{anchor}" font-family="{fam}"'
             f'{wt}>{esc(s)}</text>')
 
-    def chip(self, x, y, s, size=11.5, fg=DEEP, bg=CHIP_BG, mono=False,
+    def chip(self, x, y, s, size=12, fg=DEEP, bg=CHIP_BG, mono=False,
              pad=9):
         w = tw(s, size) + pad * 2
         self.rect(x, y, w, size + 12, fill=bg, stroke=None, rx=9)
@@ -144,7 +144,7 @@ RM = load("repo-metrics.json")
 CF = load("catalog-facts.json")
 
 
-def claims(s, x, y, ids, size=10.5):
+def claims(s, x, y, ids, size=11):
     cx = x
     for i in ids:
         w = s.chip(cx, y, i, size=size, fg=ACCENT, bg=CHIP_BG, mono=True,
@@ -182,13 +182,13 @@ def p0():
         s.rect(x, 274, 220, 82, fill="none", stroke=S1, rx=10)
         s.text(x + 110, 304, name, size=17, fill=DEEP, anchor="middle",
                weight="700", mono=True)
-        s.text(x + 110, 328, f"{role} · {desc}", size=11.5, fill=SUB,
+        s.text(x + 110, 328, f"{role} · {desc}", size=12, fill=SUB,
                anchor="middle")
     s.arrow(766, 315, 802, 315)
     s.rect(812, 274, 268, 82, fill=PAPER, stroke=ACCENT, rx=10, sw=1.6)
     s.text(946, 304, "不可变能力快照", size=15, fill=DEEP, anchor="middle",
            weight="700")
-    s.text(946, 328, "管理面刷新生成 · 带内容指纹", size=11.5, fill=SUB,
+    s.text(946, 328, "管理面刷新生成 · 带内容指纹", size=12, fill=SUB,
            anchor="middle")
     s.rect(40, 374, 1040, 52, fill=CHIP_BG2, stroke=None, rx=10)
     s.text(560, 406, "快照之下是 provider 生态：协议原生 provider 与遗留"
@@ -204,7 +204,7 @@ def p0():
         x = 40 + i * 209
         s.rect(x, 446, 189, 88, fill=PAPER)
         s.text(x + 16, 488, v, size=30, fill=DEEP, weight="700", mono=True)
-        s.text(x + 16, 514, k, size=11.5, fill=MUT)
+        s.text(x + 16, 514, k, size=12, fill=MUT)
     s.text(40, 574, "页面纪律", size=14, weight="700")
     s.text(130, 574, "显示层零代码细节：源文件名、代码坐标、逐字摘录、"
                      "内部标识符、内部路径与重建命令一律不出现；", size=12.5,
@@ -235,8 +235,8 @@ def p1():
         s.rect(x, 110, 196, 96, fill="none", stroke=S1, rx=10)
         s.text(x + 98, 142, name, size=16, fill=DEEP, anchor="middle",
                weight="700")
-        s.text(x + 98, 168, d1, size=11, fill=SUB, anchor="middle")
-        s.text(x + 98, 188, d2, size=11, fill=SUB, anchor="middle")
+        s.text(x + 98, 168, d1, size=12, fill=SUB, anchor="middle")
+        s.text(x + 98, 188, d2, size=12, fill=SUB, anchor="middle")
     s.card(40, 234, 500, 252, "协议原生侧（权威）")
     rows = ["自描述通过协议校验后成为参数面真相源",
             "发现顺序第五级扫描协议原生前缀可执行文件",
@@ -278,13 +278,13 @@ def p2():
     s.rect(40, 108, 200, 64, fill=CHIP_BG, stroke=None, rx=10)
     s.text(140, 134, "管理面刷新", size=14, fill=DEEP, anchor="middle",
            weight="700")
-    s.text(140, 156, "显式挂接 + 环境发现", size=11, fill=SUB,
+    s.text(140, 156, "显式挂接 + 环境发现", size=12, fill=SUB,
            anchor="middle")
     s.arrow(246, 140, 286, 140)
     s.rect(296, 108, 240, 64, fill=PAPER, stroke=ACCENT, rx=10, sw=1.6)
     s.text(416, 134, "不可变能力快照", size=14, fill=DEEP, anchor="middle",
            weight="700")
-    s.text(416, 156, "探测结果 · 能力视图 · 分组 · 指纹", size=10.5,
+    s.text(416, 156, "探测结果 · 能力视图 · 分组 · 指纹", size=12,
            fill=SUB, anchor="middle")
     s.arrow(542, 140, 582, 140)
     s.rect(592, 108, 488, 64, fill=CHIP_BG2, stroke=None, rx=10)
@@ -292,7 +292,7 @@ def p2():
                      " 次探测调用（自描述 + 依赖探测）", size=12.5, fill=INK,
            anchor="middle", weight="600")
     s.text(836, 156, "快照指纹 = 全部提供者+分组+能力视图的内容哈希，"
-                     "重建即复算", size=10.5, fill=SUB, anchor="middle")
+                     "重建即复算", size=12, fill=SUB, anchor="middle")
     # readonly face
     s.card(40, 204, 500, 300, "只读面：零启动（日志实测）")
     seen = []
@@ -345,33 +345,33 @@ def p3():
     flags = [l.split()[0] for l in EC["help_contract"]["global_flag_lines"]]
     for i, f in enumerate(flags):
         col, row = i % 2, i // 2
-        s.chip(60 + col * 162, 148 + row * 32, f, size=10.5, mono=True,
+        s.chip(60 + col * 162, 148 + row * 32, f, size=11, mono=True,
                fg=DEEP, bg=CHIP_BG, pad=7)
-    s.text(60, 296, "参数一次成对象传入；四把布尔门 + 干跑；", size=11.5,
+    s.text(60, 296, "参数一次成对象传入；四把布尔门 + 干跑；", size=12,
            fill=SUB)
-    s.text(60, 318, "标准输出恰好一个版本化信封。", size=11.5, fill=SUB)
-    s.text(60, 352, "盘点类选项属于管理面：执行面拒绝越权（实测退出码 1）。",
-           size=11, fill=MUT)
+    s.text(60, 318, "标准输出恰好一个版本化信封。", size=12, fill=SUB)
+    s.text(60, 344, "盘点类选项属于管理面：", size=12, fill=MUT)
+    s.text(60, 366, "执行面拒绝越权（实测退出码 1）。", size=12, fill=MUT)
     s.card(408, 108, 344, 268, "管理面 · 动词（实测）")
     verbs = ["refresh", "providers", "capabilities", "route", "completion"]
     for i, v in enumerate(verbs):
         col, row = i % 2, i // 2
         s.chip(428 + col * 162, 148 + row * 34, v, size=11, mono=True,
                fg=DEEP, bg=CHIP_BG)
-    s.text(428, 252, "刷新产出快照；提供者诊断列出每个 provider；", size=11.5,
+    s.text(428, 252, "刷新产出快照；提供者诊断列出每个 provider；", size=12,
            fill=SUB)
     s.text(428, 272, "能力检索列目录；路由面解释/固定/清除；补全两 shell。",
-           size=11.5, fill=SUB)
-    s.text(428, 308, "同一 CLI 语义，管理面独占盘点与发现旗标。", size=11,
+           size=12, fill=SUB)
+    s.text(428, 308, "同一 CLI 语义，管理面独占盘点与发现旗标。", size=12,
            fill=MUT)
     s.card(776, 108, 304, 268, "发布面 · 方法（实测会话）")
     methods = ["initialize", "ping", "tools/list", "tools/call"]
     for i, m in enumerate(methods):
         s.chip(796, 148 + i * 34, m, size=11, mono=True, fg=DEEP,
                bg=CHIP_BG)
-    s.text(796, 296, "换行分帧；未知方法与坏帧有固定错误码；", size=11.5,
+    s.text(796, 296, "换行分帧；未知方法与坏帧有固定错误码；", size=12,
            fill=SUB)
-    s.text(796, 318, "通知帧一律容忍不回。", size=11.5, fill=SUB)
+    s.text(796, 318, "通知帧一律容忍不回。", size=12, fill=SUB)
     s.card(40, 404, 1040, 200, "稳定目录（内置命令表，实测镜像校验全过）")
     s.text(64, 456, f"{CF['command_count']} 条能力命令 · "
                     f"{CF['namespace_count']} 个发布命名空间 · 语义标识逐条"
@@ -389,7 +389,7 @@ def p3():
         s.rect(x, 462, w, 54, fill=CHIP_BG, stroke=None, rx=8)
         s.text(x + w / 2, 484, ns, size=12, fill=DEEP, anchor="middle",
                weight="600", mono=True)
-        s.text(x + w / 2, 504, f"{n} 条", size=11, fill=SUB, anchor="middle")
+        s.text(x + w / 2, 504, f"{n} 条", size=12, fill=SUB, anchor="middle")
         x += w + 10
     s.text(64, 548, "命令面是长期契约：provider 可以来去，命令表不动；新能力"
                     "经 provider 侧发布即可见于列表。", size=12, fill=SUB)
@@ -420,7 +420,7 @@ def p4():
         s.rect(40, y, 640, 72, fill=CHIP_BG, stroke=None, rx=10)
         s.text(60, y + 30, v, size=15, fill=DEEP, weight="700", mono=True)
         s.text(160, y + 30, d.split("：", 1)[0], size=12.5, fill=INK)
-        s.text(60, y + 52, d.split("：", 1)[1], size=11.5, fill=SUB)
+        s.text(60, y + 52, d.split("：", 1)[1], size=12, fill=SUB)
     s.card(704, 112, 376, 244, "版本协商（实测）")
     s.text(724, 162, "中枢支持集与提供者声明集取交集，选最高共同版。",
            size=12, fill=SUB)
@@ -433,7 +433,7 @@ def p4():
     s.text(724, 276, "依赖探测失败不降级，", size=12, fill=SUB)
     s.text(724, 298, "未知不等于不可用。", size=12, fill=SUB)
     tax = EC["probe_taxonomy"]
-    s.card(40, 384, 1040, 152, "探测失败分类（四个假提供者实测冻结）")
+    s.card(40, 384, 1040, 172, "探测失败分类（四个假提供者实测冻结）")
     cols = [("正常提供者", "fake", "探测通过"),
             ("坏输出", "bad", "清单畸形"),
             ("未来版本", "ver", "版本无交集"),
@@ -443,28 +443,31 @@ def p4():
         entry = tax[pid]
         ok = entry["probed"]
         color = S1 if ok else STATUS_DENY
-        s.rect(x, 420, 226, 66, fill=PAPER)
-        s.rect(x, 420, 6, 66, fill=color, stroke=None, rx=2)
-        s.text(x + 18, 444, label, size=13, fill=INK, weight="600")
-        s.text(x + 18, 464, verdict, size=12, fill=SUB)
-        s.text(x + 18, 482, "实测：探测通过" if ok else
-               f"实测错误码：{entry['probe_error_code']}",
-               size=10.5, fill=MUT, mono=True)
-    s.text(64, 514, "未知副作用在清单校验层即被拒（副作用枚举封闭），策略层"
+        s.rect(x, 430, 226, 88, fill=PAPER)
+        s.rect(x, 430, 6, 88, fill=color, stroke=None, rx=2)
+        s.text(x + 18, 454, label, size=13, fill=INK, weight="600")
+        s.text(x + 18, 477, verdict, size=12, fill=SUB)
+        if ok:
+            s.text(x + 18, 503, "实测：探测通过", size=12, fill=MUT)
+        else:
+            s.text(x + 18, 496, "实测错误码", size=12, fill=MUT)
+            s.text(x + 18, 513, entry["probe_error_code"], size=11,
+                   fill=MUT, mono=True)
+    s.text(64, 540, "未知副作用在清单校验层即被拒（副作用枚举封闭），策略层"
                     "同样默认拒绝——两道闸都关。", size=12, fill=SUB)
-    s.card(40, 560, 1040, 74, "命令行渲染序（兜底路径）")
-    s.text(64, 618, "常驻", size=13, fill=DEEP, weight="600")
-    s.arrow(118, 614, 142, 614)
-    s.text(152, 618, "子命令", size=13, fill=DEEP, weight="600")
-    s.arrow(216, 614, 240, 614)
-    s.text(250, 618, "位置参数", size=13, fill=DEEP, weight="600")
-    s.arrow(328, 614, 352, 614)
-    s.text(362, 618, "旗标（序号升序，平手按旗标字典序）", size=13,
+    s.card(40, 576, 1040, 74, "命令行渲染序（兜底路径）")
+    s.text(64, 634, "常驻", size=13, fill=DEEP, weight="600")
+    s.arrow(118, 630, 142, 630)
+    s.text(152, 634, "子命令", size=13, fill=DEEP, weight="600")
+    s.arrow(216, 630, 240, 630)
+    s.text(250, 634, "位置参数", size=13, fill=DEEP, weight="600")
+    s.arrow(328, 630, 352, 630)
+    s.text(362, 634, "旗标（序号升序，平手按旗标字典序）", size=13,
            fill=DEEP, weight="600")
-    s.text(700, 618, "布尔只在真值发射 · 可反转旗标相反 · 数组可逐元素或拼接",
-           size=11.5, fill=MUT)
-    claims(s, 950, 576, ["C10", "C11", "C13"])
-    s.save("p4-protocol.svg", 660)
+    s.text(700, 634, "布尔只在真值发射 · 可反转旗标相反 · 数组可逐元素或拼接",
+           size=12, fill=MUT)
+    claims(s, 950, 592, ["C10", "C11", "C13"])
+    s.save("p4-protocol.svg", 700)
 
 
 # ============================================================ p5 policy
@@ -491,9 +494,9 @@ def p5():
            fill=SUB)
     s.rect(62, 364, 516, 66, fill=CHIP_BG2, stroke=None, rx=8)
     msg = EC["policy_denied"]["envelope"]["error"]["message"]
-    s.text(76, 384, msg[0:38], size=10.5, fill=DEEP, mono=True)
-    s.text(76, 400, msg[38:76], size=10.5, fill=DEEP, mono=True)
-    s.text(76, 416, msg[76:], size=10.5, fill=DEEP, mono=True)
+    s.text(76, 384, msg[0:38], size=11, fill=DEEP, mono=True)
+    s.text(76, 400, msg[38:76], size=11, fill=DEEP, mono=True)
+    s.text(76, 416, msg[76:], size=11, fill=DEEP, mono=True)
     s.text(62, 458, "fail-closed：provider 声明中枢还不认识的副作用时，"
                     "没有任何旗标能放行——", size=12.5, fill=SUB)
     s.text(62, 480, "清单层枚举封闭直接拒收，策略层未知默认拒。", size=12.5,
@@ -518,12 +521,12 @@ def p5():
             s.rect(824, y + 2, tw(v, 12.5) + 8, 22, fill="none",
                    stroke=STATUS_DENY, rx=4)
     s.text(664, 344, "开两把门后重跑干跑：", size=12.5, fill=SUB)
-    s.chip(664, 356, "--allow-network --allow-data-egress", size=10.5,
+    s.chip(664, 356, "--allow-network --allow-data-egress", size=11,
            mono=True, fg=DEEP, bg=CHIP_BG)
     s.text(664, 404, "被拒清单清空 · 真跑会执行 = 是", size=13, fill=DEEP,
            weight="700")
-    s.text(664, 432, "干跑本身永远成功退出：只读操作，不启动 provider、不写"
-                     "文件、不联网。", size=11.5, fill=MUT)
+    s.text(664, 432, "干跑本身永远成功退出：只读操作，", size=12, fill=MUT)
+    s.text(664, 454, "不启动 provider、不写文件、不联网。", size=12, fill=MUT)
     claims(s, 900, 570, ["C14", "C15", "C16"])
     s.save("p5-policy.svg", 640)
 
@@ -536,7 +539,7 @@ def p6():
     s.rect(0.5, 0.5, s.w - 1, 639, fill="none", stroke=BORDER)
     s.text(40, 44, "错误处理", size=15, fill=ACCENT, weight="600")
     s.text(40, 80, "错误码集合固定，输出纪律只有一条", size=22, weight="700")
-    s.card(40, 108, 560, 250, "九个机器错误码（协议层固定集合）")
+    s.card(40, 108, 560, 308, "九个机器错误码（协议层固定集合）")
     codes = [("版本无交集", "unsupported_schema_version"),
              ("清单畸形", "malformed_manifest"),
              ("能力未找到", "capability_not_found"),
@@ -549,12 +552,12 @@ def p6():
     for i, (zh, code) in enumerate(codes):
         col, row = i % 2, i // 2
         x = 64 + col * 266
-        y = 170 + row * 34
-        s.rect(x, y - 14, 246, 28, fill=CHIP_BG, stroke=None, rx=6)
-        s.text(x + 10, y + 5, zh, size=11, fill=SUB)
-        s.text(x + 104, y + 5, code, size=9.5, fill=DEEP, mono=True)
-    s.text(64, 340, "新增错误码前必须先查旧码；两个清单类错误不可混用。",
-           size=11.5, fill=MUT)
+        y = 162 + row * 46
+        s.rect(x, y, 246, 42, fill=CHIP_BG, stroke=None, rx=6)
+        s.text(x + 12, y + 17, zh, size=12, fill=SUB)
+        s.text(x + 12, y + 34, code, size=11, fill=DEEP, mono=True)
+    s.text(64, 404, "新增错误码前必须先查旧码；两个清单类错误不可混用。",
+           size=12, fill=MUT)
     s.card(640, 108, 440, 250, "输出纪律（实测）")
     s.text(664, 160, "标准输出：恰好一个版本化信封", size=13, fill=INK,
            weight="700")
@@ -566,28 +569,28 @@ def p6():
            fill=SUB)
     for i, f in enumerate(EC["cli_failure_contract"][:5]):
         s.text(664, 258 + i * 18, f"· {f['first_stderr_line'][:38]}",
-               size=10, fill=MUT, mono=True)
-    s.rect(40, 372, 1040, 96, fill=CHIP_BG2, stroke=None, rx=10)
-    s.text(64, 404, "实测披露：命令行顶层的错误信封把机器码统一折叠为通用"
+               size=11, fill=MUT, mono=True)
+    s.rect(40, 432, 1040, 96, fill=CHIP_BG2, stroke=None, rx=10)
+    s.text(64, 464, "实测披露：命令行顶层的错误信封把机器码统一折叠为通用"
                     "错误码，细节留在人话消息里；", size=13, fill=INK,
            weight="600")
-    s.text(64, 428, "阶段级错误（如流水线某一步的调用失败）保留原样机器码。"
+    s.text(64, 488, "阶段级错误（如流水线某一步的调用失败）保留原样机器码。"
                     "这是与规格文档的已登记偏差。", size=12.5, fill=SUB)
-    s.text(64, 452, "机器码的权威消费方是结构与自动化路径（发布面结构化内容、"
+    s.text(64, 512, "机器码的权威消费方是结构与自动化路径（发布面结构化内容、"
                     "阶段信封）。", size=12.5, fill=SUB)
-    s.card(40, 492, 1040, 118, "未知能力实测（冻结输出）")
+    s.card(40, 552, 1040, 118, "未知能力实测（冻结输出）")
     ee = EC["error_envelope"]
-    s.text(64, 544, f"退出码 {ee['rc']} · 信封架构版本 "
+    s.text(64, 604, f"退出码 {ee['rc']} · 信封架构版本 "
                     f"{ee['envelope']['schema_version']} · 标准输出恰好一个"
                     "对象", size=13, fill=DEEP, weight="600")
-    s.text(64, 570, "消息：", size=12, fill=MUT)
-    s.text(112, 570, ee["envelope"]["error"]["message"], size=12, fill=INK,
+    s.text(64, 630, "消息：", size=12, fill=MUT)
+    s.text(112, 630, ee["envelope"]["error"]["message"], size=12, fill=INK,
            mono=True)
-    s.text(64, 594, "机器码：", size=12, fill=MUT)
-    s.text(132, 594, ee["envelope"]["error"]["code"], size=12, fill=INK,
+    s.text(64, 654, "机器码：", size=12, fill=MUT)
+    s.text(132, 654, ee["envelope"]["error"]["code"], size=12, fill=INK,
            mono=True)
-    claims(s, 900, 512, ["C17", "C18"])
-    s.save("p6-errors.svg", 640)
+    claims(s, 900, 566, ["C17", "C18"])
+    s.save("p6-errors.svg", 700)
 
 
 # ============================================================ p7 pipeline
@@ -611,9 +614,10 @@ def p7():
         if i + 1 < len(stages):
             s.arrow(272, y + 22, 312, y + 22)
             s.text(320, y + 20, "产物注入下游参数（占位符换工作目录副本）",
-                   size=10.5, fill=MUT)
-            s.text(320, y + 38, f"实测注入值：{inj}", size=10.5, fill=MUT,
-                   mono=True)
+                   size=12, fill=MUT)
+            s.text(320, y + 38, "注入值", size=12, fill=MUT)
+            s.text(320 + tw("注入值", 12) + 8, y + 38, inj, size=11,
+                   fill=MUT, mono=True)
         y += 56
     s.text(64, 302, "阶段产物先校验校验和，再复制进工作目录并重算哈希；",
            size=12, fill=SUB)
@@ -627,7 +631,7 @@ def p7():
         s.rect(664, 152 + i * 62, 8, 8, fill=S1, stroke=None, rx=2)
         s.text(684, 161 + i * 62, c, size=12, fill=SUB)
     s.text(664, 336, "实测违规边：内联结果型能力被接线 → 计划期直接拒绝。",
-           size=11.5, fill=MUT)
+           size=12, fill=MUT)
     s.card(40, 384, 500, 268, "门预检与断点重跑（实测）")
     s.text(64, 436, "预检：计划期收集全部阶段副作用并集，一次过门；", size=12.5,
            fill=SUB)
@@ -638,7 +642,7 @@ def p7():
                     f"调用 {sum(1 for l in run_seq if l.startswith('invoke'))}"
                     " 次）", size=13, fill=DEEP, weight="700")
     for i, line in enumerate(run_seq[:4]):
-        s.chip(64 + (i % 2) * 230, 498 + (i // 2) * 34, line, size=10.5,
+        s.chip(64 + (i % 2) * 230, 498 + (i // 2) * 34, line, size=11,
                mono=True, fg=DEEP, bg=CHIP_BG)
     res = EC["pipeline_resume"]
     s.text(64, 588, f"断点重跑实测：校验和一致 → 两阶段全部复用，调用 "
@@ -649,14 +653,14 @@ def p7():
            fill=MUT)
     s.card(580, 384, 500, 268, "工作目录（实测落盘清单）")
     for i, f in enumerate(EC["pipeline_run"]["work_dir_files"]):
-        s.chip(604 + (i % 2) * 240, 424 + (i // 2) * 40, f, size=10.5,
+        s.chip(604 + (i % 2) * 240, 424 + (i // 2) * 40, f, size=11,
                mono=True, fg=DEEP, bg=CHIP_BG)
     s.text(604, 546, "每阶段一个阶段信封 + 整链一个总信封，全部落工作目录。",
            size=12, fill=SUB)
     s.text(604, 572, "重跑按阶段标识匹配记录；", size=12, fill=SUB)
     s.text(604, 598, "成环或引用未知阶段 → 流水线结构错误；平手按定义序。",
            size=12, fill=SUB)
-    claims(s, 900, 404, ["C19", "C20", "C21", "C22", "C23", "C24"])
+    claims(s, 830, 404, ["C19", "C20", "C21", "C22", "C23", "C24"])
     s.save("p7-pipeline.svg", 700)
 
 
@@ -675,7 +679,7 @@ def p8():
                     f"{m['tool_count']} 个工具：前缀 + 语义标识（空格连字符"
                     "转下划线）", size=12.5, fill=SUB)
     for i, t in enumerate(m["tool_names"][:5]):
-        s.chip(64 + (i % 3) * 176, 166 + (i // 3) * 36, t, size=10.5,
+        s.chip(64 + (i % 3) * 176, 166 + (i // 3) * 36, t, size=11,
                mono=True, fg=DEEP, bg=CHIP_BG)
     props = m["capability_tool_schema_props"]["test_echo"]
     injected = [p for p in props if p.startswith("allow_")] + \
@@ -685,8 +689,8 @@ def p8():
            size=12.5, fill=SUB)
     s.text(64, 280, "调用时先剥除再送校验，不污染 provider 的封闭模式。",
            size=12.5, fill=SUB)
-    s.text(64, 308, f"实测注入键：{', '.join(injected)}", size=11, fill=MUT,
-           mono=True)
+    s.text(64, 306, "实测注入键", size=12, fill=MUT)
+    s.text(64, 324, ", ".join(injected), size=11, fill=MUT, mono=True)
     s.card(640, 108, 440, 226, "门注入（启动期配置）")
     s.text(664, 162, "发布面没有逐次调用的旗标，门由启动配置供给：", size=12.5,
            fill=SUB)
@@ -733,14 +737,14 @@ def p9():
     s.card(40, 108, 500, 240, "实现与测试行数")
     mx = max(RM["impl_loc"], RM["test_loc"])
     s.text(60, 166, "实现", size=13, fill=INK, weight="700")
-    s.text(60, 186, f"{RM['go_impl_files']} 个文件", size=11, fill=MUT)
+    s.text(60, 186, f"{RM['go_impl_files']} 个文件", size=12, fill=MUT)
     s.rect(150, 152, 300 * RM["impl_loc"] / mx, 22, fill=S1, stroke=None,
            rx=4)
     s.text(158 + 300 * RM["impl_loc"] / mx, 169, f"{RM['impl_loc']:,}",
            size=13, fill=DEEP, weight="700", mono=True)
     s.text(60, 226, "测试", size=13, fill=INK, weight="700")
     s.text(60, 246, f"{RM['go_test_files']} 个文件 · "
-                    f"{RM['test_fn_count']} 个测试函数", size=11, fill=MUT)
+                    f"{RM['test_fn_count']} 个测试函数", size=12, fill=MUT)
     s.rect(150, 212, 300 * RM["test_loc"] / mx, 22, fill=S2, stroke=None,
            rx=4)
     s.text(158 + 300 * RM["test_loc"] / mx, 229, f"{RM['test_loc']:,}",
@@ -758,13 +762,13 @@ def p9():
     rmx = roles[0]["loc"]
     for i, r in enumerate(roles):
         y = 150 + i * 18
-        s.text(600, y + 11, r["role"], size=10.5, fill=SUB)
+        s.text(600, y + 11, r["role"], size=12, fill=SUB)
         s.rect(748, y, 220 * r["loc"] / rmx, 13, fill=S1, stroke=None, rx=3)
         s.text(756 + 220 * r["loc"] / rmx, y + 10.5, f"{r['loc']:,}",
-               size=10, fill=DEEP, weight="600", mono=True)
+               size=11, fill=DEEP, weight="600", mono=True)
     s.text(600, 338, f"合计 {RM['impl_loc']:,} 行实现 · "
                      f"{RM['go_total_loc']:,} 行 Go 源码（含测试）",
-           size=11, fill=MUT)
+           size=12, fill=MUT)
     s.card(40, 376, 1040, 158, "全仓构成（git 跟踪文件，逐类枚举后合计）")
     go_n = RM["by_ext"].get("go", 0)
     md_n = RM["by_ext"].get("md", 0)
@@ -772,16 +776,16 @@ def p9():
     s.text(64, 446, str(RM["tracked_total"]), size=26, fill=DEEP,
            weight="700", mono=True)
     s.text(124, 446, "个跟踪文件 =", size=13, fill=INK)
-    s.chip(232, 428, f"{go_n} Go 源码", size=11.5, fg=DEEP, bg=CHIP_BG)
-    s.chip(376, 428, f"{md_n} 规格与文档", size=11.5, fg=DEEP, bg=CHIP_BG)
-    s.chip(536, 428, f"{other_n} 其他（清单/契约等）", size=11.5, fg=DEEP,
+    s.chip(232, 428, f"{go_n} Go 源码", size=12, fg=DEEP, bg=CHIP_BG)
+    s.chip(376, 428, f"{md_n} 规格与文档", size=12, fg=DEEP, bg=CHIP_BG)
+    s.chip(536, 428, f"{other_n} 其他（清单/契约等）", size=12, fg=DEEP,
            bg=CHIP_BG)
     s.text(64, 486, "枚举明细（扩展名 → 个数）："
                     + " · ".join(f"{k} {v}" for k, v in
-                                 sorted(RM["by_ext"].items())), size=11.5,
+                                 sorted(RM["by_ext"].items())), size=12,
            fill=SUB)
     s.text(64, 512, f"逐类相加 {sum(RM['by_ext'].values())} = 跟踪总数 "
-                    f"{RM['tracked_total']}，与冻结快照一致。", size=11.5,
+                    f"{RM['tracked_total']}，与冻结快照一致。", size=12,
            fill=MUT)
     claims(s, 900, 396, ["C29", "C30"])
     s.save("p9-quality.svg", 660)
@@ -821,7 +825,7 @@ def p10():
         s.rect(40, y, 6, 78, fill=color, stroke=None, rx=2)
         s.text(66, y + 28, title, size=14, fill=INK, weight="700")
         s.text(66, y + 54, body, size=12, fill=SUB)
-        s.chip(858, y + 14, verdict, size=10.5, fg=DEEP, bg=CHIP_BG)
+        s.chip(858, y + 14, verdict, size=12, fg=DEEP, bg=CHIP_BG)
     s.rect(40, 584, 1040, 84, fill=CHIP_BG2, stroke=None, rx=10)
     s.text(64, 616, "假提供者纪律：全部证据来自 shell 假提供者——零真实网络、"
                     "零模型下载、零真实调用外部接口。", size=13, fill=INK,

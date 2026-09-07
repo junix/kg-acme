@@ -139,8 +139,23 @@ if head.returncode != 0:
     die("git rev-parse failed")
 head = head.stdout.strip()
 if head != FROZEN_HEAD:
-    die(f"engine HEAD is {head}, expected frozen {FROZEN_HEAD}; anchors are "
-        "line-sensitive — refuse to freeze from a moved tree")
+    # distinguish "engine evolved" (normal after the delivery commit; the
+    # frozen commit is still in history) from "evidence drifted" (frozen
+    # commit unresolvable). Both refuse to re-freeze — anchors and timing
+    # are line-sensitive — but the evolved case gets the worktree recipe.
+    resolvable = subprocess.run(
+        ["git", "-C", ROOT, "cat-file", "-e", FROZEN_HEAD + "^{commit}"],
+        capture_output=True).returncode == 0
+    if resolvable:
+        die(f"engine evolved: HEAD is {head}, evidence was frozen at "
+            f"{FROZEN_HEAD} — refusing to re-freeze from a moved tree "
+            "(anchors are line-sensitive). Post-commit re-runs must use "
+            "the frozen worktree recipe (README 提交后复现):\n"
+            f"  git worktree add /tmp/kgacme-frozen {FROZEN_HEAD}\n"
+            f"  KG_ACME_ROOT=/tmp/kgacme-frozen IG_OUT=… IG_WORK=… "
+            "python3 extract.py")
+    die(f"evidence drifted: frozen commit {FROZEN_HEAD} is no longer "
+        f"resolvable in {ROOT} (history rewritten?) — hard fail")
 dirty = subprocess.run(["git", "-C", ROOT, "status", "--porcelain"],
                        capture_output=True, text=True).stdout
 tainted = [l for l in dirty.splitlines()

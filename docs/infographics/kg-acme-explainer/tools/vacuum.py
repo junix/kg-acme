@@ -99,7 +99,22 @@ def run(script):
 head = subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"],
                       capture_output=True, text=True).stdout.strip()
 if head != FROZEN_HEAD:
-    die(f"engine HEAD {head} != frozen {FROZEN_HEAD}")
+    # "engine evolved" (delivery commit landed; frozen commit still in
+    # history) → recipe pointer; "evidence drifted" (frozen commit gone)
+    # → hard fail. Vacuum rebuilds against the frozen state, so both
+    # refuse — but only the second is unexplained.
+    resolvable = subprocess.run(
+        ["git", "-C", ROOT, "cat-file", "-e", FROZEN_HEAD + "^{commit}"],
+        capture_output=True).returncode == 0
+    if resolvable:
+        die(f"engine evolved: HEAD {head} != frozen {FROZEN_HEAD}. Post-"
+            "commit vacuum must rebuild against the frozen state via the "
+            "README 提交后复现 recipe:\n"
+            f"  git worktree add /tmp/kgacme-frozen {FROZEN_HEAD}\n"
+            f"  KG_ACME_ROOT=/tmp/kgacme-frozen IG_OUT=… IG_WORK=… "
+            "python3 vacuum.py")
+    die(f"evidence drifted: frozen commit {FROZEN_HEAD} is no longer "
+        f"resolvable in {ROOT} (history rewritten?)")
 for rel in TEXT_REBUILD + BITMAPS + ONE_TIME + ["svg/p0-hero.svg"]:
     if not (OUT / rel).exists():
         die(f"missing artifact before vacuum: {rel}")
@@ -234,7 +249,8 @@ expected_files = set(TEXT_REBUILD + BITMAPS + ONE_TIME +
                      ["VERIFICATION.md", "README.md"]) | \
     {f"svg/{p.name}" for p in (OUT / "svg").glob("*.svg")} | \
     {f"tools/{p.name}" for p in (OUT / "tools").glob("*.py")} | \
-    {f"render/crops/{p.name}" for p in (OUT / "render" / "crops").glob("*.png")}
+    {f"render/crops/{p.name}" for p in (OUT / "render" / "crops").glob("*.png")} | \
+    {f"data/audit/{p.name}" for p in (OUT / "data" / "audit").glob("*.md")}
 actual = {p.relative_to(OUT).as_posix() for p in OUT.rglob("*")
           if p.is_file()}
 stray = sorted(actual - expected_files)

@@ -29,7 +29,7 @@ p.lead{color:var(--sub);font-size:15px;line-height:1.8;margin:8px 0 16px;
 max-width:980px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;
 padding:38px}
-.panel img{display:block;width:1042px;height:auto;margin:0 auto}
+.panel svg{display:block;width:1042px;height:auto;margin:0 auto}
 .disc{background:var(--card);border:1px solid var(--line);border-radius:14px;
 margin:26px 40px 0;padding:22px 28px}
 .disc h3{font-size:17px;color:var(--deep);margin-bottom:8px}
@@ -47,18 +47,784 @@ flex-wrap:wrap}
 <header><div class="wrap"><div class="kicker">可审计技术长图 · 全部数字锚定冻结证据</div><h1>kg-acme：知识图谱能力中枢</h1><p class="sub">中枢只做集成：发现、协议、目录、策略、路由五件事；图谱算法全部住在 provider 里。本页解释三条入口、一份不可变快照、四把策略门与一条纯编排流水线。</p><div class="metastrip"><div class="m">引擎提交 9cea0c7（冻结）</div><div class="m">冻结证据 6 份 JSON</div><div class="m">面板 11 张 · 声明 30 条</div><div class="m">测试 172 通过 / 0 失败（一次冻结运行）</div><div class="m">跟踪文件 50 个</div></div></div></header>
 <div class="wrap">
 <section style="padding-top:34px"><div class="sec-head"><span class="sec-no">导读</span></div><p class="lead">这张长图按「总览 → 架构 → 命令面 → 行为与门禁 → 错误处理 → 流水线与发布面 → 工程事实 → 契约实测」组织。每张面板右下角的编号是声明编号：30 条声明逐条登记在交付目录的验证层，每条都给出冻结证据与源锚点，任何一个数字都可以被独立复算。显示层不放任何代码细节——那是审计层的事。</p></section>
-<section id="s0"><div class="sec-head"><span class="sec-no">01</span><h2>总览</h2></div><p class="lead">两条铁律定边界：中枢只做集成，参数面永远来自 provider 自描述。三个二进制入口共享同一份不可变能力快照。</p><div class="panel"><img src="svg/p0-hero.svg" alt="总览面板" width="1120"></div></section>
-<section id="s1"><div class="sec-head"><span class="sec-no">02</span><h2>架构：五职责内核</h2></div><p class="lead">发现、协议、目录、策略、路由五个职责构成内核；provider 分协议原生与遗留命令行两侧接入，路由排序确定。</p><div class="panel"><img src="svg/p1-architecture.svg" alt="架构：五职责内核面板" width="1120"></div></section>
-<section id="s2"><div class="sec-head"><span class="sec-no">03</span><h2>数据流：一份快照两种纪律</h2></div><p class="lead">只读面永不启动 provider（日志实测为零）；执行面只对最终选中者做一次复核与调用。</p><div class="panel"><img src="svg/p2-snapshot.svg" alt="数据流：一份快照两种纪律面板" width="1120"></div></section>
-<section id="s3"><div class="sec-head"><span class="sec-no">04</span><h2>命令面：动词与稳定目录</h2></div><p class="lead">执行面、管理面、发布面各持一段动词；内置目录是唯一长期稳定契约，加载期强校验。</p><div class="panel"><img src="svg/p3-cli.svg" alt="命令面：动词与稳定目录面板" width="1120"></div></section>
-<section id="s4"><div class="sec-head"><span class="sec-no">05</span><h2>协议：三个动词</h2></div><p class="lead">自描述、依赖探测、调用三个动词承载全部 provider 通信；版本协商与清单校验把失败分成两类。</p><div class="panel"><img src="svg/p4-protocol.svg" alt="协议：三个动词面板" width="1120"></div></section>
-<section id="s5"><div class="sec-head"><span class="sec-no">06</span><h2>行为门禁：默认全拒</h2></div><p class="lead">四类副作用对应四把旗标；未知副作用无门可开；干跑渲染完整执行计划而零副作用。</p><div class="panel"><img src="svg/p5-policy.svg" alt="行为门禁：默认全拒面板" width="1120"></div></section>
-<section id="s6"><div class="sec-head"><span class="sec-no">07</span><h2>错误处理：九码与单信封</h2></div><p class="lead">机器错误码集合固定；标准输出永远恰好一个信封；失败契约逐例实测冻结。</p><div class="panel"><img src="svg/p6-errors.svg" alt="错误处理：九码与单信封面板" width="1120"></div></section>
-<section id="s7"><div class="sec-head"><span class="sec-no">08</span><h2>流水线：纯编排</h2></div><p class="lead">每一步都是一次完整路由调用；类型边在计划期校验；工作目录自包含；校验和一致即复用。</p><div class="panel"><img src="svg/p7-pipeline.svg" alt="流水线：纯编排面板" width="1120"></div></section>
-<section id="s8"><div class="sec-head"><span class="sec-no">09</span><h2>发布面：同源工具清单</h2></div><p class="lead">工具清单由同一份快照运行时派生；策略门由启动配置注入；帧级错误语义固定。</p><div class="panel"><img src="svg/p8-mcp.svg" alt="发布面：同源工具清单面板" width="1120"></div></section>
-<section id="s9"><div class="sec-head"><span class="sec-no">10</span><h2>工程事实</h2></div><p class="lead">规模先枚举后求和；两层测试网全绿冻结；全部数字锚定证据文件。</p><div class="panel"><img src="svg/p9-quality.svg" alt="工程事实面板" width="1120"></div></section>
-<section id="s10"><div class="sec-head"><span class="sec-no">11</span><h2>契约实测案例</h2></div><p class="lead">五个端到端案例全部由真二进制加假提供者跑出并冻结，可复算、可核查。</p><div class="panel"><img src="svg/p10-contract.svg" alt="契约实测案例面板" width="1120"></div></section>
-<div class="disc"><h3>本页纪律</h3><p>零脚本、零外部请求：整页仅引用同目录面板文件，无任何网络依赖。显示层执行六条禁令：不出现引擎源码文件名、代码坐标、逐字摘录、内部标识符、内部路径与任何生成器或重建命令；豁免词表（公开契约词汇与冻结数据字符串）登记在交付目录证据层。位图三件（两倍全页、灰度版、缩略图）与逐节裁片由交付目录渲染产物提供，渲染断言含全页高度等式。</p></div>
+<section id="s0"><div class="sec-head"><span class="sec-no">01</span><h2>总览</h2></div><p class="lead">两条铁律定边界：中枢只做集成，参数面永远来自 provider 自描述。三个二进制入口共享同一份不可变能力快照。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img">
+<title>kg-acme 总览：三条入口、一份快照、两条铁律</title>
+<desc>能力中枢模式总览：中枢只做集成，算法在 provider 生态</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="640" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="639" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="50" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">知识图谱能力中枢</text>
+<text x="40" y="90" font-size="25" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">一个中枢，把散落的图谱工具组织成一张可发现、可路由、可治理的能力表</text>
+<rect x="40" y="110" width="500" height="106" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="110.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="142" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">铁律一 · 中枢只做集成</text>
+<text x="60" y="158" font-size="13" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">发现 · 协议 · 目录 · 策略 · 路由，恰好五件事</text>
+<text x="60" y="182" font-size="13" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">抽取、去重、社区、问答、存储等图谱算法</text>
+<text x="60" y="206" font-size="13" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">全部属于 provider 工程，中枢绝不自实现</text>
+<rect x="580" y="110" width="500" height="106" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="581.5" y="110.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="596" y="142" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">铁律二 · 参数面不写死</text>
+<text x="600" y="158" font-size="13" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力的旗标、枚举、默认值来自 provider 自描述</text>
+<text x="600" y="182" font-size="13" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">中枢内置的兼容表只是兜底，</text>
+<text x="600" y="206" font-size="13" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">与自描述冲突时以 provider 为准并发射诊断</text>
+<text x="40" y="258" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">三条入口 · 一份不可变快照 · 一片生态</text>
+<rect x="40" y="274" width="220" height="82" rx="10" fill="#E3EEFA"/>
+<rect x="40" y="274" width="220" height="82" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="150" y="304" font-size="17" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">kg</text>
+<text x="150" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">执行面 · 能力调用与流水线</text>
+<rect x="290" y="274" width="220" height="82" rx="10" fill="#E3EEFA"/>
+<rect x="290" y="274" width="220" height="82" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="400" y="304" font-size="17" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">kgctl</text>
+<text x="400" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">管理面 · 刷新快照与诊断</text>
+<rect x="540" y="274" width="220" height="82" rx="10" fill="#E3EEFA"/>
+<rect x="540" y="274" width="220" height="82" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="650" y="304" font-size="17" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">kg-mcp</text>
+<text x="650" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">发布面 · 工具清单与调用</text>
+<polygon points="766,315 793,319.2 793,310.8" fill="#1D5FBF"/>
+<polygon points="802,315 793,317.6 793,312.4" fill="#1D5FBF"/>
+<rect x="812" y="274" width="268" height="82" rx="10" fill="#FFFFFF" stroke="#1D5FBF" stroke-width="1.6"/>
+<text x="946" y="304" font-size="15" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">不可变能力快照</text>
+<text x="946" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">管理面刷新生成 · 带内容指纹</text>
+<rect x="40" y="374" width="1040" height="52" rx="10" fill="#E8EEF5"/>
+<text x="560" y="406" font-size="13" fill="#1B2733" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">快照之下是 provider 生态：协议原生 provider 与遗留命令行（兼容桥接入）——算法都在那里</text>
+<rect x="40" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="56" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">17</text>
+<text x="56" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">条稳定命令（目录内置）</text>
+<rect x="249" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="265" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">11</text>
+<text x="265" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个发布命名空间</text>
+<rect x="458" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="474" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">5</text>
+<text x="474" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">项能力（实测快照）</text>
+<rect x="667" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="683" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">172</text>
+<text x="683" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个测试全绿（冻结运行）</text>
+<rect x="876" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="892" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">50</text>
+<text x="892" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个 git 跟踪文件</text>
+<text x="40" y="574" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">页面纪律</text>
+<text x="130" y="574" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">显示层零代码细节：源文件名、代码坐标、逐字摘录、内部标识符、内部路径与重建命令一律不出现；</text>
+<text x="130" y="600" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">每个数字都锚定冻结证据，坐标级锚点登记在交付目录验证层。</text>
+<rect x="960" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="976.1" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C01</text>
+<rect x="998.1" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1014.2" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C02</text>
+<rect x="1036.3" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1052.4" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C03</text>
+<rect x="1074.5" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1090.5" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C04</text>
+</g>
+</svg></div></section>
+<section id="s1"><div class="sec-head"><span class="sec-no">02</span><h2>架构：五职责内核</h2></div><p class="lead">发现、协议、目录、策略、路由五个职责构成内核；provider 分协议原生与遗留命令行两侧接入，路由排序确定。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img">
+<title>中枢五职责与 provider 两侧</title>
+<desc>发现、协议、目录、策略、路由五个职责与协议原生、遗留两侧</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="620" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="619" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">架构</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">五职责内核：算法不进中枢，中枢只做集成</text>
+<rect x="40" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
+<rect x="40" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="138" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">发现</text>
+<text x="138" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">五级顺序找 provider</text>
+<text x="138" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">逐个尽力探测</text>
+<rect x="248" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
+<rect x="248" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="346" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">协议</text>
+<text x="346" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">自描述与执行信封</text>
+<text x="346" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">版本协商</text>
+<rect x="456" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
+<rect x="456" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="554" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">目录</text>
+<text x="554" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">稳定命令面</text>
+<text x="554" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">加载期强校验</text>
+<rect x="664" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
+<rect x="664" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="762" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">策略</text>
+<text x="762" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">副作用四门</text>
+<text x="762" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">默认全拒</text>
+<rect x="872" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
+<rect x="872" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
+<text x="970" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">路由</text>
+<text x="970" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">确定性三键排序</text>
+<text x="970" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">选中即执行</text>
+<rect x="40" y="234" width="500" height="252" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="234.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="266" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">协议原生侧（权威）</text>
+<rect x="64" y="284" width="8" height="8" rx="2" fill="#2a78d6"/>
+<text x="84" y="293" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">自描述通过协议校验后成为参数面真相源</text>
+<rect x="64" y="326" width="8" height="8" rx="2" fill="#2a78d6"/>
+<text x="84" y="335" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">发现顺序第五级扫描协议原生前缀可执行文件</text>
+<rect x="64" y="368" width="8" height="8" rx="2" fill="#2a78d6"/>
+<text x="84" y="377" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测三个已知原生二进制进路由表登记</text>
+<rect x="64" y="410" width="8" height="8" rx="2" fill="#2a78d6"/>
+<text x="84" y="419" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">依赖探测失败不降级：未知不等于不可用</text>
+<rect x="580" y="234" width="500" height="252" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="581.5" y="234.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="596" y="266" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">遗留命令行侧（兜底兼容桥）</text>
+<rect x="604" y="284" width="8" height="8" rx="2" fill="#7C8FA3"/>
+<text x="624" y="293" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">只桥接有真实命令行调用形态的三个遗留工程</text>
+<rect x="604" y="324" width="8" height="8" rx="2" fill="#7C8FA3"/>
+<text x="624" y="333" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">桥表按键挂接在 provider 发布命名空间下</text>
+<rect x="604" y="364" width="8" height="8" rx="2" fill="#7C8FA3"/>
+<text x="624" y="373" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">探测成功时自描述覆盖桥表，不一致即发射诊断</text>
+<rect x="604" y="404" width="8" height="8" rx="2" fill="#7C8FA3"/>
+<text x="624" y="413" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">无命令行形态的能力是纯协议能力：</text>
+<rect x="604" y="444" width="8" height="8" rx="2" fill="#7C8FA3"/>
+<text x="624" y="453" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">未探测即报能力未找到</text>
+<rect x="40" y="510" width="1040" height="76" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="510.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="542" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">路由三键排序（确定性）</text>
+<text x="64" y="556" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">探测过的优先于兜底的</text>
+<polygon points="268,552 287,556.2 287,547.8" fill="#1D5FBF"/>
+<polygon points="296,552 287,554.6 287,549.4" fill="#1D5FBF"/>
+<text x="310" y="556" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">然后按权重降序</text>
+<polygon points="452,552 471,556.2 471,547.8" fill="#1D5FBF"/>
+<polygon points="480,552 471,554.6 471,549.4" fill="#1D5FBF"/>
+<text x="494" y="556" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">平手按提供者标识字典序</text>
+<text x="760" y="556" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">· 同输入必得同选择</text>
+<rect x="980" y="528" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="996.1" y="543" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C02</text>
+<rect x="1018.1" y="528" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1034.2" y="543" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C03</text>
+<rect x="1056.3" y="528" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1072.4" y="543" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C12</text>
+</g>
+</svg></div></section>
+<section id="s2"><div class="sec-head"><span class="sec-no">03</span><h2>数据流：一份快照两种纪律</h2></div><p class="lead">只读面永不启动 provider（日志实测为零）；执行面只对最终选中者做一次复核与调用。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img">
+<title>快照数据流：只读面零启动，执行面只复核选中者</title>
+<desc>管理面刷新构建不可变快照；只读面不启动 provider；执行面三次调用</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="640" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="639" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">数据流</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">一份不可变快照，两种消费纪律</text>
+<rect x="40" y="108" width="200" height="64" rx="10" fill="#E3EEFA"/>
+<text x="140" y="134" font-size="14" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">管理面刷新</text>
+<text x="140" y="156" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">显式挂接 + 环境发现</text>
+<polygon points="246,140 277,144.2 277,135.8" fill="#1D5FBF"/>
+<polygon points="286,140 277,142.6 277,137.4" fill="#1D5FBF"/>
+<rect x="296" y="108" width="240" height="64" rx="10" fill="#FFFFFF" stroke="#1D5FBF" stroke-width="1.6"/>
+<text x="416" y="134" font-size="14" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">不可变能力快照</text>
+<text x="416" y="156" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">探测结果 · 能力视图 · 分组 · 指纹</text>
+<polygon points="542,140 573,144.2 573,135.8" fill="#1D5FBF"/>
+<polygon points="582,140 573,142.6 573,137.4" fill="#1D5FBF"/>
+<rect x="592" y="108" width="488" height="64" rx="10" fill="#E8EEF5"/>
+<text x="836" y="134" font-size="12.5" fill="#1B2733" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">刷新实测：6 次探测调用（自描述 + 依赖探测）</text>
+<text x="836" y="156" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">快照指纹 = 全部提供者+分组+能力视图的内容哈希，重建即复算</text>
+<rect x="40" y="204" width="500" height="300" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="204.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="236" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">只读面：零启动（日志实测）</text>
+<text x="64" y="260" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">10 次只读操作（7 类命令）连跑，全部只看快照：</text>
+<rect x="64" y="274" width="72.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="100.2" y="289" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg --help</text>
+<rect x="304" y="274" width="60.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="334.2" y="289" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg list</text>
+<rect x="64" y="310" width="90.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="109.3" y="325" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg test.echo</text>
+<rect x="304" y="310" width="60.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="334.2" y="325" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg test</text>
+<rect x="64" y="346" width="126.9" height="23" rx="9" fill="#E3EEFA"/>
+<text x="127.4" y="361" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kgctl capabilities</text>
+<rect x="304" y="346" width="84.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="346.3" y="361" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kgctl route</text>
+<rect x="64" y="382" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="121.4" y="397" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kgctl completion</text>
+<text x="64" y="444" font-size="14" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">provider 启动次数：0 次</text>
+<text x="64" y="470" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">帮助 · 列表 · 描述 · 补全 · 工具清单 · 干跑一律不探测、不加载模型</text>
+<rect x="580" y="204" width="500" height="300" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="581.5" y="204.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="596" y="236" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">执行面：只复核最终选中的 provider（日志实测）</text>
+<text x="604" y="260" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">一次真实调用的完整 provider 日志：</text>
+<rect x="604" y="274" width="112.9" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="660.4" y="289.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">describe --json</text>
+<rect x="604" y="314" width="119.2" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="663.6" y="329.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">available --json</text>
+<rect x="604" y="354" width="188.8" height="23.5" rx="9" fill="#E3EEFA"/>
+<text x="698.4" y="369.5" font-size="11.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.net --request -</text>
+<text x="604" y="444" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">恰好 3 次调用：先校验参数与策略，再复核并启动唯一的选中者</text>
+<text x="604" y="470" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">策略被拒时连这三次也不会发生（见策略门一节实测）</text>
+<rect x="40" y="532" width="1040" height="72" rx="10" fill="#E8EEF5"/>
+<text x="64" y="566" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">快照只在安装期由管理面重算；执行期以快照为准，需要真相时只向最终选中者要。</text>
+<text x="64" y="590" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">离线帮助永不唤醒算法进程；每次真实执行的探测开销收敛到常数。</text>
+<rect x="920" y="544" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="936.1" y="559" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C04</text>
+<rect x="958.1" y="544" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="974.2" y="559" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C05</text>
+<rect x="996.3" y="544" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1012.4" y="559" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C06</text>
+</g>
+</svg></div></section>
+<section id="s3"><div class="sec-head"><span class="sec-no">04</span><h2>命令面：动词与稳定目录</h2></div><p class="lead">执行面、管理面、发布面各持一段动词；内置目录是唯一长期稳定契约，加载期强校验。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="660" viewBox="0 0 1120 660" role="img">
+<title>三条命令面：动词、旗标与稳定目录</title>
+<desc>执行面旗标、管理面动词、发布面方法与目录命令表</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="660" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="659" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">命令面</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">三个入口各管一段，目录是唯一稳定契约</text>
+<rect x="40" y="108" width="344" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="108.5" width="341" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">执行面 · 全局旗标（实测帮助）</text>
+<rect x="60" y="148" width="62.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="91.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--params</text>
+<rect x="222" y="148" width="68.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="256.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--dry-run</text>
+<rect x="60" y="180" width="104.7" height="23" rx="9" fill="#E3EEFA"/>
+<text x="112.4" y="195" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-network</text>
+<rect x="222" y="180" width="128.9" height="23" rx="9" fill="#E3EEFA"/>
+<text x="286.5" y="195" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-data-egress</text>
+<rect x="60" y="212" width="147.1" height="23" rx="9" fill="#E3EEFA"/>
+<text x="133.5" y="227" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-model-download</text>
+<rect x="222" y="212" width="110.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="277.4" y="227" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-db-write</text>
+<rect x="60" y="244" width="50.3" height="23" rx="9" fill="#E3EEFA"/>
+<text x="85.2" y="259" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--json</text>
+<text x="60" y="296" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">参数一次成对象传入；四把布尔门 + 干跑；</text>
+<text x="60" y="318" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">标准输出恰好一个版本化信封。</text>
+<text x="60" y="344" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">盘点类选项属于管理面：</text>
+<text x="60" y="366" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">执行面拒绝越权（实测退出码 1）。</text>
+<rect x="408" y="108" width="344" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="409.5" y="108.5" width="341" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="424" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">管理面 · 动词（实测）</text>
+<rect x="428" y="148" width="60.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="458.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">refresh</text>
+<rect x="590" y="148" width="72.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="626.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">providers</text>
+<rect x="428" y="182" width="90.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="473.3" y="197" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">capabilities</text>
+<rect x="590" y="182" width="48.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="614.1" y="197" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">route</text>
+<rect x="428" y="216" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="467.2" y="231" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">completion</text>
+<text x="428" y="252" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">刷新产出快照；提供者诊断列出每个 provider；</text>
+<text x="428" y="272" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力检索列目录；路由面解释/固定/清除；补全两 shell。</text>
+<text x="428" y="308" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">同一 CLI 语义，管理面独占盘点与发现旗标。</text>
+<rect x="776" y="108" width="304" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="777.5" y="108.5" width="301" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="792" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">发布面 · 方法（实测会话）</text>
+<rect x="796" y="148" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="835.2" y="163" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">initialize</text>
+<rect x="796" y="182" width="42.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="817.1" y="197" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">ping</text>
+<rect x="796" y="216" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="835.2" y="231" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">tools/list</text>
+<rect x="796" y="250" width="78.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="835.2" y="265" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">tools/call</text>
+<text x="796" y="296" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">换行分帧；未知方法与坏帧有固定错误码；</text>
+<text x="796" y="318" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">通知帧一律容忍不回。</text>
+<rect x="40" y="404" width="1040" height="200" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="404.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="436" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">稳定目录（内置命令表，实测镜像校验全过）</text>
+<text x="64" y="456" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">17 条能力命令 · 10 个发布命名空间 · 语义标识逐条镜像命令路径（点分 ↔ 空格分段）</text>
+<rect x="64" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="101" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">analyze</text>
+<text x="101" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">6 条</text>
+<rect x="148" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="185" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">detect</text>
+<text x="185" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">3 条</text>
+<rect x="232" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="269" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">embed</text>
+<text x="269" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="316" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="353" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">extract</text>
+<text x="353" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="400" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="437" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">layout</text>
+<text x="437" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="484" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="521" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">parse</text>
+<text x="521" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="568" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="605" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">resolve</text>
+<text x="605" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="652" y="462" width="78.8" height="54" rx="8" fill="#E3EEFA"/>
+<text x="691.4" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">retrieve</text>
+<text x="691.4" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="740.8" y="462" width="74" height="54" rx="8" fill="#E3EEFA"/>
+<text x="777.8" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">store</text>
+<text x="777.8" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<rect x="824.8" y="462" width="85.4" height="54" rx="8" fill="#E3EEFA"/>
+<text x="867.5" y="484" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">summarize</text>
+<text x="867.5" y="504" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">1 条</text>
+<text x="64" y="548" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">命令面是长期契约：provider 可以来去，命令表不动；新能力经 provider 侧发布即可见于列表。</text>
+<text x="64" y="574" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">目录加载期强校验：标识镜像、分段小写连字符、标题无结尾标点、描述单句收句号——非法即拒绝启动。</text>
+<rect x="900" y="424" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="916.1" y="439" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C01</text>
+<rect x="938.1" y="424" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="954.2" y="439" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C07</text>
+<rect x="976.3" y="424" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="992.4" y="439" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C08</text>
+<rect x="1014.4" y="424" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1030.5" y="439" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C09</text>
+</g>
+</svg></div></section>
+<section id="s4"><div class="sec-head"><span class="sec-no">05</span><h2>协议：三个动词</h2></div><p class="lead">自描述、依赖探测、调用三个动词承载全部 provider 通信；版本协商与清单校验把失败分成两类。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="700" viewBox="0 0 1120 700" role="img">
+<title>provider 协议：三个动词与一次调用</title>
+<desc>自描述、依赖探测、调用三个动词；探测失败两分；参数面覆盖兜底</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="660" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="659" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">协议</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">三个动词说完一切：自描述 · 依赖探测 · 调用</text>
+<rect x="40" y="112" width="640" height="72" rx="10" fill="#E3EEFA"/>
+<text x="60" y="142" font-size="15" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">describe</text>
+<text x="160" y="142" font-size="12.5" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">输出能力清单</text>
+<text x="60" y="164" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">标题、描述、副作用、输入模式、输出模式与命令行形态</text>
+<rect x="40" y="198" width="640" height="72" rx="10" fill="#E3EEFA"/>
+<text x="60" y="228" font-size="15" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">available</text>
+<text x="160" y="228" font-size="12.5" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">输出依赖状态</text>
+<text x="60" y="250" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">可用与否、就绪与缺失清单；退出码恒为零</text>
+<rect x="40" y="284" width="640" height="72" rx="10" fill="#E3EEFA"/>
+<text x="60" y="314" font-size="15" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">invoke</text>
+<text x="160" y="314" font-size="12.5" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">按能力标识调用</text>
+<text x="60" y="336" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">标准输入一份请求对象，标准输出恰好一个执行信封</text>
+<rect x="704" y="112" width="376" height="244" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="705.5" y="112.5" width="373" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="720" y="144" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">版本协商（实测）</text>
+<text x="724" y="162" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">中枢支持集与提供者声明集取交集，选最高共同版。</text>
+<text x="724" y="194" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">版本无交集</text>
+<text x="812" y="194" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">说得好但听不懂（声明了未来版本）</text>
+<text x="724" y="222" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">清单畸形</text>
+<text x="812" y="222" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">不是合法清单（没说清楚）</text>
+<text x="724" y="254" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">两个错误码严格区分，诊断各归各类；</text>
+<text x="724" y="276" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">依赖探测失败不降级，</text>
+<text x="724" y="298" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">未知不等于不可用。</text>
+<rect x="40" y="384" width="1040" height="172" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="384.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="416" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">探测失败分类（四个假提供者实测冻结）</text>
+<rect x="64" y="430" width="226" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="64" y="430" width="6" height="88" rx="2" fill="#2a78d6"/>
+<text x="82" y="454" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">正常提供者</text>
+<text x="82" y="477" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">探测通过</text>
+<text x="82" y="503" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测：探测通过</text>
+<rect x="318" y="430" width="226" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="318" y="430" width="6" height="88" rx="2" fill="#e34948"/>
+<text x="336" y="454" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">坏输出</text>
+<text x="336" y="477" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">清单畸形</text>
+<text x="336" y="496" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测错误码</text>
+<text x="336" y="513" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">malformed_manifest</text>
+<rect x="572" y="430" width="226" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="572" y="430" width="6" height="88" rx="2" fill="#e34948"/>
+<text x="590" y="454" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">未来版本</text>
+<text x="590" y="477" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">版本无交集</text>
+<text x="590" y="496" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测错误码</text>
+<text x="590" y="513" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">unsupported_schema_version</text>
+<rect x="826" y="430" width="226" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="826" y="430" width="6" height="88" rx="2" fill="#e34948"/>
+<text x="844" y="454" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">未知副作用</text>
+<text x="844" y="477" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">清单畸形（枚举封闭）</text>
+<text x="844" y="496" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测错误码</text>
+<text x="844" y="513" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">malformed_manifest</text>
+<text x="64" y="540" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">未知副作用在清单校验层即被拒（副作用枚举封闭），策略层同样默认拒绝——两道闸都关。</text>
+<rect x="40" y="576" width="1040" height="74" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="576.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="608" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">命令行渲染序（兜底路径）</text>
+<text x="64" y="634" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">常驻</text>
+<polygon points="118,630 133,634.2 133,625.8" fill="#1D5FBF"/>
+<polygon points="142,630 133,632.6 133,627.4" fill="#1D5FBF"/>
+<text x="152" y="634" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">子命令</text>
+<polygon points="216,630 231,634.2 231,625.8" fill="#1D5FBF"/>
+<polygon points="240,630 231,632.6 231,627.4" fill="#1D5FBF"/>
+<text x="250" y="634" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">位置参数</text>
+<polygon points="328,630 343,634.2 343,625.8" fill="#1D5FBF"/>
+<polygon points="352,630 343,632.6 343,627.4" fill="#1D5FBF"/>
+<text x="362" y="634" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">旗标（序号升序，平手按旗标字典序）</text>
+<text x="700" y="634" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">布尔只在真值发射 · 可反转旗标相反 · 数组可逐元素或拼接</text>
+<rect x="950" y="592" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="966.1" y="607" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C10</text>
+<rect x="988.1" y="592" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1004.2" y="607" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C11</text>
+<rect x="1026.3" y="592" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1042.4" y="607" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C13</text>
+</g>
+</svg></div></section>
+<section id="s5"><div class="sec-head"><span class="sec-no">06</span><h2>行为门禁：默认全拒</h2></div><p class="lead">四类副作用对应四把旗标；未知副作用无门可开；干跑渲染完整执行计划而零副作用。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img">
+<title>策略门：默认全拒与零副作用干跑</title>
+<desc>四类副作用四把旗标；未知副作用无门可开；干跑渲染计划</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="640" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="639" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">行为门禁</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">副作用四门默认全拒，开门必须点名</text>
+<rect x="40" y="112" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="112" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="139" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">network</text>
+<text x="250" y="139" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">联网（调用模型、拉远端服务）</text>
+<rect x="443.2" y="125" width="108.7" height="23" rx="9" fill="#E3EEFA"/>
+<text x="497.6" y="140" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-network</text>
+<rect x="40" y="168" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="168" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="195" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">data_egress</text>
+<text x="250" y="195" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">本地数据离开本机</text>
+<rect x="419.1" y="181" width="132.9" height="23" rx="9" fill="#E3EEFA"/>
+<text x="485.5" y="196" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-data-egress</text>
+<rect x="40" y="224" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="224" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="251" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">downloads_models</text>
+<text x="250" y="251" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">下载模型权重</text>
+<rect x="400.9" y="237" width="151.1" height="23" rx="9" fill="#E3EEFA"/>
+<text x="476.5" y="252" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-model-download</text>
+<rect x="40" y="280" width="560" height="44" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="280" width="6" height="44" rx="2" fill="#e34948"/>
+<text x="62" y="307" font-size="13" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">writes_db</text>
+<text x="250" y="307" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">写图数据库</text>
+<rect x="437.2" y="293" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="494.6" y="308" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-db-write</text>
+<text x="62" y="352" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">被拒时错误文案直接点名所需旗标（实测冻结）：</text>
+<rect x="62" y="364" width="516" height="66" rx="8" fill="#E8EEF5"/>
+<text x="76" y="384" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">side effects denied by policy: network</text>
+<text x="76" y="400" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">, data_egress (allow explicitly with -</text>
+<text x="76" y="416" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">-allow-network --allow-data-egress)</text>
+<text x="62" y="458" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">fail-closed：provider 声明中枢还不认识的副作用时，没有任何旗标能放行——</text>
+<text x="62" y="480" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">清单层枚举封闭直接拒收，策略层未知默认拒。</text>
+<rect x="640" y="112" width="440" height="372" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="641.5" y="112.5" width="437" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="656" y="144" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">干跑：零副作用的执行计划（实测冻结）</text>
+<text x="664" y="170" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力</text>
+<text x="828" y="170" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">test.net</text>
+<text x="664" y="204" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">提供者</text>
+<text x="828" y="204" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">fake</text>
+<text x="664" y="238" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">声明副作用</text>
+<text x="828" y="238" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">network, data_egress</text>
+<text x="664" y="272" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">当前被拒</text>
+<text x="828" y="272" font-size="12.5" fill="#e34948" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">network, data_egress</text>
+<rect x="824" y="256" width="145.5" height="22" rx="4" fill="none" stroke="#e34948" stroke-width="1"/>
+<text x="664" y="306" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">真跑会执行</text>
+<text x="828" y="306" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">否</text>
+<text x="664" y="344" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">开两把门后重跑干跑：</text>
+<rect x="664" y="356" width="229.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="778.9" y="371" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">--allow-network --allow-data-egress</text>
+<text x="664" y="404" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">被拒清单清空 · 真跑会执行 = 是</text>
+<text x="664" y="432" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">干跑本身永远成功退出：只读操作，</text>
+<text x="664" y="454" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">不启动 provider、不写文件、不联网。</text>
+<rect x="900" y="570" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="916.1" y="585" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C14</text>
+<rect x="938.1" y="570" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="954.2" y="585" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C15</text>
+<rect x="976.3" y="570" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="992.4" y="585" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C16</text>
+</g>
+</svg></div></section>
+<section id="s6"><div class="sec-head"><span class="sec-no">07</span><h2>错误处理：九码与单信封</h2></div><p class="lead">机器错误码集合固定；标准输出永远恰好一个信封；失败契约逐例实测冻结。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="700" viewBox="0 0 1120 700" role="img">
+<title>错误处理：九个机器码与单信封纪律</title>
+<desc>机器错误码全景、输出纪律与实测失败契约</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="640" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="639" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">错误处理</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">错误码集合固定，输出纪律只有一条</text>
+<rect x="40" y="108" width="560" height="308" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="108.5" width="557" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">九个机器错误码（协议层固定集合）</text>
+<rect x="64" y="162" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="76" y="179" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">版本无交集</text>
+<text x="76" y="196" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">unsupported_schema_version</text>
+<rect x="330" y="162" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="342" y="179" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">清单畸形</text>
+<text x="342" y="196" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">malformed_manifest</text>
+<rect x="64" y="208" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="76" y="225" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力未找到</text>
+<text x="76" y="242" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">capability_not_found</text>
+<rect x="330" y="208" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="342" y="225" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">提供者未找到</text>
+<text x="342" y="242" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">provider_not_found</text>
+<rect x="64" y="254" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="76" y="271" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">策略拒绝</text>
+<text x="76" y="288" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">policy_denied</text>
+<rect x="330" y="254" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="342" y="271" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">参数非法</text>
+<text x="342" y="288" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">invalid_input</text>
+<rect x="64" y="300" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="76" y="317" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">调用失败</text>
+<text x="76" y="334" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">invocation_failed</text>
+<rect x="330" y="300" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="342" y="317" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">流水线结构</text>
+<text x="342" y="334" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">invalid_pipeline</text>
+<rect x="64" y="346" width="246" height="42" rx="6" fill="#E3EEFA"/>
+<text x="76" y="363" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">类型边不兼容</text>
+<text x="76" y="380" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">incompatible_stage_edge</text>
+<text x="64" y="404" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">新增错误码前必须先查旧码；两个清单类错误不可混用。</text>
+<rect x="640" y="108" width="440" height="250" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="641.5" y="108.5" width="437" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="656" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">输出纪律（实测）</text>
+<text x="664" y="160" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">标准输出：恰好一个版本化信封</text>
+<text x="664" y="184" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">日志与诊断：永远走标准错误</text>
+<text x="664" y="208" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">命令行失败：退出码 1 + 一行人话错误</text>
+<text x="664" y="236" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测失败契约（逐例冻结，全部退出码 1）：</text>
+<text x="664" y="258" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">· kg: --describe cannot be combined with</text>
+<text x="664" y="276" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">· kg: invalid --params JSON: invalid cha</text>
+<text x="664" y="294" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">· kg: --params must contain a JSON objec</text>
+<text x="664" y="312" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">· kg: provider and inventory options bel</text>
+<text x="664" y="330" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">· kg: --provider-bin expects ID=PATH</text>
+<rect x="40" y="432" width="1040" height="96" rx="10" fill="#E8EEF5"/>
+<text x="64" y="464" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">实测披露：命令行顶层的错误信封把机器码统一折叠为通用错误码，细节留在人话消息里；</text>
+<text x="64" y="488" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">阶段级错误（如流水线某一步的调用失败）保留原样机器码。这是与规格文档的已登记偏差。</text>
+<text x="64" y="512" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">机器码的权威消费方是结构与自动化路径（发布面结构化内容、阶段信封）。</text>
+<rect x="40" y="552" width="1040" height="118" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="552.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="584" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">未知能力实测（冻结输出）</text>
+<text x="64" y="604" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">退出码 1 · 信封架构版本 kg.error/v1 · 标准输出恰好一个对象</text>
+<text x="64" y="630" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">消息：</text>
+<text x="112" y="630" font-size="12" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">capability not found: no.such-capability; run kg list</text>
+<text x="64" y="654" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">机器码：</text>
+<text x="132" y="654" font-size="12" fill="#1B2733" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">error</text>
+<rect x="900" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="916.1" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C17</text>
+<rect x="938.1" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="954.2" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C18</text>
+</g>
+</svg></div></section>
+<section id="s7"><div class="sec-head"><span class="sec-no">08</span><h2>流水线：纯编排</h2></div><p class="lead">每一步都是一次完整路由调用；类型边在计划期校验；工作目录自包含；校验和一致即复用。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="700" viewBox="0 0 1120 700" role="img">
+<title>流水线：纯编排、类型边与断点重跑</title>
+<desc>每步一次完整路由调用；类型边三层校验；工作目录自包含；复用校验和</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="700" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="699" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">流水线</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">中枢仍然只做编排：每一步都是一次完整路由调用</text>
+<rect x="40" y="108" width="560" height="250" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="108.5" width="557" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实测计划：写产物 → 注入下游（拓扑序冻结）</text>
+<rect x="64" y="158" width="200" height="44" rx="8" fill="#E3EEFA"/>
+<text x="164" y="185" font-size="12.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">test.artifact</text>
+<polygon points="272,180 303,184.2 303,175.8" fill="#1D5FBF"/>
+<polygon points="312,180 303,182.6 303,177.4" fill="#1D5FBF"/>
+<text x="320" y="178" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">产物注入下游参数（占位符换工作目录副本）</text>
+<text x="320" y="196" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">注入值</text>
+<text x="364.7" y="196" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">wd/stage-write-provider-out.json</text>
+<rect x="64" y="214" width="200" height="44" rx="8" fill="#E3EEFA"/>
+<text x="164" y="241" font-size="12.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">test.echo</text>
+<text x="64" y="302" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">阶段产物先校验校验和，再复制进工作目录并重算哈希；</text>
+<text x="64" y="324" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">下游拿到的是工作目录里的自包含副本。</text>
+<rect x="640" y="108" width="440" height="250" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="641.5" y="108.5" width="437" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="656" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">类型边三层校验（计划期，拒绝即不执行）</text>
+<rect x="664" y="152" width="8" height="8" rx="2" fill="#2a78d6"/>
+<text x="684" y="161" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">可接线：上游必须是产物文件型能力（内联结果型没有产物可传）</text>
+<rect x="664" y="214" width="8" height="8" rx="2" fill="#2a78d6"/>
+<text x="684" y="223" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">种类一致：边声明的产物种类必须等于上游声明</text>
+<rect x="664" y="276" width="8" height="8" rx="2" fill="#2a78d6"/>
+<text x="684" y="285" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">通道兼容：产物种类与下游参数按约定映射通道，两侧已知且不同即拒</text>
+<text x="664" y="336" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测违规边：内联结果型能力被接线 → 计划期直接拒绝。</text>
+<rect x="40" y="384" width="500" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="384.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="416" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">门预检与断点重跑（实测）</text>
+<text x="64" y="436" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">预检：计划期收集全部阶段副作用并集，一次过门；</text>
+<text x="64" y="458" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">缺旗标则快速失败——任何 provider 都不会启动。</text>
+<text x="64" y="484" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实测整链运行：4 次调用（复核 2 次 + 调用 2 次）</text>
+<rect x="64" y="498" width="108.7" height="23" rx="9" fill="#E3EEFA"/>
+<text x="118.4" y="513" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">describe --json</text>
+<rect x="294" y="498" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="351.4" y="513" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">available --json</text>
+<rect x="64" y="532" width="211.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="169.8" y="547" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.artifact --request -</text>
+<rect x="294" y="532" width="187.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="387.7" y="547" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.echo --request -</text>
+<text x="64" y="588" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">断点重跑实测：校验和一致 → 两阶段全部复用，调用 0 次，仅复核 2 次</text>
+<text x="64" y="612" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">校验和不符则该步重跑，下游随之用新产物。</text>
+<rect x="580" y="384" width="500" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="581.5" y="384.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="596" y="416" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">工作目录（实测落盘清单）</text>
+<rect x="604" y="424" width="151.1" height="23" rx="9" fill="#E3EEFA"/>
+<text x="679.5" y="439" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">pipeline.envelope.json</text>
+<rect x="844" y="424" width="169.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="928.6" y="439" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-shout.envelope.json</text>
+<rect x="604" y="464" width="193.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="700.7" y="479" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-write-provider-out.json</text>
+<rect x="844" y="464" width="169.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="928.6" y="479" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-write.envelope.json</text>
+<text x="604" y="546" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">每阶段一个阶段信封 + 整链一个总信封，全部落工作目录。</text>
+<text x="604" y="572" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">重跑按阶段标识匹配记录；</text>
+<text x="604" y="598" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">成环或引用未知阶段 → 流水线结构错误；平手按定义序。</text>
+<rect x="830" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="846.1" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C19</text>
+<rect x="868.1" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="884.2" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C20</text>
+<rect x="906.3" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="922.4" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C21</text>
+<rect x="944.4" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="960.5" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C22</text>
+<rect x="982.6" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="998.7" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C23</text>
+<rect x="1020.7" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1036.8" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C24</text>
+</g>
+</svg></div></section>
+<section id="s8"><div class="sec-head"><span class="sec-no">09</span><h2>发布面：同源工具清单</h2></div><p class="lead">工具清单由同一份快照运行时派生；策略门由启动配置注入；帧级错误语义固定。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img">
+<title>发布面：同一份快照展开成工具清单</title>
+<desc>工具面由快照运行时派生；门注入；结构化错误与帧级容错</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="640" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="639" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">发布面</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">工具清单不另维护：同一份快照运行时派生</text>
+<rect x="40" y="108" width="560" height="226" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="108.5" width="557" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">工具派生（实测）</text>
+<text x="64" y="162" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">快照 5 项能力 → 5 个工具：前缀 + 语义标识（空格连字符转下划线）</text>
+<rect x="64" y="166" width="108.7" height="23" rx="9" fill="#E3EEFA"/>
+<text x="118.4" y="181" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_pipeline_run</text>
+<rect x="240" y="166" width="139" height="23" rx="9" fill="#E3EEFA"/>
+<text x="309.5" y="181" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_pipeline_validate</text>
+<rect x="416" y="166" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="473.4" y="181" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_artifact</text>
+<rect x="64" y="202" width="90.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="109.3" y="217" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_echo</text>
+<rect x="240" y="202" width="84.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="282.3" y="217" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_net</text>
+<text x="64" y="256" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力工具的参数模式即 provider 发布的输入模式原样；中枢只追加 5 个自有键（四把门 + 干跑）</text>
+<text x="64" y="280" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">调用时先剥除再送校验，不污染 provider 的封闭模式。</text>
+<text x="64" y="306" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测注入键</text>
+<text x="64" y="324" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">allow_data_egress, allow_db_write, allow_model_download, allow_network, dry_run</text>
+<rect x="640" y="108" width="440" height="226" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="641.5" y="108.5" width="437" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="656" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">门注入（启动期配置）</text>
+<text x="664" y="162" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">发布面没有逐次调用的旗标，门由启动配置供给：</text>
+<text x="664" y="190" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">启动旗标 OR 环境允许表，两源合并</text>
+<text x="664" y="218" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">允许表里出现未知令牌 → 启动即报错退出</text>
+<text x="664" y="246" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">配置写错必须响：不允许静默开错门或关错门。</text>
+<text x="664" y="276" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测：无门启动下调用副作用能力 →</text>
+<text x="664" y="302" font-size="12.5" fill="#e34948" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">错误结果 + 状态错误的信封，服务不退出、provider 不启动</text>
+<rect x="40" y="360" width="1040" height="150" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="360.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="392" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">帧级契约（实测会话冻结）</text>
+<text x="64" y="412" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">发帧 8 · 回帧 6 · 静默帧 2（通知与坏帧一律不回）</text>
+<text x="64" y="438" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">未知方法 → 固定未找到错误码；坏帧 → 固定解析错误码且连接不断；</text>
+<text x="64" y="462" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">版本协商认识三个日期版则回显，否则回最新。</text>
+<text x="64" y="488" font-size="12.5" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实测整场会话 provider 启动次数：0（工具清单与干跑调用都只读快照）</text>
+<rect x="40" y="536" width="1040" height="66" rx="10" fill="#E8EEF5"/>
+<text x="64" y="566" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">三个前端、一套内核：目录、发现、路由、策略、流水线全部复用内部实现，发布面只是第三种前端。</text>
+<text x="64" y="590" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">大产物不内联：产物永远是路径 + 校验和引用，与命令行完全一致。</text>
+<rect x="920" y="556" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="936.1" y="571" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C25</text>
+<rect x="958.1" y="556" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="974.2" y="571" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C26</text>
+<rect x="996.3" y="556" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1012.4" y="571" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C27</text>
+</g>
+</svg></div></section>
+<section id="s9"><div class="sec-head"><span class="sec-no">10</span><h2>工程事实</h2></div><p class="lead">规模先枚举后求和；两层测试网全绿冻结；全部数字锚定证据文件。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="660" viewBox="0 0 1120 660" role="img">
+<title>工程事实：规模、职责与测试网</title>
+<desc>文件构成、实现与测试行数、按职责规模与两层测试</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="660" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="659" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">事实</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">规模先枚举后求和，测试两层全覆盖</text>
+<rect x="40" y="108" width="500" height="240" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="108.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实现与测试行数</text>
+<text x="60" y="166" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实现</text>
+<text x="60" y="186" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">19 个文件</text>
+<rect x="150" y="152" width="300" height="22" rx="4" fill="#2a78d6"/>
+<text x="458" y="169" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">4,223</text>
+<text x="60" y="226" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">测试</text>
+<text x="60" y="246" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">9 个文件 · 97 个测试函数</text>
+<rect x="150" y="212" width="241.1" height="22" rx="4" fill="#4a3aa7"/>
+<text x="399.1" y="229" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">3,394</text>
+<text x="60" y="280" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">测试 : 实现 ≈ 0.8 : 1 · 冻结运行 172 通过 / 0 失败（88.7 秒）</text>
+<text x="60" y="304" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">两层测试网：内部单测覆盖每个职责包；端到端层构建真二进制，</text>
+<text x="60" y="326" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">用 shell 假提供者对打完整协议（零真实网络、零模型）。</text>
+<rect x="580" y="108" width="500" height="240" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="581.5" y="108.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="596" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">按职责的实现规模（行）</text>
+<text x="600" y="161" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">命令界面（三入口共享）</text>
+<rect x="748" y="150" width="220" height="13" rx="3" fill="#2a78d6"/>
+<text x="976" y="160.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">1,178</text>
+<text x="600" y="179" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">流水线编排</text>
+<rect x="748" y="168" width="143.1" height="13" rx="3" fill="#2a78d6"/>
+<text x="899.1" y="178.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">766</text>
+<text x="600" y="197" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">路由与执行</text>
+<rect x="748" y="186" width="96.7" height="13" rx="3" fill="#2a78d6"/>
+<text x="852.7" y="196.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">518</text>
+<text x="600" y="215" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">兼容桥（fallback 表）</text>
+<rect x="748" y="204" width="70" height="13" rx="3" fill="#2a78d6"/>
+<text x="826" y="214.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">375</text>
+<text x="600" y="233" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力快照构建</text>
+<rect x="748" y="222" width="59.4" height="13" rx="3" fill="#2a78d6"/>
+<text x="815.4" y="232.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">318</text>
+<text x="600" y="251" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">提供者发现</text>
+<rect x="748" y="240" width="51.5" height="13" rx="3" fill="#2a78d6"/>
+<text x="807.5" y="250.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">276</text>
+<text x="600" y="269" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">协议契约类型</text>
+<rect x="748" y="258" width="42" height="13" rx="3" fill="#2a78d6"/>
+<text x="798" y="268.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">225</text>
+<text x="600" y="287" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">二进制入口</text>
+<rect x="748" y="276" width="29.5" height="13" rx="3" fill="#2a78d6"/>
+<text x="785.5" y="286.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">158</text>
+<text x="600" y="305" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力目录</text>
+<rect x="748" y="294" width="27.3" height="13" rx="3" fill="#2a78d6"/>
+<text x="783.3" y="304.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">146</text>
+<text x="600" y="323" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">策略门</text>
+<rect x="748" y="312" width="24.3" height="13" rx="3" fill="#2a78d6"/>
+<text x="780.3" y="322.5" font-size="11" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">130</text>
+<text x="600" y="338" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">合计 4,223 行实现 · 7,617 行 Go 源码（含测试）</text>
+<rect x="40" y="376" width="1040" height="158" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="41.5" y="376.5" width="1037" height="3.5" rx="1.5" fill="#1D5FBF"/>
+<text x="56" y="408" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">全仓构成（git 跟踪文件，逐类枚举后合计）</text>
+<text x="64" y="446" font-size="26" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">50</text>
+<text x="124" y="446" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个跟踪文件 =</text>
+<rect x="232" y="428" width="82.1" height="24" rx="9" fill="#E3EEFA"/>
+<text x="273" y="444" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">28 Go 源码</text>
+<rect x="376" y="428" width="92.4" height="24" rx="9" fill="#E3EEFA"/>
+<text x="422.2" y="444" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">9 规格与文档</text>
+<rect x="536" y="428" width="154.6" height="24" rx="9" fill="#E3EEFA"/>
+<text x="613.3" y="444" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">13 其他（清单/契约等）</text>
+<text x="64" y="486" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">枚举明细（扩展名 → 个数）：(no-ext) 1 · gitignore 1 · go 28 · html 1 · json 3 · md 9 · mod 1 · pdf 1 · png 1 · sty 1 · sum 1 · svg 1 · tex 1</text>
+<text x="64" y="512" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">逐类相加 50 = 跟踪总数 50，与冻结快照一致。</text>
+<rect x="900" y="396" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="916.1" y="411" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C29</text>
+<rect x="938.1" y="396" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="954.2" y="411" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C30</text>
+</g>
+</svg></div></section>
+<section id="s10"><div class="sec-head"><span class="sec-no">11</span><h2>契约实测案例</h2></div><p class="lead">五个端到端案例全部由真二进制加假提供者跑出并冻结，可复算、可核查。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="700" viewBox="0 0 1120 700" role="img">
+<title>实测契约案例：五个冻结证据</title>
+<desc>零启动、三调用复核、门拒绝、协商两分、断点重跑零调用</desc>
+<g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+<rect x="0" y="0" width="1120" height="700" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="0.5" y="0.5" width="1119" height="699" rx="10" fill="none" stroke="#D8E2EC" stroke-width="1"/>
+<text x="40" y="44" font-size="15" fill="#1D5FBF" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">契约实测</text>
+<text x="40" y="80" font-size="22" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">每个案例都是真二进制 + 假提供者的一次完整运行</text>
+<rect x="40" y="112" width="1040" height="78" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="112" width="6" height="78" rx="2" fill="#2a78d6"/>
+<text x="66" y="140" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">案例一 · 只读面零启动</text>
+<text x="66" y="166" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">10 类只读操作连跑一遍，假提供者日志增量 0 行——帮助、列表、描述、补全、干跑、工具清单全部只读快照。</text>
+<rect x="858" y="126" width="133.9" height="24" rx="9" fill="#E3EEFA"/>
+<text x="925" y="142" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">provider 启动 0 次</text>
+<rect x="40" y="204" width="1040" height="78" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="204" width="6" height="78" rx="2" fill="#2a78d6"/>
+<text x="66" y="232" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">案例二 · 执行面三调用</text>
+<text x="66" y="258" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">真实调用副作用能力：先参数与策略校验，再对最终选中者复核并调用；日志恰好三行，顺序固定。</text>
+<rect x="858" y="218" width="209.4" height="24" rx="9" fill="#E3EEFA"/>
+<text x="962.7" y="234" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">describe → available → invoke</text>
+<rect x="40" y="296" width="1040" height="78" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="296" width="6" height="78" rx="2" fill="#e34948"/>
+<text x="66" y="324" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">案例三 · 门拒绝零启动</text>
+<text x="66" y="350" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">不开门调用副作用能力：错误信封点名被拒副作用与所需旗标，退出码 1；日志增量为零——provider 根本没启动。</text>
+<rect x="858" y="310" width="140.4" height="24" rx="9" fill="#E3EEFA"/>
+<text x="928.2" y="326" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">文案冻结在策略门一节</text>
+<rect x="40" y="388" width="1040" height="78" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="388" width="6" height="78" rx="2" fill="#2a78d6"/>
+<text x="66" y="416" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">案例四 · 协商两分</text>
+<text x="66" y="442" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">未来版本与坏输出两个假提供者分别落入版本无交集与清单畸形；未知副作用在枚举封闭层即拒收。</text>
+<rect x="858" y="402" width="103.7" height="24" rx="9" fill="#E3EEFA"/>
+<text x="909.8" y="418" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">错误码各归各类</text>
+<rect x="40" y="480" width="1040" height="78" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="480" width="6" height="78" rx="2" fill="#2a78d6"/>
+<text x="66" y="508" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">案例五 · 断点重跑零调用</text>
+<text x="66" y="534" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">校验和一致的阶段全部复用：重跑日志里调用次数为零，只有一次复核；产物通道注入的是工作目录副本。</text>
+<rect x="858" y="494" width="163.1" height="24" rx="9" fill="#E3EEFA"/>
+<text x="939.5" y="510" font-size="12" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">调用 0 次 · 复用 2 阶段</text>
+<rect x="40" y="584" width="1040" height="84" rx="10" fill="#E8EEF5"/>
+<text x="64" y="616" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">假提供者纪律：全部证据来自 shell 假提供者——零真实网络、零模型下载、零真实调用外部接口。</text>
+<text x="64" y="644" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">模型类路径只以假实现出现；每个数字都能在冻结证据里逐字节找到。</text>
+<rect x="920" y="596" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="936.1" y="611" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C28</text>
+</g>
+</svg></div></section>
+<div class="disc"><h3>本页纪律</h3><p>零脚本、零外部请求：11 张面板图以可缩放矢量图形逐字节内联于本页，不引用任何面板文件，无任何网络依赖。显示层执行六条禁令：不出现引擎源码文件名、代码坐标、逐字摘录、内部标识符、内部路径与任何生成器或重建命令；豁免词表（公开契约词汇与冻结数据字符串）登记在交付目录证据层。位图三件（两倍全页、灰度版、缩略图）与逐节裁片由交付目录渲染产物提供，渲染断言含全页高度等式。</p></div>
 </div>
 <footer><div class="wrap"><div class="foot-card"><div class="col"><h4>如何核查本页</h4><p>声明编号 C01–C30 逐条对应验证层登记表：每条声明给出冻结证据文件、字段路径与引擎源锚点，并附全部产物的指纹表与已知偏差披露。验证与重建的完整说明在交付目录的验证与工具文档里。</p></div><div class="col"><h4>证据分层</h4><p>一次性冻结层（计时类，绝不重测）与确定性重建层（双跑逐字节一致）在证据登记簿中预先声明；行为证据全部来自真二进制对假提供者的实测，零真实网络、零模型调用。</p></div></div></div></footer>
 </body>
