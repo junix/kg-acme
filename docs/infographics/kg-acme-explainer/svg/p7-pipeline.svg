@@ -13,8 +13,9 @@
 <text x="164" y="185" font-size="12.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">test.artifact</text>
 <polygon points="272,180 303,184.2 303,175.8" fill="#1D5FBF"/>
 <polygon points="312,180 303,182.6 303,177.4" fill="#1D5FBF"/>
-<text x="320" y="178" font-size="10.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">产物注入下游参数（占位符换工作目录副本）</text>
-<text x="320" y="196" font-size="10.5" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">实测注入值：wd/stage-write-provider-out.json</text>
+<text x="320" y="178" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">产物注入下游参数（占位符换工作目录副本）</text>
+<text x="320" y="196" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">注入值</text>
+<text x="364.7" y="196" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">wd/stage-write-provider-out.json</text>
 <rect x="64" y="214" width="200" height="44" rx="8" fill="#E3EEFA"/>
 <text x="164" y="241" font-size="12.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">test.echo</text>
 <text x="64" y="302" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">阶段产物先校验校验和，再复制进工作目录并重算哈希；</text>
@@ -28,48 +29,48 @@
 <text x="684" y="223" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">种类一致：边声明的产物种类必须等于上游声明</text>
 <rect x="664" y="276" width="8" height="8" rx="2" fill="#2a78d6"/>
 <text x="684" y="285" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">通道兼容：产物种类与下游参数按约定映射通道，两侧已知且不同即拒</text>
-<text x="664" y="336" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测违规边：内联结果型能力被接线 → 计划期直接拒绝。</text>
+<text x="664" y="336" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测违规边：内联结果型能力被接线 → 计划期直接拒绝。</text>
 <rect x="40" y="384" width="500" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <rect x="41.5" y="384.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
 <text x="56" y="416" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">门预检与断点重跑（实测）</text>
 <text x="64" y="436" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">预检：计划期收集全部阶段副作用并集，一次过门；</text>
 <text x="64" y="458" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">缺旗标则快速失败——任何 provider 都不会启动。</text>
 <text x="64" y="484" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">实测整链运行：4 次调用（复核 2 次 + 调用 2 次）</text>
-<rect x="64" y="498" width="104.6" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="116.3" y="512.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">describe --json</text>
-<rect x="294" y="498" width="110.4" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="349.2" y="512.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">available --json</text>
-<rect x="64" y="532" width="202.8" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="165.4" y="546.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.artifact --request -</text>
-<rect x="294" y="532" width="179.7" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="383.9" y="546.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.echo --request -</text>
+<rect x="64" y="498" width="108.7" height="23" rx="9" fill="#E3EEFA"/>
+<text x="118.4" y="513" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">describe --json</text>
+<rect x="294" y="498" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="351.4" y="513" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">available --json</text>
+<rect x="64" y="532" width="211.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="169.8" y="547" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.artifact --request -</text>
+<rect x="294" y="532" width="187.4" height="23" rx="9" fill="#E3EEFA"/>
+<text x="387.7" y="547" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">invoke test.echo --request -</text>
 <text x="64" y="588" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">断点重跑实测：校验和一致 → 两阶段全部复用，调用 0 次，仅复核 2 次</text>
 <text x="64" y="612" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">校验和不符则该步重跑，下游随之用新产物。</text>
 <rect x="580" y="384" width="500" height="268" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <rect x="581.5" y="384.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
 <text x="596" y="416" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">工作目录（实测落盘清单）</text>
-<rect x="604" y="424" width="145.1" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="676.5" y="438.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">pipeline.envelope.json</text>
-<rect x="844" y="424" width="162.4" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="925.2" y="438.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-shout.envelope.json</text>
-<rect x="604" y="464" width="185.5" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="696.7" y="478.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-write-provider-out.json</text>
-<rect x="844" y="464" width="162.4" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="925.2" y="478.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-write.envelope.json</text>
+<rect x="604" y="424" width="151.1" height="23" rx="9" fill="#E3EEFA"/>
+<text x="679.5" y="439" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">pipeline.envelope.json</text>
+<rect x="844" y="424" width="169.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="928.6" y="439" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-shout.envelope.json</text>
+<rect x="604" y="464" width="193.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="700.7" y="479" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-write-provider-out.json</text>
+<rect x="844" y="464" width="169.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="928.6" y="479" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">stage-write.envelope.json</text>
 <text x="604" y="546" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">每阶段一个阶段信封 + 整链一个总信封，全部落工作目录。</text>
 <text x="604" y="572" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">重跑按阶段标识匹配记录；</text>
 <text x="604" y="598" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">成环或引用未知阶段 → 流水线结构错误；平手按定义序。</text>
-<rect x="900" y="404" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="915.7" y="418.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C19</text>
-<rect x="937.3" y="404" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="953" y="418.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C20</text>
-<rect x="974.7" y="404" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="990.3" y="418.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C21</text>
-<rect x="1012" y="404" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1027.6" y="418.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C22</text>
-<rect x="1049.3" y="404" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1065" y="418.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C23</text>
-<rect x="1086.6" y="404" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1102.3" y="418.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C24</text>
+<rect x="830" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="846.1" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C19</text>
+<rect x="868.1" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="884.2" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C20</text>
+<rect x="906.3" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="922.4" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C21</text>
+<rect x="944.4" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="960.5" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C22</text>
+<rect x="982.6" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="998.7" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C23</text>
+<rect x="1020.7" y="404" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1036.8" y="419" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C24</text>
 </g>
 </svg>

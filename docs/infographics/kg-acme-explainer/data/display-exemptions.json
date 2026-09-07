@@ -1,5 +1,5 @@
 {
-  "note": "display-layer exemption registry for ban④; ban sets themselves are rebuilt live from the engine repo by build.py on every run",
+  "note": "display-layer exemption registry for ban④; ban sets are rebuilt by build.py on every run from the FROZEN engine commit tree (provenance frozen_head), excluding the delivery tree's own path — stable across engine HEAD movement",
   "whitelist_categories": {
     "cli_flags": [
       "all",

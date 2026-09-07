@@ -1,5 +1,5 @@
 {
-  "note": "deterministic fingerprint table; excluded: VERIFICATION.md (quotes this table), README.md, this file itself; render/crops are derived from full-2x and byte-covered by the render assertions",
+  "note": "deterministic fingerprint table; excluded: VERIFICATION.md (quotes this table), README.md, this file itself, data/audit/ (post-commit run records, exempt by design); render/crops are derived from full-2x and byte-covered by the render assertions",
   "count": 22,
   "files": [
     {
@@ -9,8 +9,8 @@
     },
     {
       "path": "data/display-exemptions.json",
-      "sha256": "bd46cde68607ce55d74f13f2fe691c605f34ccc501e520b86cc6261fd1384855",
-      "bytes": 3915
+      "sha256": "1adf763d26cf8fb4e568bcc9a723406f1853e28706475a794733988a47278202",
+      "bytes": 4017
     },
     {
       "path": "data/engine-contract.json",
@@ -39,78 +39,78 @@
     },
     {
       "path": "index.html",
-      "sha256": "4f9c783190223ba898c5055acc46de338b18ea330931f40e3fa37a4c2dd95827",
-      "bytes": 8602
+      "sha256": "e9aa71a606032efcd28d496f23d78f4e573b5515d468ddf3d6572597ddb34104",
+      "bytes": 117111
     },
     {
       "path": "render/full-2x.png",
-      "sha256": "219c26dc0e327cc917c4b4e97cb882c3e85723c730b79f762207961fb7f2c05b",
-      "bytes": 4038706
+      "sha256": "aa554a78510b63caf9c9a4b3c85a2228995282dde6fdaedfeb4e4ae3c4f2d6f2",
+      "bytes": 4102334
     },
     {
       "path": "render/full-gray.png",
-      "sha256": "21a89348835ec5b19d7cc57af57cb59eee91024aa769154a3892f08cd696eaee",
-      "bytes": 1778921
+      "sha256": "6c8e76d6a32408bd7a45cac08160618e0ae20ecc8949019e324e4a62ec99359e",
+      "bytes": 1810525
     },
     {
       "path": "render/thumb.png",
-      "sha256": "6e8961c72e4fd908b2e26aea45836b4536f3f7d11afd21cc869031d43a8f3ace",
-      "bytes": 367312
+      "sha256": "fbad9754feee1d8f2222b30026661442715e313a1576be4ed8ef7e595c688545",
+      "bytes": 374051
     },
     {
       "path": "svg/p0-hero.svg",
-      "sha256": "6a6282eac57d0e90bb55d7dfaf43776eaceab09239a220fc430b47d296134a55",
-      "bytes": 9844
+      "sha256": "bd3308b6a15c8b0c1acccb479e88e3ed81e3e7b802c0c0a3ae033279d5eeda89",
+      "bytes": 9806
     },
     {
       "path": "svg/p1-architecture.svg",
-      "sha256": "4e9b269dac70f47ba5f5ec073be4247c98c37e3505bff0d7e6561eeadf636eb9",
-      "bytes": 9899
+      "sha256": "68a5482d43cf8b66ef455f6d9d579e3b7a9e9abbc39a4c50eb92918662444524",
+      "bytes": 9883
     },
     {
       "path": "svg/p10-contract.svg",
-      "sha256": "f6f17e7864f825f1a6b8cfc5ad7b998f8fcbf97ee45be4126e827b43c48d0e0b",
-      "bytes": 6596
+      "sha256": "0df78a5e0a9db29d28f8f480fa446605e499bb1383a9c917aeae55d2ad1070c1",
+      "bytes": 6561
     },
     {
       "path": "svg/p2-snapshot.svg",
-      "sha256": "fab7b8554c6b6066ee49f471fbbd351de9dd2504d5108f79dbdd1d0670875af6",
-      "bytes": 8758
+      "sha256": "8a51bb7daa735add0537a71cd54dbe2932116ae56593ead7d1adbbb43d141628",
+      "bytes": 8738
     },
     {
       "path": "svg/p3-cli.svg",
-      "sha256": "5e91b259ca63c533d9724182f69bd31deb5b97cc534990ca58a6aa5da799f8ad",
-      "bytes": 14087
+      "sha256": "985fb58ba48cc50d070503740df0d17ee9010cb1b1f73e859cfdd56c27776ad4",
+      "bytes": 14172
     },
     {
       "path": "svg/p4-protocol.svg",
-      "sha256": "669cd71a0a4f0fe71a347b28a5f40baefea7da7ec82580061f7a52b739b9fbda",
-      "bytes": 10895
+      "sha256": "41caca4aa79582aea9d3fc617f0ff86bb65e42de8ffdd470315fe08f52fc0ce0",
+      "bytes": 11335
     },
     {
       "path": "svg/p5-policy.svg",
-      "sha256": "346207f3f8d22bb1aac7965a1e40438cb3007d20fa6c6119e5a5524d416d07dc",
-      "bytes": 9298
+      "sha256": "1f4ff47663f72ca7318185e9067029e9ffec452378da4d8b47bd0243c0f241c8",
+      "bytes": 9424
     },
     {
       "path": "svg/p6-errors.svg",
-      "sha256": "269f66c82fed8853a270294bfc732f8ce5d764b7347c54052c60c59382b7946f",
-      "bytes": 10061
+      "sha256": "7a34d9d414b7766afad8f118a894e9fbcc122829e4dd5fb698a04b408ad134fe",
+      "bytes": 10035
     },
     {
       "path": "svg/p7-pipeline.svg",
-      "sha256": "917aa0b8b9ce9583994d77b3da6df3634b5e9d1607dd38f2c5af30dbf3646ac8",
-      "bytes": 10630
+      "sha256": "e204ff0c183096d400177a25e98571a15018037b3c4e9c7b3e8db3cda525e18a",
+      "bytes": 10691
     },
     {
       "path": "svg/p8-mcp.svg",
-      "sha256": "886894cd30bdbcab07de981ead84b11e8d7c32ce450e58a86cc7fc308e6b3df0",
-      "bytes": 8087
+      "sha256": "930bd3dbcfda38b4e3c7d89f5d71cb187b9f882da35cf0315c3f32ec8eb823c3",
+      "bytes": 8191
     },
     {
       "path": "svg/p9-quality.svg",
-      "sha256": "52fd11dd4b235ff9469ab45a69c1424eb7d024e7820bd32c90428f312d849fcf",
-      "bytes": 10555
+      "sha256": "2de6a94fe34c9aead532df6426ba68da4c165be4ee153adbbcd60fb606425752",
+      "bytes": 10501
     }
   ]
 }

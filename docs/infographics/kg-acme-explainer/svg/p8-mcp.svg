@@ -10,19 +10,20 @@
 <rect x="41.5" y="108.5" width="557" height="3.5" rx="1.5" fill="#1D5FBF"/>
 <text x="56" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">工具派生（实测）</text>
 <text x="64" y="162" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">快照 5 项能力 → 5 个工具：前缀 + 语义标识（空格连字符转下划线）</text>
-<rect x="64" y="166" width="104.6" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="116.3" y="180.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_pipeline_run</text>
-<rect x="240" y="166" width="133.5" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="306.8" y="180.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_pipeline_validate</text>
-<rect x="416" y="166" width="110.4" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="471.2" y="180.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_artifact</text>
-<rect x="64" y="202" width="87.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="107.7" y="216.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_echo</text>
-<rect x="240" y="202" width="81.5" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="280.8" y="216.5" font-size="10.5" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_net</text>
+<rect x="64" y="166" width="108.7" height="23" rx="9" fill="#E3EEFA"/>
+<text x="118.4" y="181" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_pipeline_run</text>
+<rect x="240" y="166" width="139" height="23" rx="9" fill="#E3EEFA"/>
+<text x="309.5" y="181" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_pipeline_validate</text>
+<rect x="416" y="166" width="114.8" height="23" rx="9" fill="#E3EEFA"/>
+<text x="473.4" y="181" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_artifact</text>
+<rect x="64" y="202" width="90.6" height="23" rx="9" fill="#E3EEFA"/>
+<text x="109.3" y="217" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_echo</text>
+<rect x="240" y="202" width="84.5" height="23" rx="9" fill="#E3EEFA"/>
+<text x="282.3" y="217" font-size="11" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">kg_test_net</text>
 <text x="64" y="256" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">能力工具的参数模式即 provider 发布的输入模式原样；中枢只追加 5 个自有键（四把门 + 干跑）</text>
 <text x="64" y="280" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">调用时先剥除再送校验，不污染 provider 的封闭模式。</text>
-<text x="64" y="308" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">实测注入键：allow_data_egress, allow_db_write, allow_model_download, allow_network, dry_run</text>
+<text x="64" y="306" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">实测注入键</text>
+<text x="64" y="324" font-size="11" fill="#7C8FA3" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace">allow_data_egress, allow_db_write, allow_model_download, allow_network, dry_run</text>
 <rect x="640" y="108" width="440" height="226" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <rect x="641.5" y="108.5" width="437" height="3.5" rx="1.5" fill="#1D5FBF"/>
 <text x="656" y="140" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">门注入（启动期配置）</text>
@@ -42,11 +43,11 @@
 <rect x="40" y="536" width="1040" height="66" rx="10" fill="#E8EEF5"/>
 <text x="64" y="566" font-size="13" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">三个前端、一套内核：目录、发现、路由、策略、流水线全部复用内部实现，发布面只是第三种前端。</text>
 <text x="64" y="590" font-size="12" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">大产物不内联：产物永远是路径 + 校验和引用，与命令行完全一致。</text>
-<rect x="920" y="556" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="935.7" y="570.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C25</text>
-<rect x="957.3" y="556" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="973" y="570.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C26</text>
-<rect x="994.7" y="556" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1010.3" y="570.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C27</text>
+<rect x="920" y="556" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="936.1" y="571" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C25</text>
+<rect x="958.1" y="556" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="974.2" y="571" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C26</text>
+<rect x="996.3" y="556" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1012.4" y="571" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C27</text>
 </g>
 </svg>

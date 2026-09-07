@@ -22,47 +22,47 @@
 <rect x="40" y="274" width="220" height="82" rx="10" fill="#E3EEFA"/>
 <rect x="40" y="274" width="220" height="82" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="150" y="304" font-size="17" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">kg</text>
-<text x="150" y="328" font-size="11.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">执行面 · 能力调用与流水线</text>
+<text x="150" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">执行面 · 能力调用与流水线</text>
 <rect x="290" y="274" width="220" height="82" rx="10" fill="#E3EEFA"/>
 <rect x="290" y="274" width="220" height="82" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="400" y="304" font-size="17" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">kgctl</text>
-<text x="400" y="328" font-size="11.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">管理面 · 刷新快照与诊断</text>
+<text x="400" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">管理面 · 刷新快照与诊断</text>
 <rect x="540" y="274" width="220" height="82" rx="10" fill="#E3EEFA"/>
 <rect x="540" y="274" width="220" height="82" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="650" y="304" font-size="17" fill="#0E3A75" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">kg-mcp</text>
-<text x="650" y="328" font-size="11.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">发布面 · 工具清单与调用</text>
+<text x="650" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">发布面 · 工具清单与调用</text>
 <polygon points="766,315 793,319.2 793,310.8" fill="#1D5FBF"/>
 <polygon points="802,315 793,317.6 793,312.4" fill="#1D5FBF"/>
 <rect x="812" y="274" width="268" height="82" rx="10" fill="#FFFFFF" stroke="#1D5FBF" stroke-width="1.6"/>
 <text x="946" y="304" font-size="15" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">不可变能力快照</text>
-<text x="946" y="328" font-size="11.5" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">管理面刷新生成 · 带内容指纹</text>
+<text x="946" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">管理面刷新生成 · 带内容指纹</text>
 <rect x="40" y="374" width="1040" height="52" rx="10" fill="#E8EEF5"/>
 <text x="560" y="406" font-size="13" fill="#1B2733" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">快照之下是 provider 生态：协议原生 provider 与遗留命令行（兼容桥接入）——算法都在那里</text>
 <rect x="40" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <text x="56" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">17</text>
-<text x="56" y="514" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">条稳定命令（目录内置）</text>
+<text x="56" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">条稳定命令（目录内置）</text>
 <rect x="249" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <text x="265" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">11</text>
-<text x="265" y="514" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个发布命名空间</text>
+<text x="265" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个发布命名空间</text>
 <rect x="458" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <text x="474" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">5</text>
-<text x="474" y="514" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">项能力（实测快照）</text>
+<text x="474" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">项能力（实测快照）</text>
 <rect x="667" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <text x="683" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">172</text>
-<text x="683" y="514" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个测试全绿（冻结运行）</text>
+<text x="683" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个测试全绿（冻结运行）</text>
 <rect x="876" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <text x="892" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">50</text>
-<text x="892" y="514" font-size="11.5" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个 git 跟踪文件</text>
+<text x="892" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个 git 跟踪文件</text>
 <text x="40" y="574" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">页面纪律</text>
 <text x="130" y="574" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">显示层零代码细节：源文件名、代码坐标、逐字摘录、内部标识符、内部路径与重建命令一律不出现；</text>
 <text x="130" y="600" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">每个数字都锚定冻结证据，坐标级锚点登记在交付目录验证层。</text>
-<rect x="960" y="566" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="975.7" y="580.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C01</text>
-<rect x="997.3" y="566" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1013" y="580.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C02</text>
-<rect x="1034.7" y="566" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1050.3" y="580.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C03</text>
-<rect x="1072" y="566" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1087.6" y="580.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C04</text>
+<rect x="960" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="976.1" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C01</text>
+<rect x="998.1" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1014.2" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C02</text>
+<rect x="1036.3" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1052.4" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C03</text>
+<rect x="1074.5" y="566" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1090.5" y="581" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C04</text>
 </g>
 </svg>

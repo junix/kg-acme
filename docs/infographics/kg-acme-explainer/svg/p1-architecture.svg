@@ -9,28 +9,28 @@
 <rect x="40" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
 <rect x="40" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="138" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">发现</text>
-<text x="138" y="168" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">五级顺序找 provider</text>
-<text x="138" y="188" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">逐个尽力探测</text>
+<text x="138" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">五级顺序找 provider</text>
+<text x="138" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">逐个尽力探测</text>
 <rect x="248" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
 <rect x="248" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="346" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">协议</text>
-<text x="346" y="168" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">自描述与执行信封</text>
-<text x="346" y="188" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">版本协商</text>
+<text x="346" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">自描述与执行信封</text>
+<text x="346" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">版本协商</text>
 <rect x="456" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
 <rect x="456" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="554" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">目录</text>
-<text x="554" y="168" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">稳定命令面</text>
-<text x="554" y="188" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">加载期强校验</text>
+<text x="554" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">稳定命令面</text>
+<text x="554" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">加载期强校验</text>
 <rect x="664" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
 <rect x="664" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="762" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">策略</text>
-<text x="762" y="168" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">副作用四门</text>
-<text x="762" y="188" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">默认全拒</text>
+<text x="762" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">副作用四门</text>
+<text x="762" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">默认全拒</text>
 <rect x="872" y="110" width="196" height="96" rx="10" fill="#E3EEFA"/>
 <rect x="872" y="110" width="196" height="96" rx="10" fill="none" stroke="#2a78d6" stroke-width="1"/>
 <text x="970" y="142" font-size="16" fill="#0E3A75" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">路由</text>
-<text x="970" y="168" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">确定性三键排序</text>
-<text x="970" y="188" font-size="11" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">选中即执行</text>
+<text x="970" y="168" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">确定性三键排序</text>
+<text x="970" y="188" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">选中即执行</text>
 <rect x="40" y="234" width="500" height="252" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <rect x="41.5" y="234.5" width="497" height="3.5" rx="1.5" fill="#1D5FBF"/>
 <text x="56" y="266" font-size="16" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">协议原生侧（权威）</text>
@@ -66,11 +66,11 @@
 <polygon points="480,552 471,554.6 471,549.4" fill="#1D5FBF"/>
 <text x="494" y="556" font-size="13" fill="#0E3A75" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">平手按提供者标识字典序</text>
 <text x="760" y="556" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">· 同输入必得同选择</text>
-<rect x="980" y="528" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="995.7" y="542.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C02</text>
-<rect x="1017.3" y="528" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1033" y="542.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C03</text>
-<rect x="1054.7" y="528" width="31.3" height="22.5" rx="9" fill="#E3EEFA"/>
-<text x="1070.3" y="542.5" font-size="10.5" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C12</text>
+<rect x="980" y="528" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="996.1" y="543" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C02</text>
+<rect x="1018.1" y="528" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1034.2" y="543" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C03</text>
+<rect x="1056.3" y="528" width="32.2" height="23" rx="9" fill="#E3EEFA"/>
+<text x="1072.4" y="543" font-size="11" fill="#1D5FBF" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="600">C12</text>
 </g>
 </svg>

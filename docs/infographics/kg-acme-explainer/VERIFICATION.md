@@ -50,9 +50,18 @@ file:line（由 data/source-anchors.json 冻结，逐条含当行摘录与额外
 
 ## 二、六禁门禁与判例留痕
 
-门禁由 build.py 每次运行时从引擎仓**实时**重建禁集（文件基名来自
-`git ls-files`、逐字行集来自引擎 .go/.md、标识符集来自 Go 声明与
-Capitalized 词），显示层 = index.html + svg/*.svg。
+门禁由 build.py 每次运行时重建禁集（文件基名来自**冻结提交树**
+`git ls-tree -r --name-only <frozen>`、逐字行集来自引擎 .go/.md、
+标识符集来自 Go 声明与 Capitalized 词；语料钉在 provenance 的
+frozen_head 上并排除本交付树自身路径），显示层 = index.html +
+svg/*.svg。守护区分两种情况：引擎 HEAD 前进但冻结提交仍在仓内
+（引擎演进）→ 只打 NOTE 并继续用冻结语料；冻结提交不可解析
+（证据漂移）→ 硬失败。任何构建产物不含活的 HEAD（交付提交后重跑
+逐字节不变）。
+
+【2026-09-06 修正】原表述「从引擎仓实时重建禁集（git ls-files）」
+后证不实，已修正：交付提交落地后 `git ls-files` 会吞入本树自身文件
+（自咬），且正向对照文本会随 HEAD 漂移；已改为钉死冻结提交树。
 
 正向对照（自造六例，必须 6/6 咬住；留痕于 data/display-exemptions.json）：
 
@@ -66,7 +75,13 @@ Capitalized 词），显示层 = index.html + svg/*.svg。
 | ⑥ 生成器/重建命令 | 「重建命令 python3 render.py」 | 咬住 |
 
 实测：6/6 咬住，显示层 0 违规（含自我封闭检查：零 script、零外链、
-零事件属性；11 张面板引用齐全；C01–C30 全覆盖且无多余编号）。
+零事件属性；11 张面板引用齐全【后证不实，已修正：交付版页面以
+`<img src="svg/…">` 外链面板文件，既非嵌入也未在本文如实披露；
+2026-09-06 精化已改为 11 张面板 SVG 逐字节内联 index.html，自我
+封闭检查相应改为断言零 `<img>`、内联 `<svg>` 数 == 11、唯一放行的
+URL 字符串是 SVG 命名空间属性】；C01–C30 全覆盖且无多余编号；
+字体门禁（CJK ≥ 12px、≥ 90% 文本 ≥ 11px）实测 423 条文本 100%
+≥ 11px、CJK < 12px 为 0）。
 
 ban④ 豁免登记（data/display-exemptions.json）：CLI 动词与旗标、协议
 三动词、JSON 契约键值、九个错误码、架构标识（kg.error/v1 等）、四类
@@ -81,38 +96,42 @@ ban③ 逐字豁免：无。
 `data/fingerprints.json` 自身 sha256：
 
 ```
-357bffdd8cf8270f931539c33ed9feb0d7c1e2371de9e248e69564aa2e2f9eb1
+5a3b6bdbe6120d89ca4d14866ac475029ea5d2fcd6493a36015cb4357b5b14aa
 ```
 
 逐文件 sha256（`fingerprint.py --check` 逐条核验下表**逐字**出现在本文）：
 
 ```
 1dd4deab06e95603af16df71a0641a039c77969496c27bb2060147abc01c83d4  data/catalog-facts.json
-bd46cde68607ce55d74f13f2fe691c605f34ccc501e520b86cc6261fd1384855  data/display-exemptions.json
+1adf763d26cf8fb4e568bcc9a723406f1853e28706475a794733988a47278202  data/display-exemptions.json
 a50536795637e5cebd74db03b6aa20ed1221de7f0a3d999fd3c51d6380682285  data/engine-contract.json
 09a217b5865db4f0c1c817cd8a6160da5281f089fe2ebaca800ccee43de9a6bc  data/provenance.json
 535290abd0f90159112c7b9a5de3f3a0d0e6cc657da2b01c272a19902d39c640  data/repo-metrics.json
 d7f21e42b8cb733f0b165cb537aa403631f56c7583f4ad02bd21edcafd7573d3  data/source-anchors.json
 d7a3d0d32a5afd85aa7386956c602930a78486d586bf6cb3477406176615839c data/unit-tests.json
-4f9c783190223ba898c5055acc46de338b18ea330931f40e3fa37a4c2dd95827  index.html
-219c26dc0e327cc917c4b4e97cb882c3e85723c730b79f762207961fb7f2c05b  render/full-2x.png
-21a89348835ec5b19d7cc57af57cb59eee91024aa769154a3892f08cd696eaee  render/full-gray.png
-6e8961c72e4fd908b2e26aea45836b4536f3f7d11afd21cc869031d43a8f3ace  render/thumb.png
-6a6282eac57d0e90bb55d7dfaf43776eaceab09239a220fc430b47d296134a55  svg/p0-hero.svg
-4e9b269dac70f47ba5f5ec073be4247c98c37e3505bff0d7e6561eeadf636eb9  svg/p1-architecture.svg
-f6f17e7864f825f1a6b8cfc5ad7b998f8fcbf97ee45be4126e827b43c48d0e0b  svg/p10-contract.svg
-fab7b8554c6b6066ee49f471fbbd351de9dd2504d5108f79dbdd1d0670875af6  svg/p2-snapshot.svg
-5e91b259ca63c533d9724182f69bd31deb5b97cc534990ca58a6aa5da799f8ad  svg/p3-cli.svg
-669cd71a0a4f0fe71a347b28a5f40baefea7da7ec82580061f7a52b739b9fbda  svg/p4-protocol.svg
-346207f3f8d22bb1aac7965a1e40438cb3007d20fa6c6119e5a5524d416d07dc  svg/p5-policy.svg
-269f66c82fed8853a270294bfc732f8ce5d764b7347c54052c60c59382b7946f  svg/p6-errors.svg
-917aa0b8b9ce9583994d77b3da6df3634b5e9d1607dd38f2c5af30dbf3646ac8  svg/p7-pipeline.svg
-886894cd30bdbcab07de981ead84b11e8d7c32ce450e58a86cc7fc308e6b3df0  svg/p8-mcp.svg
-52fd11dd4b235ff9469ab45a69c1424eb7d024e7820bd32c90428f312d849fcf  svg/p9-quality.svg
+e9aa71a606032efcd28d496f23d78f4e573b5515d468ddf3d6572597ddb34104  index.html
+aa554a78510b63caf9c9a4b3c85a2228995282dde6fdaedfeb4e4ae3c4f2d6f2  render/full-2x.png
+6c8e76d6a32408bd7a45cac08160618e0ae20ecc8949019e324e4a62ec99359e  render/full-gray.png
+fbad9754feee1d8f2222b30026661442715e313a1576be4ed8ef7e595c688545  render/thumb.png
+bd3308b6a15c8b0c1acccb479e88e3ed81e3e7b802c0c0a3ae033279d5eeda89  svg/p0-hero.svg
+68a5482d43cf8b66ef455f6d9d579e3b7a9e9abbc39a4c50eb92918662444524  svg/p1-architecture.svg
+0df78a5e0a9db29d28f8f480fa446605e499bb1383a9c917aeae55d2ad1070c1  svg/p10-contract.svg
+8a51bb7daa735add0537a71cd54dbe2932116ae56593ead7d1adbbb43d141628  svg/p2-snapshot.svg
+985fb58ba48cc50d070503740df0d17ee9010cb1b1f73e859cfdd56c27776ad4  svg/p3-cli.svg
+41caca4aa79582aea9d3fc617f0ff86bb65e42de8ffdd470315fe08f52fc0ce0  svg/p4-protocol.svg
+1f4ff47663f72ca7318185e9067029e9ffec452378da4d8b47bd0243c0f241c8  svg/p5-policy.svg
+7a34d9d414b7766afad8f118a894e9fbcc122829e4dd5fb698a04b408ad134fe  svg/p6-errors.svg
+e204ff0c183096d400177a25e98571a15018037b3c4e9c7b3e8db3cda525e18a  svg/p7-pipeline.svg
+930bd3dbcfda38b4e3c7d89f5d71cb187b9f882da35cf0315c3f32ec8eb823c3  svg/p8-mcp.svg
+2de6a94fe34c9aead532df6426ba68da4c165be4ee153adbbcd60fb606425752  svg/p9-quality.svg
 ```
 
 （VERIFICATION.md 与 README.md 本身不入表——前者引用本表，后者是
-人读说明；render/crops/ 由 full-2x 派生，由渲染断言覆盖。）
+人读说明；render/crops/ 由 full-2x 派生，由渲染断言覆盖；
+data/audit/（提交后复核留痕）按定点规则指纹豁免——把运行记录写进
+被指纹的文件会迫使再提交、再运行，没有定点。 fingerprints.json 自身
+的 sha 亦不入表（自哈希不可能；2026-09-06 修复了重跑时旧表自哈希行
+导致的漂移，现在重复运行逐字节稳定）。）
 
 ## 四、双跑真空（vacuum.py 实测结果）
 
@@ -125,6 +144,15 @@ check 全部重过；无残留（零 .pyc、封闭文件普查、/tmp 工作目�
 display-exemptions + fingerprints + index.html + 11 张 SVG + 位图三件 +
 一次性层 2 份）全部复现：文本与位图均逐字节一致（未动用降级判据），
 一次性层未被触碰，门禁全过，无残留。
+
+【提交后复跑】交付提交已落地（引擎 HEAD 前进）后，extract / vacuum
+的 HEAD 锁会拒绝在移动过的树上重跑——这是设计行为（在移动的 HEAD
+上重冻结=证据漂移）。提交后复核按 README「提交后复现」的冻结工作树
+配方执行：`git worktree add /tmp/kgacme-frozen 9cea0c72…` 并把
+`KG_ACME_ROOT` 指向该工作树。2026-09-06 精化后的廉价门禁（build 六禁 +
+字体门禁、svg-linter、指纹核对）已在提交后 HEAD 实测通过，留痕于
+`data/audit/post-commit.md`；extract/vacuum 全链复跑由主会话在最终
+提交后按同一配方执行并补记。
 
 ## 五、偏差披露（规格 vs 实测）
 
@@ -166,3 +194,65 @@ cd /tmp && cp "$TREE/tools/vacuum.py" . && \
   KG_ACME_ROOT="$ENG" IG_OUT="$TREE" IG_WORK=/tmp/kgacme-ig-run \
   python3 vacuum.py
 ```
+
+## 2026-09-06 refine
+
+本节记录 2026-09-06 精化（按全舰队巡检结论修缺陷）。改动**未提交**，
+由主会话在精化批次完成后统一提交；引擎仓其余内容未被触碰。
+
+### 修复（按巡检缺陷类）
+
+1. **img-external-panel（高）**：交付版 index.html 以 11 个
+   `<img src="svg/*.svg">` 外链面板。已改 build.py 把每张面板 SVG
+   逐字节内联进页面（`svg/` 文件保留为重建产物与独立审阅入口，
+   字节与内联一致）；自我封闭断言升级为「零 `<img>`、内联 `<svg>` 数
+   == 11、唯一放行 URL 字符串是 SVG 命名空间属性」。
+2. **doc-drift（高）**：README 曾宣称「零外部请求，SVG 分层面板嵌入」
+   ——外链版既非嵌入也非自包含，过度宣称比缺陷更糟。内联后该句成真，
+   并按「撤回而非抹除」加注【2026-09-06 修正】；README 位图尺寸
+   （9886→9979 CSS px / 19772→19958）与交付树说明同步重写。
+3. **cjk-small（高）+ svg-text-small（中）**：panels.py 全面提字阶
+   ——CJK 一律 ≥ 12px（原最小 9.5，94 处越界），全部文本 ≥ 11px
+   （原 74.8% ≥ 11px）。放不下处拆行/拆层而非缩字：p6 错误码改双层
+   行芯片（中文 12 + 机器码 mono 11）、p4 探测分类改四行卡、p3/p5/p8
+   长句拆行；p4/p6 面板各增高 40/60px；p7 声明芯片右移避免出画布。
+   build.py 新增字体门禁（CJK ≥ 12px 且 ≥ 90% 文本 ≥ 11px，实测
+   423 条 100% ≥ 11px、CJK 越界 0）。位图三件与 15 裁片已重渲。
+4. **gate-selfbite（中）**：交付版 extract/vacuum 锁「HEAD == 冻结
+   提交 ∧ tracked == 50」，交付提交落地即双双 FATAL；build 六禁语料
+   取活 `git ls-files`（吞入本树 46 个文件、正向对照随 HEAD 漂移）；
+   README 无复现配方、无提交后运行记录。已修：六禁语料钉在冻结提交树
+   （`git ls-tree`/`git show`，双保险排除本树路径）；守护两分——引擎
+   演进（NOTE+配方指针，门禁照跑）vs 证据漂移（硬失败，临时仓实测
+   rc=1）；任何产物不含活 HEAD（build 双跑逐字节一致）；README 新增
+   「提交后复现（冻结工作树配方）」；提交后运行记录放指纹豁免的
+   `data/audit/post-commit.md`（fingerprint 普查与 vacuum 普查同步
+   放行该目录）。
+5. **fingerprint 自咬（精化中发现）**：原 fingerprint.py 重跑时会把
+   旧 fingerprints.json 当普通 data/*.json 哈希进表（带旧自哈希行），
+   重跑即漂移、非双跑稳定。已修：自哈希不可能的文件不再入表，重跑
+   逐字节稳定（实测双跑一致）。
+
+### 缓引（不实施，按精化权限）
+
+- no-hero / hero-not-subject（中）：11 张同权重卡片、无 ≥ 2.5× 主角
+  面板——超出本次最小修复范围。
+- no-claims-binding（中）：C01–C30 仅页脚范围指针，无逐声明页面绑定。
+- no-sidenote-track（中）：无 680/40/288 侧注轨。
+- no-poison / no-reverse-sweep / no-vacuum / form-mismatch /
+  palette-mismatch / no-negative-facts：巡检未列或按类缓引；
+  contract.md 缺失（低）同缓引。
+
+### 门禁复跑（改动后、提交前，全在树内廉价档）
+
+| 门禁 | 结果 |
+|---|---|
+| panels → build → render 全链重建 | PASS（面板 11 张；页面 1200×9979 CSS；13 片滚动回读全中；位图 2400×19958；15 裁片） |
+| build.py 六禁 + 正向对照 | PASS：6/6 咬住、显示层 0 违规、引擎演进 NOTE 后照常完成、双跑逐字节一致 |
+| build.py 字体门禁 | PASS：100% ≥ 11px（423 条），CJK < 12px = 0 |
+| svg-linter 逐张 | PASS：11 张 rc=0 ∧ 0 findings |
+| fingerprint.py + --check | PASS：22 文件零漂移，全部 sha 逐字在本文 |
+| 提交后守护实测 | 缺 KG_ACME_ROOT → rc=1；冻结提交不可解析 → rc=1（证据漂移）；活仓（HEAD 已前进）→ NOTE + 全过，记录在 data/audit/post-commit.md |
+
+extract / vacuum 全链提交后复跑（需冻结工作树 + ~90s 离线 Go 构建）
+由主会话在最终提交后按 README 配方执行。

@@ -36,6 +36,10 @@ OUT = Path(OUT)
 EXCLUDED = {"VERIFICATION.md", "README.md", "data/fingerprints.json"}
 REL_GLOBS = ["index.html", "svg/*.svg", "data/*.json", "render/full-2x.png",
              "render/full-gray.png", "render/thumb.png"]
+# post-commit run records are fingerprint-exempt BY DESIGN (delta fixpoint
+# rule: recording a run inside a fingerprinted file would force another
+# commit, which would force another run — no fixpoint)
+EXEMPT_PREFIXES = ("tools/", "render/crops/", "data/audit/")
 
 
 def collect():
@@ -43,13 +47,17 @@ def collect():
     for g in REL_GLOBS:
         files.update(p.relative_to(OUT).as_posix()
                      for p in OUT.glob(g) if p.is_file())
+    # never hash our own previous output: a table row carrying the OLD
+    # fingerprints.json sha would drift on the next write (self-hash is
+    # impossible, and re-running on an existing tree must be byte-stable)
+    files.discard("data/fingerprints.json")
     unexpected = []
     for p in OUT.rglob("*"):
         if not p.is_file():
             continue
         rel = p.relative_to(OUT).as_posix()
-        if rel in EXCLUDED or rel.startswith("tools/") or \
-                rel.startswith("render/crops/") or rel in {"fingerprint.py"}:
+        if rel in EXCLUDED or rel.startswith(EXEMPT_PREFIXES) or \
+                rel in {"fingerprint.py"}:
             continue
         if rel not in files:
             unexpected.append(rel)
@@ -70,8 +78,9 @@ def build_table():
               "bytes": (OUT / rel).stat().st_size} for rel in files]
     return {"note": "deterministic fingerprint table; excluded: "
                     "VERIFICATION.md (quotes this table), README.md, this "
-                    "file itself; render/crops are derived from full-2x and "
-                    "byte-covered by the render assertions",
+                    "file itself, data/audit/ (post-commit run records, "
+                    "exempt by design); render/crops are derived from "
+                    "full-2x and byte-covered by the render assertions",
             "count": len(table),
             "files": table}
 
