@@ -96,7 +96,7 @@ ban③ 逐字豁免：无。
 `data/fingerprints.json` 自身 sha256：
 
 ```
-5a3b6bdbe6120d89ca4d14866ac475029ea5d2fcd6493a36015cb4357b5b14aa
+c342391305e18939df59bde753a3fca3049cecd29caf0121ae4d06792ef1d2a1
 ```
 
 逐文件 sha256（`fingerprint.py --check` 逐条核验下表**逐字**出现在本文）：
@@ -109,11 +109,11 @@ a50536795637e5cebd74db03b6aa20ed1221de7f0a3d999fd3c51d6380682285  data/engine-co
 535290abd0f90159112c7b9a5de3f3a0d0e6cc657da2b01c272a19902d39c640  data/repo-metrics.json
 d7f21e42b8cb733f0b165cb537aa403631f56c7583f4ad02bd21edcafd7573d3  data/source-anchors.json
 d7a3d0d32a5afd85aa7386956c602930a78486d586bf6cb3477406176615839c data/unit-tests.json
-e9aa71a606032efcd28d496f23d78f4e573b5515d468ddf3d6572597ddb34104  index.html
-aa554a78510b63caf9c9a4b3c85a2228995282dde6fdaedfeb4e4ae3c4f2d6f2  render/full-2x.png
-6c8e76d6a32408bd7a45cac08160618e0ae20ecc8949019e324e4a62ec99359e  render/full-gray.png
-fbad9754feee1d8f2222b30026661442715e313a1576be4ed8ef7e595c688545  render/thumb.png
-bd3308b6a15c8b0c1acccb479e88e3ed81e3e7b802c0c0a3ae033279d5eeda89  svg/p0-hero.svg
+85f7b4677b2d0cd4c183c8a7417a78fb420f4c8927099b19dfe897e4d438435c  index.html
+a225803cbf089bae2ae51e6eee72efe540a2cea071b8750a54e0d3c9ce239e5c  render/full-2x.png
+0c9c055d2a0a15be2d6fb7624c63e2329dc8524ff160f8cc52416dd6b65484bb  render/full-gray.png
+ba3a78bf15669a27a00b43cb171bcceb5d6115d51c9789d96cfb61dda1b50e9d  render/thumb.png
+b3c57c16aed668633ef2c1a44fa94966ffb77dab1df6586f5c8901249ddeca78  svg/p0-hero.svg
 68a5482d43cf8b66ef455f6d9d579e3b7a9e9abbc39a4c50eb92918662444524  svg/p1-architecture.svg
 0df78a5e0a9db29d28f8f480fa446605e499bb1383a9c917aeae55d2ad1070c1  svg/p10-contract.svg
 8a51bb7daa735add0537a71cd54dbe2932116ae56593ead7d1adbbb43d141628  svg/p2-snapshot.svg
@@ -256,3 +256,40 @@ cd /tmp && cp "$TREE/tools/vacuum.py" . && \
 
 extract / vacuum 全链提交后复跑（需冻结工作树 + ~90s 离线 Go 构建）
 由主会话在最终提交后按 README 配方执行。
+
+## 2026-09-09 reader-pass（hero 测试计数下架）
+
+依据 create-explainer §4.5 读者面规则（fleet reader-pass Wave 2d-2）。本批
+命中一处：hero 区可见的测试计数普查数字（metastrip「测试 172 通过 / 0 失败
+（一次冻结运行）」与 p0-hero 面板瓦片「172 个测试全绿（冻结运行）」）。
+实跑数字仍由 p9 工程事实面板（C30：「冻结运行 172 通过 / 0 失败 / 88.7s」
+及其测试网砖）与 data/unit-tests.json 一次性冻结层承载，绑定强度不降。
+
+### 改动清单（tools/build.py / tools/panels.py）
+
+1. `build.py` metastrip 删「测试 N 通过 / M 失败（一次冻结运行）」一项
+   （5 → 4 项：引擎提交、冻结证据、面板声明、跟踪文件——后三项非本批命中）；
+   随删唯一使用处后 `UT = load("unit-tests.json")` 一并移除。
+2. `panels.py` p0-hero mets 瓦片带删「172 个测试全绿（冻结运行）」砖
+   （5 → 4 砖），瓦宽由固定 189 改按 4 枚均分原跨距（(1025−3×20)//4=241）；
+   p0 面板高 640 不变。
+3. 页面「172」可见残留仅剩 p9 工程事实面板 2 处（C30 认领的证据语境）；
+   hero 与导读零测试计数残留。
+
+### 门禁复跑（旧 → 新；/tmp 平面拷贝全链）
+
+| 门禁 | 旧 | 新 |
+|---|---|---|
+| build.py 六禁门禁 | 0 violations · controls 6/6 | 同左；字号线 421 runs 100% ≥11px、CJK<12px 0 ✓ |
+| svg-linter ×11 | 11 × (rc=0 ∧ 0 findings) | 同左（仅 svg/p0-hero.svg 变，其余 10 面板逐字节不变）✓ |
+| render.py 三重断言 | 2400×19958（1200×9979 × dpr2） | 同左（页高不变；hero 区 crops 00-el0/02-s0 更新）✓ |
+| 重建确定性（双跑） | — | 第二份 /tmp 拷贝 panels+build 重跑，index.html 与 p0-hero.svg 逐字节一致 ✓ |
+| 指纹 machine check | 22 文件全符 · 逐字在本文 | 22 文件全符（§三 六行新 sha 随批更新，含 fingerprints.json 自身 sha）✓ |
+| 冻结层 | — | unit-tests/provenance/catalog-facts/engine-contract/repo-metrics/source-anchors 六文件 sha256 逐份与 §三 旧值一致 ✓ |
+
+### 产物指纹
+
+§三 表已按新产物更新（index.html、svg/p0-hero.svg、render 三件、
+fingerprints.json 自身 sha）；render/crops 仅 hero 区两片（00-el0、02-s0）
+随内容更新，其余 crops 派生自不变区段、逐字节不变（按指纹豁免规则不入表，
+由渲染断言覆盖）。

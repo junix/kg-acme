@@ -65,10 +65,12 @@ def load(name):
 
 
 EC = load("engine-contract.json")
-UT = load("unit-tests.json")
 RM = load("repo-metrics.json")
 CF = load("catalog-facts.json")
 PROV = load("provenance.json")
+# 2026-09-09 reader-pass：metastrip 的「测试 N 通过 / M 失败」普查项依读者面
+# 规则移出 hero；实跑数字仍由 p9 工程事实面板（C30）与 data/unit-tests.json
+# 一次性冻结层承载，绑定强度不降。unit-tests.json 不再为本页加载。
 
 HEAD_SHORT = PROV["engine_head"][:7]
 CLAIM_IDS = [f"C{i:02d}" for i in range(1, 31)]
@@ -165,8 +167,6 @@ parts.append(
     f'<div class="m">引擎提交 {HEAD_SHORT}（冻结）</div>'
     f'<div class="m">冻结证据 6 份 JSON</div>'
     f'<div class="m">面板 11 张 · 声明 30 条</div>'
-    f'<div class="m">测试 {UT["total_passed"]} 通过 / '
-    f'{UT["total_failed"]} 失败（一次冻结运行）</div>'
     f'<div class="m">跟踪文件 {RM["tracked_total"]} 个</div>'
     "</div></div></header>")
 parts.append('<div class="wrap">')

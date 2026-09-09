@@ -44,7 +44,7 @@ flex-wrap:wrap}
 </style>
 </head>
 <body>
-<header><div class="wrap"><div class="kicker">可审计技术长图 · 全部数字锚定冻结证据</div><h1>kg-acme：知识图谱能力中枢</h1><p class="sub">中枢只做集成：发现、协议、目录、策略、路由五件事；图谱算法全部住在 provider 里。本页解释三条入口、一份不可变快照、四把策略门与一条纯编排流水线。</p><div class="metastrip"><div class="m">引擎提交 9cea0c7（冻结）</div><div class="m">冻结证据 6 份 JSON</div><div class="m">面板 11 张 · 声明 30 条</div><div class="m">测试 172 通过 / 0 失败（一次冻结运行）</div><div class="m">跟踪文件 50 个</div></div></div></header>
+<header><div class="wrap"><div class="kicker">可审计技术长图 · 全部数字锚定冻结证据</div><h1>kg-acme：知识图谱能力中枢</h1><p class="sub">中枢只做集成：发现、协议、目录、策略、路由五件事；图谱算法全部住在 provider 里。本页解释三条入口、一份不可变快照、四把策略门与一条纯编排流水线。</p><div class="metastrip"><div class="m">引擎提交 9cea0c7（冻结）</div><div class="m">冻结证据 6 份 JSON</div><div class="m">面板 11 张 · 声明 30 条</div><div class="m">跟踪文件 50 个</div></div></div></header>
 <div class="wrap">
 <section style="padding-top:34px"><div class="sec-head"><span class="sec-no">导读</span></div><p class="lead">这张长图按「总览 → 架构 → 命令面 → 行为与门禁 → 错误处理 → 流水线与发布面 → 工程事实 → 契约实测」组织。每张面板右下角的编号是声明编号：30 条声明逐条登记在交付目录的验证层，每条都给出冻结证据与源锚点，任何一个数字都可以被独立复算。显示层不放任何代码细节——那是审计层的事。</p></section>
 <section id="s0"><div class="sec-head"><span class="sec-no">01</span><h2>总览</h2></div><p class="lead">两条铁律定边界：中枢只做集成，参数面永远来自 provider 自描述。三个二进制入口共享同一份不可变能力快照。</p><div class="panel"><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img">
@@ -87,21 +87,18 @@ flex-wrap:wrap}
 <text x="946" y="328" font-size="12" fill="#46586B" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">管理面刷新生成 · 带内容指纹</text>
 <rect x="40" y="374" width="1040" height="52" rx="10" fill="#E8EEF5"/>
 <text x="560" y="406" font-size="13" fill="#1B2733" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="600">快照之下是 provider 生态：协议原生 provider 与遗留命令行（兼容桥接入）——算法都在那里</text>
-<rect x="40" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<rect x="40" y="446" width="241" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
 <text x="56" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">17</text>
 <text x="56" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">条稳定命令（目录内置）</text>
-<rect x="249" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
-<text x="265" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">11</text>
-<text x="265" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个发布命名空间</text>
-<rect x="458" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
-<text x="474" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">5</text>
-<text x="474" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">项能力（实测快照）</text>
-<rect x="667" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
-<text x="683" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">172</text>
-<text x="683" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个测试全绿（冻结运行）</text>
-<rect x="876" y="446" width="189" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
-<text x="892" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">50</text>
-<text x="892" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个 git 跟踪文件</text>
+<rect x="301" y="446" width="241" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="317" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">11</text>
+<text x="317" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个发布命名空间</text>
+<rect x="562" y="446" width="241" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="578" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">5</text>
+<text x="578" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">项能力（实测快照）</text>
+<rect x="823" y="446" width="241" height="88" rx="10" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1"/>
+<text x="839" y="488" font-size="30" fill="#0E3A75" text-anchor="start" font-family="'SF Mono',Menlo,Consolas,'PingFang SC',monospace" font-weight="700">50</text>
+<text x="839" y="514" font-size="12" fill="#7C8FA3" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">个 git 跟踪文件</text>
 <text x="40" y="574" font-size="14" fill="#1B2733" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-weight="700">页面纪律</text>
 <text x="130" y="574" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">显示层零代码细节：源文件名、代码坐标、逐字摘录、内部标识符、内部路径与重建命令一律不出现；</text>
 <text x="130" y="600" font-size="12.5" fill="#46586B" text-anchor="start" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">每个数字都锚定冻结证据，坐标级锚点登记在交付目录验证层。</text>
