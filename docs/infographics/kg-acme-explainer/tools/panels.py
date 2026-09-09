@@ -194,15 +194,18 @@ def p0():
     s.text(560, 406, "快照之下是 provider 生态：协议原生 provider 与遗留"
                      "命令行（兼容桥接入）——算法都在那里", size=13,
            fill=INK, anchor="middle", weight="600")
+    # 2026-09-09 reader-pass：普查类瓦片（测试全绿计数）依读者面规则移出
+    # hero 面板；数字仍由 p9 工程事实面板（C30）与 data/unit-tests.json
+    # 冻结层承载。
     mets = [(str(CF["command_count"]), "条稳定命令（目录内置）"),
             (str(len(RM["source_constants"]["curated_group_namespaces"])),
              "个发布命名空间"),
             (str(len(EC["snapshot"]["semantic_ids"])), "项能力（实测快照）"),
-            (str(UT["total_passed"]), "个测试全绿（冻结运行）"),
             (str(RM["tracked_total"]), "个 git 跟踪文件")]
+    tw = (1025 - (len(mets) - 1) * 20) // len(mets)
     for i, (v, k) in enumerate(mets):
-        x = 40 + i * 209
-        s.rect(x, 446, 189, 88, fill=PAPER)
+        x = 40 + i * (tw + 20)
+        s.rect(x, 446, tw, 88, fill=PAPER)
         s.text(x + 16, 488, v, size=30, fill=DEEP, weight="700", mono=True)
         s.text(x + 16, 514, k, size=12, fill=MUT)
     s.text(40, 574, "页面纪律", size=14, weight="700")
