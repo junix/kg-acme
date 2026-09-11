@@ -25,3 +25,20 @@ go.work
 go.work.sum
 # Dependency directories
 vendor/
+
+# Generated caches, render slices, and numbered lint images (keep final PNG/PDF).
+/docs/infographics/kg-acme-explainer/render/crops/00-el0.png
+/docs/infographics/kg-acme-explainer/render/crops/01-el1.png
+/docs/infographics/kg-acme-explainer/render/crops/02-s0.png
+/docs/infographics/kg-acme-explainer/render/crops/03-s1.png
+/docs/infographics/kg-acme-explainer/render/crops/04-s2.png
+/docs/infographics/kg-acme-explainer/render/crops/05-s3.png
+/docs/infographics/kg-acme-explainer/render/crops/06-s4.png
+/docs/infographics/kg-acme-explainer/render/crops/07-s5.png
+/docs/infographics/kg-acme-explainer/render/crops/08-s6.png
+/docs/infographics/kg-acme-explainer/render/crops/09-s7.png
+/docs/infographics/kg-acme-explainer/render/crops/10-s8.png
+/docs/infographics/kg-acme-explainer/render/crops/11-s9.png
+/docs/infographics/kg-acme-explainer/render/crops/12-s10.png
+/docs/infographics/kg-acme-explainer/render/crops/13-disc.png
+/docs/infographics/kg-acme-explainer/render/crops/14-el14.png
