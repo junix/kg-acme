@@ -42,3 +42,6 @@ vendor/
 /docs/infographics/kg-acme-explainer/render/crops/12-s10.png
 /docs/infographics/kg-acme-explainer/render/crops/13-disc.png
 /docs/infographics/kg-acme-explainer/render/crops/14-el14.png
+
+# Generated caches, render slices, and numbered lint images (keep final PNG/PDF).
+/docs/infographics/kg-acme-explainer/render/crops/**/*.png
