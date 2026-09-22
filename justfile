@@ -26,9 +26,9 @@ check: vet test build
 # 安装执行面、控制面与 MCP，并发布不可变能力快照。
 install: build
     mkdir -p "{{ install_bin }}"
-    cp kg "{{ install_bin }}/kg"
-    cp kgctl "{{ install_bin }}/kgctl"
-    cp kg-mcp "{{ install_bin }}/kg-mcp"
+    @set -eu; dest="{{ install_bin }}/kg"; mkdir -p "$(dirname "$dest")"; tmp="$(mktemp "{{ install_bin }}/.kg.XXXXXX")"; trap 'rm -f "$tmp"' EXIT; cp "kg" "$tmp"; chmod 755 "$tmp"; if [ "$(uname -s)" = "Darwin" ]; then xattr -c "$tmp" 2>/dev/null || true; codesign --force --sign - "$tmp"; fi; mv -f "$tmp" "$dest"
+    @set -eu; dest="{{ install_bin }}/kgctl"; mkdir -p "$(dirname "$dest")"; tmp="$(mktemp "{{ install_bin }}/.kgctl.XXXXXX")"; trap 'rm -f "$tmp"' EXIT; cp "kgctl" "$tmp"; chmod 755 "$tmp"; if [ "$(uname -s)" = "Darwin" ]; then xattr -c "$tmp" 2>/dev/null || true; codesign --force --sign - "$tmp"; fi; mv -f "$tmp" "$dest"
+    @set -eu; dest="{{ install_bin }}/kg-mcp"; mkdir -p "$(dirname "$dest")"; tmp="$(mktemp "{{ install_bin }}/.kg-mcp.XXXXXX")"; trap 'rm -f "$tmp"' EXIT; cp "kg-mcp" "$tmp"; chmod 755 "$tmp"; if [ "$(uname -s)" = "Darwin" ]; then xattr -c "$tmp" 2>/dev/null || true; codesign --force --sign - "$tmp"; fi; mv -f "$tmp" "$dest"
     "{{ install_bin }}/kgctl" refresh
 
 clean:
