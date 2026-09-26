@@ -19,7 +19,10 @@ import (
 	"kg-acme/internal/surface"
 )
 
-const Version = "0.2.0"
+// Version carries the hub semver. Builds stamp it with the git short sha
+// (ADR-1168) via `go build -ldflags "-X kg-acme/internal/cli.Version=..."`;
+// plain `go build` falls back to the bare semver below.
+var Version = "0.2.0"
 
 type options struct {
 	JSON, All, DryRun, Describe bool
@@ -74,8 +77,8 @@ func (r Runner) Run(ctx context.Context, arguments []string) int {
 		r.rootHelp(snapshot)
 		return 0
 	}
-	if len(args) == 1 && (args[0] == "version" || args[0] == "--version") {
-		fmt.Fprintln(r.Stdout, Version)
+	if len(args) == 1 && isVersion(args[0]) {
+		fmt.Fprintf(r.Stdout, "kg %s\n", Version)
 		return 0
 	}
 	snapshot, err := state.LoadSnapshot(path)
@@ -359,6 +362,7 @@ func providerByID(providers []router.Provider, id string) (router.Provider, bool
 }
 func stringValue(value any) string { text, _ := value.(string); return text }
 func isHelp(value string) bool     { return value == "--help" || value == "-h" || value == "help" }
+func isVersion(value string) bool  { return value == "--version" || value == "-v" || value == "version" }
 
 func rejectOutputCollision(values map[string]any) error {
 	output, _ := values["output"].(string)

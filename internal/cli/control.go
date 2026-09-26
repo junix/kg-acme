@@ -33,6 +33,10 @@ func (c ControlRunner) Run(ctx context.Context, arguments []string) int {
 		r.controlHelp()
 		return 0
 	}
+	if len(args) == 1 && isVersion(args[0]) {
+		fmt.Fprintf(r.Stdout, "kgctl %s\n", Version)
+		return 0
+	}
 	if opts.Params != "" || opts.Output != "" || opts.DryRun || opts.Describe || opts.Gates != (policyZero()) {
 		return r.fail(fmt.Errorf("execution options are not accepted by kgctl"), opts.JSON)
 	}

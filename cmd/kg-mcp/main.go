@@ -28,6 +28,10 @@ type response struct {
 }
 
 func main() {
+	if len(os.Args) == 2 && (os.Args[1] == "--version" || os.Args[1] == "-v") {
+		fmt.Printf("kg-mcp %s\n", cli.Version)
+		return
+	}
 	path, err := state.DefaultSnapshotPath()
 	if err != nil {
 		fatal(err)

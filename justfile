@@ -7,13 +7,17 @@ os_suffix := if os() == "macos" { "macos" } else { "linux" }
 arch_suffix := if arch() == "aarch64" { "arm64" } else { "x86" }
 install_bin := env("SYNC_BIN_DIR", home_directory() / "sync" / (os_suffix + "-" + arch_suffix + "-bin"))
 
+# 构建印章（ADR-1168）：git 短 sha，工作树脏时带 .dirty 后缀
+stamp := `git rev-parse --short HEAD` + ` (git diff --quiet && git diff --cached --quiet) >/dev/null 2>&1 || printf .dirty`
+ldflags := "-X kg-acme/internal/cli.Version=0.2.0+g" + stamp
+
 default: test
 
 build:
     go build ./...
-    go build -o kg ./cmd/kg
-    go build -o kgctl ./cmd/kgctl
-    go build -o kg-mcp ./cmd/kg-mcp
+    go build -ldflags "{{ ldflags }}" -o kg ./cmd/kg
+    go build -ldflags "{{ ldflags }}" -o kgctl ./cmd/kgctl
+    go build -ldflags "{{ ldflags }}" -o kg-mcp ./cmd/kg-mcp
 
 test:
     go test ./...

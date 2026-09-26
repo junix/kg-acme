@@ -486,9 +486,29 @@ func TestCLIFailureContract(t *testing.T) {
 	})
 
 	t.Run("version prints a semantic version", func(t *testing.T) {
-		output := run(t, home, "kg", "version")
-		if !regexp.MustCompile(`^\d+\.\d+\.\d+\n$`).MatchString(output) {
-			t.Errorf("kg version should print a bare semver, got %q", output)
+		// e2e builds without the ldflags stamp, so the semver is bare here;
+		// just-built binaries append +g<sha> (ADR-1168).
+		pattern := regexp.MustCompile(`^kg \d+\.\d+\.\d+\S*\n$`)
+		for _, args := range [][]string{{"version"}, {"--version"}, {"-v"}} {
+			output := run(t, home, "kg", args...)
+			if !pattern.MatchString(output) {
+				t.Errorf("kg %s should print \"kg <semver>\", got %q", args[0], output)
+			}
+		}
+	})
+
+	t.Run("kgctl and kg-mcp answer version flags", func(t *testing.T) {
+		for _, args := range [][]string{{"version"}, {"--version"}, {"-v"}} {
+			output := run(t, home, "kgctl", args...)
+			if !regexp.MustCompile(`^kgctl \d+\.\d+\.\d+\S*\n$`).MatchString(output) {
+				t.Errorf("kgctl %s should print \"kgctl <semver>\", got %q", args[0], output)
+			}
+		}
+		for _, args := range [][]string{{"--version"}, {"-v"}} {
+			output := run(t, home, "kg-mcp", args...)
+			if !regexp.MustCompile(`^kg-mcp \d+\.\d+\.\d+\S*\n$`).MatchString(output) {
+				t.Errorf("kg-mcp %s should print \"kg-mcp <semver>\", got %q", args[0], output)
+			}
 		}
 	})
 }
