@@ -615,6 +615,109 @@ func TestResumeSkipsCompletedStages(t *testing.T) {
 	}
 }
 
+// A stage checkpoint that cannot be persisted fails the run before any
+// dependent stage launches: Execute returning success would promise a
+// resumable work dir while later resume silently reruns providers. The
+// destination is blocked with a directory, which the atomic temp+rename
+// publish cannot replace.
+func TestExecuteStageCheckpointFailureAborts(t *testing.T) {
+	plan, err := Build(parseDef(t, chainDef), chainProviders(), openGates())
+	if err != nil {
+		t.Fatalf("Build: %v", err)
+	}
+	workDir := filepath.Join(t.TempDir(), "work")
+	if err := os.MkdirAll(workDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(stageEnvelopePath(workDir, "extract"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	runner := &scriptRunner{t: t, dir: t.TempDir(), calls: map[string]int{}}
+	env := Execute(context.Background(), plan, RunOptions{WorkDir: workDir, Gates: openGates(), Runner: runner})
+	if env.Status != "error" || env.Error == nil || env.Error.Code != protocol.ErrInvocationFailed {
+		t.Fatalf("expected invocation_failed persistence error, got %+v", env.Error)
+	}
+	if !contains(env.Error.Message, "persisting checkpoint") {
+		t.Errorf("error should name the checkpoint failure: %q", env.Error.Message)
+	}
+	if len(env.Stages) != 2 || env.Stages[0].Status != "ok" || env.Stages[1].Status != "error" {
+		t.Fatalf("run must abort at the unpersistable stage: %+v", env.Stages)
+	}
+	// Dependent stages never launched.
+	if runner.calls["resolve.coref"] != 0 || runner.calls["store.triples"] != 0 {
+		t.Errorf("dependent stages must not run after checkpoint failure: %v", runner.calls)
+	}
+	// No partial checkpoint: the blocked path is still a directory, not
+	// JSON, and no temp files leak into the work dir.
+	if fi, err := os.Stat(stageEnvelopePath(workDir, "extract")); err != nil || !fi.IsDir() {
+		t.Errorf("blocked checkpoint path must stay a non-file: %v %+v", err, fi)
+	}
+	entries, err := os.ReadDir(workDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range entries {
+		if strings.HasPrefix(e.Name(), ".") {
+			t.Errorf("temp file leaked into work dir: %s", e.Name())
+		}
+	}
+}
+
+// A final pipeline envelope that cannot be persisted must surface as a
+// non-success result even though every stage completed: stage checkpoints
+// survive, so a later resume still skips the providers.
+func TestExecuteFinalEnvelopeFailureReports(t *testing.T) {
+	plan, err := Build(parseDef(t, chainDef), chainProviders(), openGates())
+	if err != nil {
+		t.Fatalf("Build: %v", err)
+	}
+	workDir := filepath.Join(t.TempDir(), "work")
+	if err := os.MkdirAll(workDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(filepath.Join(workDir, "pipeline.envelope.json"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	runner := &scriptRunner{t: t, dir: t.TempDir(), calls: map[string]int{}}
+	env := Execute(context.Background(), plan, RunOptions{WorkDir: workDir, Gates: openGates(), Runner: runner})
+	if env.Status != "error" || env.Error == nil || env.Error.Code != protocol.ErrInvocationFailed {
+		t.Fatalf("expected invocation_failed persistence error, got %+v", env.Error)
+	}
+	if !contains(env.Error.Message, "persisting pipeline envelope") {
+		t.Errorf("error should name the envelope failure: %q", env.Error.Message)
+	}
+	if len(env.Stages) != 4 {
+		t.Fatalf("all four stages should have run: %+v", env.Stages)
+	}
+	for _, s := range env.Stages {
+		if s.Status != "ok" {
+			t.Errorf("stage %s ran fine, status should stay ok: %+v", s.ID, s)
+		}
+	}
+	// No partial final envelope: the blocked path is still a directory.
+	if fi, err := os.Stat(filepath.Join(workDir, "pipeline.envelope.json")); err != nil || !fi.IsDir() {
+		t.Errorf("blocked envelope path must stay a non-file: %v %+v", err, fi)
+	}
+	if err := os.Remove(filepath.Join(workDir, "pipeline.envelope.json")); err != nil {
+		t.Fatal(err)
+	}
+	// Stage checkpoints survived, so resume reuses everything instead of
+	// rerunning providers.
+	plan2, err := Build(parseDef(t, chainDef), chainProviders(), openGates())
+	if err != nil {
+		t.Fatalf("Build: %v", err)
+	}
+	callsBefore := runner.calls["extract.entities_relations"]
+	env2 := Execute(context.Background(), plan2, RunOptions{Resume: workDir, Gates: openGates(), Runner: runner})
+	if env2.Status != "ok" {
+		t.Fatalf("resume from surviving checkpoints failed: %+v", env2.Error)
+	}
+	if runner.calls["extract.entities_relations"] != callsBefore {
+		t.Errorf("resume must not rerun providers, extract calls = %d (before %d)",
+			runner.calls["extract.entities_relations"], callsBefore)
+	}
+}
+
 func TestRenderDryRun(t *testing.T) {
 	plan, err := Build(parseDef(t, chainDef), chainProviders(), policy.Gates{})
 	if err != nil {

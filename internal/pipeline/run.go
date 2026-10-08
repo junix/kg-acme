@@ -115,7 +115,11 @@ type RunOptions struct {
 // unless the stage is optional, in which case it is skipped with a
 // diagnostic. Each stage's result is recorded to
 // <work-dir>/stage-<id>.envelope.json as it completes, and the final
-// pipeline envelope to <work-dir>/pipeline.envelope.json.
+// pipeline envelope to <work-dir>/pipeline.envelope.json. Checkpoint
+// writes are atomic, and a stage or final envelope that cannot be
+// persisted fails the run (invocation_failed): a success result promises
+// a resumable work dir, so dependent stages never launch past a stage
+// whose checkpoint was not written.
 func Execute(ctx context.Context, plan *Plan, opts RunOptions) *Envelope {
 	env := newEnvelope(plan.Def)
 
@@ -225,9 +229,18 @@ func Execute(ctx context.Context, plan *Plan, opts RunOptions) *Envelope {
 			res.Status = "skipped"
 		}
 
+		// Persist the stage checkpoint before anything may depend on
+		// it: if it cannot be written, dependent stages must not
+		// launch — a later resume would rerun them and their side
+		// effects. This failure is infrastructure, not a provider
+		// failure, so optional stages get no exemption.
+		if werr := writeStageEnvelope(workDir, res); werr != nil {
+			res.Status = "error"
+			res.Error = &protocol.ErrorInfo{Code: protocol.ErrInvocationFailed, Message: fmt.Sprintf(
+				"stage %q: persisting checkpoint: %v", ps.Stage.ID, werr)}
+		}
 		results[ps.Stage.ID] = &res
 		env.Stages = append(env.Stages, res)
-		writeStageEnvelope(workDir, res)
 
 		if res.Status == "error" {
 			env.Status = "error"
@@ -236,7 +249,11 @@ func Execute(ctx context.Context, plan *Plan, opts RunOptions) *Envelope {
 		}
 	}
 
-	writePipelineEnvelope(workDir, env)
+	if werr := writePipelineEnvelope(workDir, env); werr != nil {
+		env.Status = "error"
+		env.Error = &protocol.ErrorInfo{Code: protocol.ErrInvocationFailed, Message: fmt.Sprintf(
+			"persisting pipeline envelope: %v", werr)}
+	}
 	return env
 }
 
@@ -299,20 +316,46 @@ func stageEnvelopePath(workDir, stageID string) string {
 	return filepath.Join(workDir, fmt.Sprintf("stage-%s.envelope.json", stageID))
 }
 
-func writeStageEnvelope(workDir string, res StageResult) {
-	data, err := json.MarshalIndent(res, "", "  ")
+// writeCheckpoint publishes a JSON checkpoint atomically: the payload is
+// written to a temp file in the destination directory and renamed into
+// place, so a failure never leaves a partial checkpoint behind.
+func writeCheckpoint(path string, v any) error {
+	data, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
-		return
+		return err
 	}
-	_ = os.WriteFile(stageEnvelopePath(workDir, res.ID), data, 0o644)
+	tmp, err := os.CreateTemp(filepath.Dir(path), "."+filepath.Base(path)+".tmp-")
+	if err != nil {
+		return err
+	}
+	tmpName := tmp.Name()
+	if err := tmp.Chmod(0o644); err != nil {
+		tmp.Close()
+		os.Remove(tmpName)
+		return err
+	}
+	if _, err := tmp.Write(data); err != nil {
+		tmp.Close()
+		os.Remove(tmpName)
+		return err
+	}
+	if err := tmp.Close(); err != nil {
+		os.Remove(tmpName)
+		return err
+	}
+	if err := os.Rename(tmpName, path); err != nil {
+		os.Remove(tmpName)
+		return err
+	}
+	return nil
 }
 
-func writePipelineEnvelope(workDir string, env *Envelope) {
-	data, err := json.MarshalIndent(env, "", "  ")
-	if err != nil {
-		return
-	}
-	_ = os.WriteFile(filepath.Join(workDir, "pipeline.envelope.json"), data, 0o644)
+func writeStageEnvelope(workDir string, res StageResult) error {
+	return writeCheckpoint(stageEnvelopePath(workDir, res.ID), res)
+}
+
+func writePipelineEnvelope(workDir string, env *Envelope) error {
+	return writeCheckpoint(filepath.Join(workDir, "pipeline.envelope.json"), env)
 }
 
 // loadReusable reads a recorded stage envelope and returns it when the

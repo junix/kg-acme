@@ -110,6 +110,10 @@ StageResult）；整个流水线结束落 `pipeline.envelope.json`。
 - `optional: true` 的 stage 失败：记 warning diagnostic，status 置
   `skipped`，继续。下游若 `input_from` 一个被跳过的 stage，会因
   "上游 artifact 不可得"失败（除非它自己也 optional）。
+- checkpoint 落盘失败（stage 或最终 envelope 写不进 work-dir；原子
+  temp+rename 发布，失败不留半截 JSON）：该 stage 置 `error`
+  （`invocation_failed`）并**中止**，下游 stage 不再启动，`optional`
+  不豁免——`status: "ok"` 必须意味着 work-dir 可恢复。
 
 ## 7. 命令面与输出契约
 
